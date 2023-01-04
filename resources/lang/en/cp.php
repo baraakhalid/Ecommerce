@@ -465,6 +465,7 @@ return [
 
 
 
+   'products'=>'Products',
 
 
 
