@@ -18,6 +18,8 @@ class CreateProductTranslationsTable extends Migration
               $table->string('name', 45);
 
             $table->string('info');
+            $table->integer('product_id')->unsigned();
+            $table->string('locale')->index();
             $table->timestamps();
         });
     }
