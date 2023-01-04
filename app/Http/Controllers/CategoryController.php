@@ -86,7 +86,9 @@ class CategoryController extends Controller
     
     
     
-        }    }
+        }   
+    
+    }
 
     /**
      * Display the specified resource.

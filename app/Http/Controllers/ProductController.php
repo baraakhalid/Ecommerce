@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Image;
+use App\Models\Language;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -14,8 +18,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $products=Product::all();
+        $categories=Category::all();
+
+        return response()->view('admin.products.home',['products'=>$products,'categories '=>$categories ]);        }
 
     /**
      * Show the form for creating a new resource.
@@ -24,7 +30,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories=Category::all();
+
+        return response()->view('admin.products.create',['categories'=>$categories]); 
     }
 
     /**
@@ -35,8 +43,87 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        {
+        
+            $roles = [
+                'image' => 'required|image|mimes:png,jpg,jpeg',
+                'price' => 'required|numeric|min:1',
+                'category_id' => 'required|numeric|exists:categories,id',
+                            // 'image' => 'nullable|image|mimes:jpg,png|max:2048',
+            // 'image_1' => 'required|image|mimes:jpg,png|max:2048',
+            // 'image_2' => 'nullable|image|mimes:jpg,png|max:2048',
+            // 'image_3' => 'nullable|image|mimes:jpg,png|max:2048',
+
+
+
+
+
+            ];
+            $locales = Language::all()->pluck('lang');
+            foreach ($locales as $locale) {
+                $roles['name_' . $locale] = 'required';
+            }
+            foreach ($locales as $locale) {
+                $roles['info_' . $locale] = 'required';
+            }
+          
+    
+            $this->validate($request, $roles);
+    
+            $product= new Product();
+            $product->status='active';
+            $product->category_id = $request->get('category_id');
+            $product->price = $request->get('price');
+            foreach ($locales as $locale)
+            {
+                $product->translateOrNew($locale)->name = $request->get('name_' . $locale);
+            }
+            foreach ($locales as $locale)
+            {
+                $product->translateOrNew($locale)->info = $request->get('info_' . $locale);
+            }
+       
+            $isSaved=$product->save();
+
+            if($request->has('filename')  && !empty($request->filename))
+            {
+                // dd(count($request->filename));
+                foreach($request->filename as $one)
+                {
+                    // dd($one);
+                    // dd(gettype($request->filename));
+                    $this->saveImages($request, $product, $one);
+                    // echo(1);
+
+                    // if (isset(explode('/', explode(';', explode(',', $one)[0])[0])[1])) {
+                    //     $fileType = strtolower(explode('/', explode(';', explode(',', $one)[0])[0])[1]);
+                    //     $name = "" .str_random(8) . "" .  "" . time() . "" . rand(1000000, 9999999);
+                    //     $attachType = 0;
+                        // if (in_array($fileType, ['jpg','jpeg','png','pmb'])){
+                            
+                        //     $imageName = time() . '' . str_replace(' ', '', $product->name) . "_product$one." . $request->file($one)->extension();
+                        //     $request->file($one)->storePubliclyAs('images/products', $imageName, ['disk' => 'public']);
+                
+                        // //    }
+                        // $image=new Image();
+                        
+                        // $image->name = $imageName;
+                        // $image->url = 'products/' . $imageName;
+                        // $product->images()->save($image);
+                    // }
+                }
+            }
+            if ($isSaved) {
+                $this->saveImages($request, $product, 'image');
+              
+            }
+            
+            return redirect()->back()->with('status', __('cp.create'));
+    
+    
+         
+        }     
+      }
 
     /**
      * Display the specified resource.
@@ -82,4 +169,26 @@ class ProductController extends Controller
     {
         //
     }
+    private function saveImages(Request $request, Product $product, String $key, bool $update = false)
+    {
+        if ($request->hasFile($key)) {
+            if ($update) {
+                foreach ($product->images as $image) {
+                    if (str_contains($image->name, $key)) {
+                        Storage::delete('images/products/' . $image->name);
+                        $image->delete();
+                    }
+                }
+            }
+            dd(22);
+            $imageName = time() . '' . str_replace(' ', '', $product->name) . "_product$key." . $request->file($key)->extension();
+            $request->file($key)->storePubliclyAs('images/products', $imageName, ['disk' => 'public']);
+
+            $image = new Image();
+            $image->name = $imageName;
+            $image->url = 'products/' . $imageName;
+            $product->images()->save($image);
+        }
+        }
+
 }

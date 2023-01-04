@@ -12,5 +12,7 @@ class Category extends Model
     use HasFactory,Translatable;
     protected $translatedAttributes=['name'];
 
-
+    public function products(){
+        return $this ->hasMany(Product::class ,'category_id','id' );
+    }
 }
