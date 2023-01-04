@@ -135,23 +135,21 @@
                                          <td class="v-align-middle wd-5p"><img src="{{Storage::url($one->image ?? '')}}"  width="50px" height="50px"></td>
 
                                         <td class="v-align-middle wd-25p">{{$one->name}}</td>
-                                        <td class="v-align-middle wd-10p" > <span id="label-{{$one->id}}" class="badge badge-pill badge-{{($one->status == true)
+                                        <td class="v-align-middle wd-10p" > <span id="label-{{$one->id}}" class="badge badge-pill badge-{{($one->status == "active")
                                             ? "info" : "danger"}}" id="label-{{$one->id}}">
 
-                                            {{$one->active_status}}
+                                            {{__('cp.'.$one->status)}}
                                         </span>
-                                        </td> 
+                                        </td>
 
                                         <td class="v-align-middle wd-10p">{{$one->created_at->format('Y-m-d')}}</td>
 
                                         <td class="v-align-middle wd-15p optionAddHours">
-                                            <a href="{{url(getLocal().'/admin/admins/'.$one->id.'/edit')}}"
+                                            <a href="{{url(getLocal().'/admin/categories/'.$one->id.'/edit')}}"
                                                class="btn btn-sm btn-clean btn-icon" title="{{__('cp.edit')}}">
                                                 <i class="la la-edit"></i>
                                             </a>
-                                            <a href="{{url(getLocal().'/admin/admins/'.$one->id.'/edit_password')}}" class="btn btn-sm btn-clean btn-icon" title="{{__('cp.Change_Password')}}">
-                                                <i class="la la-key"></i>
-                                            </a>
+                                          
 
                                         </td>
                                     </tr>

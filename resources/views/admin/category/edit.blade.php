@@ -1,5 +1,5 @@
 @extends('layout.adminLayout')
-@section('title') {{ucwords(__('cp.admins'))}}
+@section('title') {{ucwords(__('cp.categories'))}}
 @endsection
 @section('css')
 
@@ -12,7 +12,6 @@
 @endsection
 @section('content')
 
-
     <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
         <!--begin::Subheader-->
         <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
@@ -20,13 +19,14 @@
                 <!--begin::Info-->
                 <div class="d-flex align-items-center flex-wrap mr-1">
                     <div class="d-flex align-items-baseline mr-5">
-                        <h3>{{__('cp.edit_admin')}}</h3>
+                        <h3>{{__('cp.categories')}}</h3>
                     </div>
                 </div>
                 <!--end::Info-->
                 <!--begin::Toolbar-->
                 <div class="d-flex align-items-center">
-                    <a href="{{url(getLocal().'/admin/admins')}}" class="btn btn-secondary  mr-2">{{__('cp.cancel')}}</a>
+                    <a href="{{url(getLocal().'/admin/categories')}}"
+                       class="btn btn-secondary  mr-2">{{__('cp.cancel')}}</a>
                     <button id="submitButton" class="btn btn-success ">{{__('cp.save')}}</button>
                 </div>
                 <!--end::Toolbar-->
@@ -39,7 +39,7 @@
             <div class="container">
                 <!--begin::Card-->
                 <div class="card card-custom gutter-b example example-compact">
-                    <form method="post" action="{{url(app()->getLocale().'/admin/admins/'.$item->id)}}"
+                    <form method="post" action="{{url(app()->getLocale().'/admin/categories/'.$category->id)}}"
                           enctype="multipart/form-data" class="form-horizontal" role="form" id="form">
                         {{ csrf_field() }}
                         {{ method_field('PATCH')}}
@@ -49,55 +49,49 @@
                         </div>
 
 
-                       <div class="row col-sm-12">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>{{__('cp.name')}}</label>
-                                                <input type="text" class="form-control form-control-solid"
-                                                       name="name" value="{{old('name',$item->name) }}" required/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>{{__('cp.email')}}</label>
-                                                <input type="email" class="form-control form-control-solid" name="email"
-                                                      value="{{old('email',$item->email) }}" required/>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>{{__('cp.mobile')}}</label>
-                                                <input
-                                                    onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')"
-
-                                                    type="text" class="form-control form-control-solid" name="mobile"
-                                                    value="{{old('mobile',$item->mobile) }}" required/>
-                                            </div>
-                                        </div>
-
-
-
-                     @if($item->id!=1)
-                                       <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label> {{__('cp.roles')}}</label>
-                                                <select class="form-control form-control-solid select2" id="roles" name="roles[]"
-                                                    multiple="multiple" required>
-
-                                                    @foreach($roles as $roleItem)
-                                                        <option value="{{$roleItem->id}}" {{in_array($roleItem->id,old('roles',$item->roles->pluck('role_id')->toArray())) ? "selected":"" }}>{{$roleItem->name}}</option>
-                                                    @endforeach
-                                                </select>
-                                                  @if ($errors->has('roles'))
-                                                    <span class="help-block">
-                                                    <strong>{{ $errors->first('roles') }}</strong>
-                                                        </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                    @endif
+                     
+                        <div class="row">
+                            @foreach($locales as $locale)
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>{{__('cp.name_'.$locale->lang)}}</label>
+                                        <input required 
+                                        {{($locale->lang == 'ar') ? 'dir=rtl' :'' }} type="text" class="form-control" id="name" name="name_{{$locale->lang}}"
+                                     
+                                        value="{{old('name_'.$locale->lang,@$category->translate($locale->lang)->name)}}" placeholder="Enter full name" />
+                                        <span class="form-text text-muted">{{__('cms.please_enter')}} {{__('cms.name')}}</span>
                                     </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div id="image_div" class="form-group row">
+                            <label class="col-3 col-form-label">Image:</label>
+                            <div class="col-3">
+                                <div class="image-input image-input-empty image-input-outline" id="image" name="image"
+                                    style="background-image: url({{Storage::url($category->image ?? '')}})">
+                                    <div class="image-input-wrapper"></div>
+    
+                                    <label
+                                        class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                        data-action="change" data-toggle="tooltip" title=""
+                                        data-original-title="Change avatar">
+                                        <i class="fa fa-pen icon-sm text-muted"></i>
+                                        <input  type="file" name="image" accept=".png, .jpg, .jpeg" />
+                                        <input type="hidden" name="image" />
+                                    </label>
+    
+                                    <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                        data-action="cancel" data-toggle="tooltip" title="Cancel avatar">
+                                        <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                    </span>
+    
+                                    <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                        data-action="remove" data-toggle="tooltip" title="Remove avatar">
+                                        <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
 
                         <button type="submit" id="submitForm" style="display:none"></button>
                     </form>
@@ -123,11 +117,14 @@
             // $('#submitButton').addClass('spinner spinner-white spinner-left');
             $('#submitForm').click();
         });
+        var image = new KTImageInput('image');
+
     </script>
 
 
 @endsection
 
 @section('script')
+
 
 @endsection
