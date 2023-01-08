@@ -144,7 +144,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return response()->view('admin.products.edit',['product'=>$product]);
     }
 
     /**
