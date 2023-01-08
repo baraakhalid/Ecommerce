@@ -211,7 +211,7 @@
                                                            name="chkBox"/>
                                                     <span></span></label>
                                             </div>
-                                            {{-- @endif --}}
+                                            @endif
                                         </td>
                                         <td class="v-align-middle wd-5p">{{$one->id}}</td>
 
