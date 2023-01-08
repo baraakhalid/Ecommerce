@@ -44,6 +44,7 @@
                             <i class="flaticon-delete"></i>
                             <span>{{__('cp.delete')}}</span>
                         </button>
+
                         <button type="button" class="btn btn-secondary" href="#cancel_activation" role="button"
                                 data-toggle="modal">
                             <i class="icon-xl la la-ban"></i>
@@ -202,7 +203,8 @@
                                 @forelse($products as $one)
                                     <tr class="odd gradeX" id="tr-{{$one->id}}">
                                         <td class="v-align-middle wd-5p">
-                                            {{-- @if($one->id != '0') --}}
+
+                                            @if($one->category_id != '0')
                                             <div class="checkbox-inline">
                                                 <label class="checkbox">
                                                     <input type="checkbox" value="{{$one->id}}" class="checkboxes"
@@ -217,6 +219,7 @@
                                                                               height="50px"></td>
 
                                         <td class="v-align-middle wd-25p">{{$one->name}}</td>
+
                                         <td class="v-align-middle wd-25p">{{@$one->category? @$one->category->name : __('cp.un_assigned')}}</td>
                                         <td class="v-align-middle wd-25p">{{@$one->price}}</td>
                                         <td class="v-align-middle wd-10p"> <span id="label-{{$one->id}}"

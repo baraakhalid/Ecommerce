@@ -89,10 +89,8 @@ class ProductController extends Controller
             {
 
                 
-                // dd(count($request->filename));
                 foreach($request->filename as $one)
                 {
-                    // dd($request->filename[0]);
 
 
                     if (isset(explode('/', explode(';', explode(',', $one)[0])[0])[1])) {
@@ -104,7 +102,6 @@ class ProductController extends Controller
                         $attachType = 1;
                         // Image::make($one)->resize(800, null, function ($constraint) {$constraint->aspectRatio();})->save("uploads/images/meals/$newName");
                     }
-                    // echo $newName ;
 
 
                     $this->saveImages($request, $product, 'all_images');
@@ -114,10 +111,12 @@ class ProductController extends Controller
                    
                 }
             }
-            // if ($isSaved) {
-            //     $this->saveImages($request, $product, 'image');
+      
+ 
+            if ($isSaved) {
+                $this->saveImages($request, $product, 'image');
               
-            // }
+            }
             
             return redirect()->back()->with('status', __('cp.create'));
     
@@ -177,6 +176,7 @@ class ProductController extends Controller
                 foreach ($product->images as $image) {
                     if (str_contains($image->name, $key)) {
                         Storage::delete('products/' . $image->name);
+
                         $image->delete();
                     }
                 }
@@ -184,6 +184,7 @@ class ProductController extends Controller
             // dd(22);
             $imageName = time() . '' . str_replace(' ', '', $product->name) . "_product_$key." . $request->file($key)->extension();
             $request->file($key)->storePubliclyAs('products', $imageName, ['disk' => 'public']);
+
 
             $image = new Image();
             $image->name = $imageName;

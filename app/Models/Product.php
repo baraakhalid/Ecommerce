@@ -22,6 +22,7 @@ class Product extends Model
     public function getMainImageAttribute()
     {
         return $this->images()->first()->url;
+
     }
 
 
