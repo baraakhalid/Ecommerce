@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Color;
 use App\Models\Image;
 use App\Models\Language;
 use App\Models\Product;
+use App\Models\ProductColorSize;
+use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,8 +34,10 @@ class ProductController extends Controller
     public function create()
     {
         $categories=Category::all();
+        $sizes=Size::all();
+        $colors=Color::all();
 
-        return response()->view('admin.products.create',['categories'=>$categories]); 
+        return response()->view('admin.products.create',['categories'=>$categories,'sizes'=>$sizes,'colors'=>$colors]); 
     }
 
     /**
@@ -49,6 +54,10 @@ class ProductController extends Controller
                 'image' => 'required|image|mimes:png,jpg,jpeg',
                 'price' => 'required|numeric|min:1',
                 'category_id' => 'required|numeric|exists:categories,id',
+                'colors' => 'required',      
+                'sizes' => 'required',
+
+
                             // 'image' => 'nullable|image|mimes:jpg,png|max:2048',
             // 'image_1' => 'required|image|mimes:jpg,png|max:2048',
             // 'image_2' => 'nullable|image|mimes:jpg,png|max:2048',
@@ -117,7 +126,25 @@ class ProductController extends Controller
                 $this->saveImages($request, $product, 'image');
               
             }
-            
+            if ($isSaved){
+            if ($request->colors != null) {
+                $count = 1;
+                foreach ($request->colors as $color_id) {
+                    foreach ($request->sizes as $size_id){
+                        $values[] = [
+                            'product_id' => $product->id,
+                            'color_id' => $color_id,
+                            'size_id' => $size_id,
+
+                        ];
+                    }
+
+                        
+                    $count++;
+                }
+                ProductColorSize::insert($values);
+            }
+        }
             return redirect()->back()->with('status', __('cp.create'));
     
     
