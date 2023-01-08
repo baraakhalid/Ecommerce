@@ -87,32 +87,32 @@ class ProductController extends Controller
 
             if($request->has('filename')  && !empty($request->filename))
             {
-                // dd(count($request->filename));
+
+                
                 foreach($request->filename as $one)
                 {
-                    // dd($one);
-                    // dd(gettype($request->filename));
-                    $this->saveImages($request, $product, $one);
-                    // echo(1);
 
-                    // if (isset(explode('/', explode(';', explode(',', $one)[0])[0])[1])) {
-                    //     $fileType = strtolower(explode('/', explode(';', explode(',', $one)[0])[0])[1]);
-                    //     $name = "" .str_random(8) . "" .  "" . time() . "" . rand(1000000, 9999999);
-                    //     $attachType = 0;
-                        // if (in_array($fileType, ['jpg','jpeg','png','pmb'])){
-                            
-                        //     $imageName = time() . '' . str_replace(' ', '', $product->name) . "_product$one." . $request->file($one)->extension();
-                        //     $request->file($one)->storePubliclyAs('images/products', $imageName, ['disk' => 'public']);
-                
-                        // //    }
-                        // $image=new Image();
-                        
-                        // $image->name = $imageName;
-                        // $image->url = 'products/' . $imageName;
-                        // $product->images()->save($image);
-                    // }
+
+                    if (isset(explode('/', explode(';', explode(',', $one)[0])[0])[1])) {
+                    $fileType = strtolower(explode('/', explode(';', explode(',', $one)[0])[0])[1]);
+                    $name = "" .str_random(8) . "" .  "" . time() . "" . rand(1000000, 9999999);
+                    $attachType = 0;
+                    if (in_array($fileType, ['jpg','jpeg','png','pmb'])){
+                        $newName = $name. ".jpg";
+                        $attachType = 1;
+                        // Image::make($one)->resize(800, null, function ($constraint) {$constraint->aspectRatio();})->save("uploads/images/meals/$newName");
+                    }
+
+
+                    $this->saveImages($request, $product, 'all_images');
+
+                    
+                }
+                   
                 }
             }
+      
+ 
             if ($isSaved) {
                 $this->saveImages($request, $product, 'image');
               
@@ -175,14 +175,16 @@ class ProductController extends Controller
             if ($update) {
                 foreach ($product->images as $image) {
                     if (str_contains($image->name, $key)) {
-                        Storage::delete('images/products/' . $image->name);
+                        Storage::delete('products/' . $image->name);
+
                         $image->delete();
                     }
                 }
             }
-            dd(22);
-            $imageName = time() . '' . str_replace(' ', '', $product->name) . "_product$key." . $request->file($key)->extension();
-            $request->file($key)->storePubliclyAs('images/products', $imageName, ['disk' => 'public']);
+            // dd(22);
+            $imageName = time() . '' . str_replace(' ', '', $product->name) . "_product_$key." . $request->file($key)->extension();
+            $request->file($key)->storePubliclyAs('products', $imageName, ['disk' => 'public']);
+
 
             $image = new Image();
             $image->name = $imageName;

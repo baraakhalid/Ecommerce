@@ -38,7 +38,7 @@ class HomeController extends Controller
         $role = "";
         if ($model == "admins") $role = 'App\Models\Admin';
         if ($model == "categories") $role = 'App\Models\Category';
-        if ($model == "meals") $role = 'App\Models\Meal';
+        if ($model == "products") $role = 'App\Models\Product';
         if ($model == "option_values") $role = 'App\Models\OptionValue';
         if ($model == "promo_codes") $role = 'App\Models\PromoCode';
         if ($model == "orders") $role = 'App\Models\Order';

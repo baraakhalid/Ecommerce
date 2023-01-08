@@ -40,6 +40,11 @@
                             <i class="icon-xl la la-check"></i>
                             <span>{{__('cp.activation')}}</span>
                         </button>
+                        <button type="button" class="btn btn-secondary" href="#deleteAll" role="button" data-toggle="modal">
+                            <i class="flaticon-delete"></i>
+                            <span>{{__('cp.delete')}}</span>
+                        </button>
+
                         <button type="button" class="btn btn-secondary" href="#cancel_activation" role="button"
                                 data-toggle="modal">
                             <i class="icon-xl la la-ban"></i>
@@ -198,6 +203,7 @@
                                 @forelse($products as $one)
                                     <tr class="odd gradeX" id="tr-{{$one->id}}">
                                         <td class="v-align-middle wd-5p">
+
                                             @if($one->category_id != '0')
                                             <div class="checkbox-inline">
                                                 <label class="checkbox">
@@ -205,14 +211,15 @@
                                                            name="chkBox"/>
                                                     <span></span></label>
                                             </div>
-                                            @endif
+                                            {{-- @endif --}}
                                         </td>
                                         <td class="v-align-middle wd-5p">{{$one->id}}</td>
 
-                                        <td class="v-align-middle wd-5p"><img src="{{$one->image}}" width="50px"
+                                        <td class="v-align-middle wd-5p"><img src="{{Storage::url($one->main_image ?? '')}}" width="50px"
                                                                               height="50px"></td>
 
-                                        <td class="v-align-middle wd-25p">{{$one->title}}</td>
+                                        <td class="v-align-middle wd-25p">{{$one->name}}</td>
+
                                         <td class="v-align-middle wd-25p">{{@$one->category? @$one->category->name : __('cp.un_assigned')}}</td>
                                         <td class="v-align-middle wd-25p">{{@$one->price}}</td>
                                         <td class="v-align-middle wd-10p"> <span id="label-{{$one->id}}"
