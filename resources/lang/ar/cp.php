@@ -457,6 +457,8 @@ return [
    'full_time'=>'دوام كامل',
    'part_time'=>'دوام جزئي',
 
+
+   'products'=>'منتجات',
     
 
 

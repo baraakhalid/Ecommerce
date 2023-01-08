@@ -48,26 +48,32 @@ class CategoryController extends Controller
     {
         {
         
-            // $roles = [
-            //     'status'=> 'required | boolean',
+            $roles = [
+                // 'status'=> 'required | boolean',
+                'image' => 'required|image|mimes:png,jpg,jpeg',
 
 
-            // ];
+
+            ];
             $locales = Language::all()->pluck('lang');
             foreach ($locales as $locale) {
                 $roles['name_' . $locale] = 'required';
             }
           
     
-            // $this->validate($request, $roles);
+            $this->validate($request, $roles);
     
             $item= new Category();
-            // $item->status=$request->get('status');
             $item->status='active';
 
+            // if ($request->hasFile('image')) {
+            //     $item->image =  $this->storeImage( $request->file('image'), 'categories',null,512);
+            // }    
             if ($request->hasFile('image')) {
-                $item->image =  $this->storeImage( $request->file('image'), 'categories',null,512);
-            }    
+                $imagetitle =  time() . '_'. str_replace(' ','',$item->name).'.'. $request->file('image')->extension();
+                $request->file('image')->storePubliclyAs('categories', $imagetitle,['disk'=>'public']);
+                $item->image = 'categories/'.$imagetitle;
+            }
             foreach ($locales as $locale)
             {
                 $item->translateOrNew($locale)->name = $request->get('name_' . $locale);
@@ -80,7 +86,9 @@ class CategoryController extends Controller
     
     
     
-        }    }
+        }   
+    
+    }
 
     /**
      * Display the specified resource.
@@ -114,7 +122,9 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $roles = [
-            'status' => 'required|boolean',
+            // 'status' => 'required|boolean',
+            // 'image' => 'image|mimes:png,jpg,jpeg',
+
            
 
         ];
@@ -125,10 +135,12 @@ class CategoryController extends Controller
      
         $this->validate($request, $roles);
 
-        $category->status=$request->get('status');
 
         if ($request->hasFile('image')) {
-            $category->image =  $this->storeImage( $request->file('image'), 'categories',null,512);
+            Storage::delete($category->image);
+            $imagetitle =  time() . '_'. str_replace(' ','',$category->name).'.'. $request->file('image')->extension();
+            $request->file('image')->storePubliclyAs('categories', $imagetitle,['disk'=>'public']);
+            $category->image = 'categories/'.$imagetitle;
         }
 
         foreach ($locales as $locale)
