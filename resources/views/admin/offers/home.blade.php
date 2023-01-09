@@ -1,5 +1,5 @@
 @extends('layout.adminLayout')
-@section('title') {{ucwords(__('cp.products'))}}
+@section('title') {{ucwords(__('cp.offers'))}}
 @endsection
 @section('css')
 
@@ -22,7 +22,7 @@
                 <!--begin::Info-->
                 <div class="d-flex align-items-center flex-wrap mr-1">
                     <div class="d-flex align-items-baseline mr-5">
-                        <h3>{{ucwords(__('cp.products'))}}</h3>
+                        <h3>{{ucwords(__('cp.offers'))}}</h3>
                     </div>
                 </div>
                 <!--end::Info-->
@@ -31,7 +31,7 @@
 
                 <div>
                     <div class="btn-group mb-2 m-md-3 mt-md-0 ml-2 ">
-                        <a  class="btn btn-secondary btn_export" href="{{url('admin/export/excel/products')}}">
+                        <a  class="btn btn-secondary btn_export" href="{{url('admin/export/excel/product_offers')}}">
                             <i class="icon-xl la la-file-excel"></i>
                             <span>{{__('cp.excel')}}</span>
                         </a>
@@ -52,7 +52,7 @@
                         </button>
 
                     </div>
-                    <a href="{{url(getLocal().'/admin/products/create')}}" class="btn btn-secondary  mr-2 btn-success">
+                    <a href="{{url(getLocal().'/admin/product_offers/create')}}" class="btn btn-secondary  mr-2 btn-success">
                         <i class="icon-xl la la-plus"></i>
                         <span>{{__('cp.add')}}</span>
                     </a>
@@ -75,7 +75,7 @@
                                 class="icon-xl la la-sliders-h"></i>{{__('cp.filter')}}</button>
                         <div class="container box-filter-collapse">
                             <div class="card">
-                                <form class="form-horizontal" method="get" action="{{url(getLocal().'/admin/products')}}">
+                                <form class="form-horizontal" method="get" action="{{url(getLocal().'/admin/offers')}}">
                                     <div class="row">
 
                                         
@@ -166,7 +166,7 @@
                                                 <i class="fa fa-search"></i>
                                             </button>
 
-                                            <a href="{{url(app()->getLocale().'/admin/products')}}" type="submit"
+                                            <a href="{{url(app()->getLocale().'/admin/offers')}}" type="submit"
                                                class="btn sbold btn-default btnRest">{{__('cp.reset')}}
                                                 <i class="fa fa-refresh"></i>
                                             </a>
@@ -190,29 +190,19 @@
                                         </div>
                                     </th>
                                     <th class="wd-5p">ID</th>
-                                    <th class="wd-5p"> {{ucwords(__('cp.image'))}}</th>
-                                    <th class="wd-25p"> {{ucwords(__('cp.title'))}}</th>
-                                    <th class="wd-5p"> {{ucwords(__('cp.category'))}}</th>
-                                    <th class="wd-5p"> {{ucwords(__('cp.price'))}}</th>
-                                    
-
-                                    {{-- Current date: {{ $currentDate->toDateString() }} --}}
-                                
+                                    <th class="wd-5p"> {{ucwords(__('cp.product'))}}</th>
                                     <th class="wd-5p"> {{ucwords(__('cp.discount'))}}</th>
-                                    <th class="wd-5p"> {{ucwords(__('cp.price_after_discount'))}}</th>
-                                 
-
-                                    <th class="wd-10p"> {{ucwords(__('cp.status'))}}</th>
-                                    <th class="wd-10p"> {{ucwords(__('cp.created'))}}</th>
+                                    <th class="wd-10p"> {{ucwords(__('cp.start_date'))}}</th>
+                                    <th class="wd-10p"> {{ucwords(__('cp.end_date'))}}</th>
                                     <th class="wd-15p"> {{ucwords(__('cp.action'))}}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @forelse($products as $one)
+                                @forelse($product_offers as $one)
                                     <tr class="odd gradeX" id="tr-{{$one->id}}">
                                         <td class="v-align-middle wd-5p">
 
-                                            @if($one->category_id != '0')
+                                            @if($one->product_id != '0')
                                             <div class="checkbox-inline">
                                                 <label class="checkbox">
                                                     <input type="checkbox" value="{{$one->id}}" class="checkboxes"
@@ -223,31 +213,21 @@
                                         </td>
                                         <td class="v-align-middle wd-5p">{{$one->id}}</td>
 
-                                        <td class="v-align-middle wd-5p"><img src="{{Storage::url($one->main_image ?? '')}}" width="50px"
-                                                                              height="50px"></td>
 
-                                        <td class="v-align-middle wd-25p">{{$one->name}}</td>
+                                        <td class="v-align-middle wd-25p">{{@$one->product? @$one->product->name : __('cp.un_assigned')}}</td>
+                                        <td class="v-align-middle wd-25p">{{@$one->discount}}</td>
+                                       
 
-                                        <td class="v-align-middle wd-25p">{{@$one->category? @$one->category->name : __('cp.un_assigned')}}</td>
-                                        <td class="v-align-middle wd-25p">{{@$one->price}}</td>
-                                        <td class="v-align-middle wd-25p">{{@$one->offers->first()->discount  ?? 0}}</td>
-                                        <td class="v-align-middle wd-25p">{{@$one->offer_price??  @$one->price}}</td>
-                                        <td class="v-align-middle wd-10p"> <span id="label-{{$one->id}}"
-                                                                                 class="badge badge-pill badge-{{($one->status == "active")
-                                            ? "info" : "danger"}}" id="label-{{$one->id}}">
-                                            {{__('cp.'.$one->status)}}
-                                        </span>
-                                        </td>
-
-                                        <td class="v-align-middle wd-10p">{{$one->created_at->format('Y-m-d')}}</td>
+                                        <td class="v-align-middle wd-10p">{{$one->start_date}}</td>
+                                        <td class="v-align-middle wd-10p">{{$one->end_date}}</td>
 
                                         <td class="v-align-middle wd-15p optionAddHours">
-                                            <a href="{{url(getLocal().'/admin/products/'.$one->id.'/edit')}}"
+                                            <a href="{{url(getLocal().'/admin/product_offers/'.$one->id.'/edit')}}"
                                                class="btn btn-sm btn-clean btn-icon" title="{{__('cp.edit')}}">
                                                 <i class="la la-edit"></i>
                                             </a>
 
-                                            <a href="{{url(getLocal().'/admin/products/'.$one->id.'/options')}}"
+                                            <a href="{{url(getLocal().'/admin/product_offers/'.$one->id.'/options')}}"
                                                class="btn btn-sm btn-clean btn-icon" title="{{__('cp.options')}}">
                                                 <i class="la la-info-circle"></i>
                                             </a>
@@ -301,7 +281,7 @@
 
                                 </tbody>
                             </table>
-                            {{-- {{$products->appends($_GET)->links("pagination::bootstrap-4") }} --}}
+                            {{-- {{$offers->appends($_GET)->links("pagination::bootstrap-4") }} --}}
                         </div>
                     </div>
                 </div>
@@ -323,7 +303,7 @@
             //alert(id);
             e.preventDefault();
 
-            var url = '{{url(getLocal()."/admin/products")}}/' + id;
+            var url = '{{url(getLocal()."/admin/offers")}}/' + id;
             var csrf_token = '{{csrf_token()}}';
             $.ajax({
                 type: 'delete',
@@ -351,7 +331,7 @@
             //alert(id);
             e.preventDefault();
 
-            var url = '{{url(getLocal()."/admin/products")}}/' + id+'/deleteOffer';
+            var url = '{{url(getLocal()."/admin/offers")}}/' + id+'/deleteOffer';
             var csrf_token = '{{csrf_token()}}';
             $.ajax({
                 type: 'delete',
