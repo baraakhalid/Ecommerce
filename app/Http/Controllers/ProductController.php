@@ -55,7 +55,7 @@ class ProductController extends Controller
                 'price' => 'required|numeric|min:1',
                 'category_id' => 'required|numeric|exists:categories,id',
                 'colors' => 'required',      
-                'sizes' => 'required',
+                // 'sizes' => 'required',
 
 
                             // 'image' => 'nullable|image|mimes:jpg,png|max:2048',
@@ -126,25 +126,25 @@ class ProductController extends Controller
                 $this->saveImages($request, $product, 'image');
               
             }
-            if ($isSaved){
             if ($request->colors != null) {
-                $count = 1;
                 foreach ($request->colors as $color_id) {
-                    foreach ($request->sizes as $size_id){
-                        $values[] = [
-                            'product_id' => $product->id,
-                            'color_id' => $color_id,
-                            'size_id' => $size_id,
-
-                        ];
+                  $color_sizes = $request->input("sizes_for_color_$color_id");
+                  if ($color_sizes != null) {
+                    foreach ($color_sizes as $size_id){
+                      $quantity = $request->input("quantities_for_color_$color_id" . "_size_" . "$size_id");
+                      $values[] = [
+                        'product_id' => $product->id,
+                        'color_id' => $color_id,
+                        'size_id' => $size_id,
+                        'quantity' => $quantity,
+                      ];
                     }
-
-                        
-                    $count++;
+                  }
                 }
                 ProductColorSize::insert($values);
-            }
-        }
+              }
+              
+                  
             return redirect()->back()->with('status', __('cp.create'));
     
     
