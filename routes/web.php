@@ -122,6 +122,8 @@ Route::get('/cv',[ App\Http\Controllers\InfoController::class,'downloadCv'])->na
         Route::resource('categories', CategoryController::class);
         Route::resource('products', ProductController::class);
         Route::resource('product_offers', ProductOfferController::class);
+        Route::resource('banners', BannerController::class);
+
 
         Route::resource('messages', MessageController::class)->except([ 'store']);
         Route::get('profile/personal', [AuthController::class, 'profilePersonalInformation'])->name('admin.profile.personal-information');
