@@ -155,9 +155,9 @@
 
                                                 <label class="checkbox">
                                                     <input type="checkbox"  id="sizes"
-                                                    name="sizes[]" value="{{$size->id}}"/> {{$size->name}}
-                                                    <div class="col-3">
-                                                     <input type="email" class="form-control" placeholder="Full name"/>
+                                                    name="sizes_for_color_{{$color->id}}[]" value="{{$size->id}}"/> {{$size->name}}
+                                                    <div class="col-12" >
+                                                     <input type="text" name="quantities_for_color_{{$color->id}}_size_{{$size->id}}" class="col-12"  />
                                                     </div>
                                                     <span></span>
                                                 </label>
