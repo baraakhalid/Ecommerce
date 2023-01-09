@@ -130,6 +130,45 @@
                                         </div>
                                     @endforeach
                                 </div>
+                                    
+                                <label class="form-group">Colors:</label>
+                                @foreach ($colors as $color)
+
+                                <div class="form-group row">
+                               
+                                    <div class="col-6 ">
+                                        <div class="checkbox-list">
+                                            <label class="checkbox">
+                                                <input type="checkbox" id="colors"
+                                                name="colors[]" value="{{$color->id}}"/> {{$color->name}}
+                                                <span></span>
+                                            </label>
+                                            
+                                           
+                                           
+                                        </div>
+                                    </div>
+                                    <label class="col-6">
+                                        <div class="form-group">
+                                            <div class="checkbox-inline">
+                                                @foreach ($sizes as $size )
+
+                                                <label class="checkbox">
+                                                    <input type="checkbox"  id="sizes"
+                                                    name="sizes[]" value="{{$size->id}}"/> {{$size->name}}
+                                                    <div class="col-3">
+                                                     <input type="email" class="form-control" placeholder="Full name"/>
+                                                    </div>
+                                                    <span></span>
+                                                </label>
+                                               @endforeach
+                                                
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                                @endforeach
+
 
                                 {{-- <div id="slider_div" class="form-group row">
                                     <label class="col-3 col-form-label">Images:</label>
