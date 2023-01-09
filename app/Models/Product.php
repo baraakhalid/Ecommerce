@@ -29,4 +29,18 @@ class Product extends Model
     public function category(){
         return $this->belongsto(Category::class ,'category_id','id');
     }
+ 
+     public function offers()
+    {
+        return $this->hasMany(ProductOffer::class, 'product_id', 'id');
+    }
+
+
+    public function getOfferPriceAttribute()
+    {
+        if ($this->offers()->count() > 0) {
+            return $this->offers()->first()->offer_price;
+        }
+        return null;
+    }
 }

@@ -15,6 +15,10 @@ class CreateProductOffersTable extends Migration
     {
         Schema::create('product_offers', function (Blueprint $table) {
             $table->id();
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->float('discount');
             $table->timestamps();
         });
     }

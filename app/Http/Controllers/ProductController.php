@@ -54,6 +54,7 @@ class ProductController extends Controller
                 'image' => 'required|image|mimes:png,jpg,jpeg',
                 'price' => 'required|numeric|min:1',
                 'category_id' => 'required|numeric|exists:categories,id',
+
                 'colors' => 'required',      
                 // 'sizes' => 'required',
 
@@ -196,6 +197,7 @@ class ProductController extends Controller
     {
         //
     }
+    
     private function saveImages(Request $request, Product $product, String $key, bool $update = false)
     {
         if ($request->hasFile($key)) {
