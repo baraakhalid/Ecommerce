@@ -157,7 +157,7 @@
                                                     <input type="checkbox"  id="sizes"
                                                     name="sizes_for_color_{{$color->id}}[]" value="{{$size->id}}"/> {{$size->name}}
                                                     <div class="col-12" >
-                                                     <input type="text" name="quantities_for_color_{{$color->id}}_size_{{$size->id}}" class="col-12"  />
+                                                     <input type="number" name="quantities_for_color_{{$color->id}}_size_{{$size->id}}" class="col-12"  />
                                                     </div>
                                                     <span></span>
                                                 </label>

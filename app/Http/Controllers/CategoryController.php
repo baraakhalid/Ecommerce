@@ -165,7 +165,8 @@ class CategoryController extends Controller
     {
         $isDeleted = $category->delete();
         if ($isDeleted) {
-            Storage::delete($category->image);
+            Storage::delete('public/category/' .$category->image);
+
 
            
         }

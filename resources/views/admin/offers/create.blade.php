@@ -26,7 +26,7 @@
                 <!--end::Info-->
                 <!--begin::Toolbar-->
                 <div class="d-flex align-items-center">
-                    <a href="{{url(getLocal().'/admin/offers')}}" class="btn btn-secondary  mr-2">{{__('cp.cancel')}}</a>
+                    <a href="{{url(getLocal().'/admin/product_offers')}}" class="btn btn-secondary  mr-2">{{__('cp.cancel')}}</a>
                     <button id="submitButtonNow" class="btn btn-success ">{{__('cp.save')}}</button>
                 </div>
                 <!--end::Toolbar-->

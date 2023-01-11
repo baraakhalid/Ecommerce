@@ -196,12 +196,13 @@
                                     <th class="wd-5p"> {{ucwords(__('cp.price'))}}</th>
                                     
 
-                                    {{-- Current date: {{ $currentDate->toDateString() }} --}}
                                 
                                     <th class="wd-5p"> {{ucwords(__('cp.discount'))}}</th>
                                     <th class="wd-5p"> {{ucwords(__('cp.price_after_discount'))}}</th>
-                                 
-
+                                    {{-- @php
+                                    $currentDate = \Carbon\Carbon::now();
+                                @endphp --}}
+                                    {{-- {{dd(if(1==1 ? '1':'0' ))}} --}}
                                     <th class="wd-10p"> {{ucwords(__('cp.status'))}}</th>
                                     <th class="wd-10p"> {{ucwords(__('cp.created'))}}</th>
                                     <th class="wd-15p"> {{ucwords(__('cp.action'))}}</th>
@@ -230,8 +231,31 @@
 
                                         <td class="v-align-middle wd-25p">{{@$one->category? @$one->category->name : __('cp.un_assigned')}}</td>
                                         <td class="v-align-middle wd-25p">{{@$one->price}}</td>
-                                        <td class="v-align-middle wd-25p">{{@$one->offers->first()->discount  ?? 0}}</td>
-                                        <td class="v-align-middle wd-25p">{{@$one->offer_price??  @$one->price}}</td>
+                                    {{-- Current date: {{ $currentDate->toDateString() }} --}}
+                                    @php
+                                        $currentDate = \Carbon\Carbon::now();
+                                    @endphp
+                                    {{-- {{dd( $currentDate)}} --}}
+
+                                    {{-- Current date: {{ $currentDate->toDateString() }} --}}
+
+                                        {{-- @if() --}}
+                                        <td class="v-align-middle wd-25p">
+                                            @if($currentDate->between($one->offers()->first()->start_date ?? null, $one->offers()->first()->end_date ?? null))
+                                            
+                                            {{@$one->offers->first()->discount ?? '0'  }}
+                                            @else{{'0'}}
+                                            @endif
+                                        
+                                        </td>
+                                        {{-- <td class="v-align-middle wd-25p">{{if($currentDate->toDateString()->between($startDate, $endDate)) ?  @$one->offers->first()->discount : 0   }}</td> --}}
+                                        <td class="v-align-middle wd-25p">
+                                            @if($currentDate->between($one->offers()->first()->start_date ?? null, $one->offers()->first()->end_date ?? null))
+                                            {{@$one->offer_price??  @$one->price}}
+                                            @else{{@$one->price}}
+                                            @endif
+                                        
+                                        </td>
                                         <td class="v-align-middle wd-10p"> <span id="label-{{$one->id}}"
                                                                                  class="badge badge-pill badge-{{($one->status == "active")
                                             ? "info" : "danger"}}" id="label-{{$one->id}}">
@@ -351,7 +375,7 @@
             //alert(id);
             e.preventDefault();
 
-            var url = '{{url(getLocal()."/admin/products")}}/' + id+'/deleteOffer';
+            var url = '{{url(getLocal()."/admin/products")}}/' + id+'/delete';
             var csrf_token = '{{csrf_token()}}';
             $.ajax({
                 type: 'delete',

@@ -1,5 +1,5 @@
 @extends('layout.adminLayout')
-@section('title') {{ucwords(__('cp.offers'))}}
+@section('title') {{ucwords(__('cp.coupons'))}}
 @endsection
 @section('css')
 
@@ -20,13 +20,13 @@
                 <!--begin::Info-->
                 <div class="d-flex align-items-center flex-wrap mr-1">
                     <div class="d-flex align-items-baseline mr-5">
-                        <h3>{{__('cp.edit_offers')}}</h3>
+                        <h3>{{__('cp.add_coupon')}}</h3>
                     </div>
                 </div>
                 <!--end::Info-->
                 <!--begin::Toolbar-->
                 <div class="d-flex align-items-center">
-                    <a href="{{url(getLocal().'/admin/product_offers')}}" class="btn btn-secondary  mr-2">{{__('cp.cancel')}}</a>
+                    <a href="{{url(getLocal().'/admin/product_coupons')}}" class="btn btn-secondary  mr-2">{{__('cp.cancel')}}</a>
                     <button id="submitButtonNow" class="btn btn-success ">{{__('cp.save')}}</button>
                 </div>
                 <!--end::Toolbar-->
@@ -39,10 +39,9 @@
             <div class="container">
                 <!--begin::Card-->
                 <div class="card card-custom gutter-b example example-compact">
-                    <form method="post" action="{{url('/admin/product_offers/'.$productOffer->id)}}"
+                    <form method="post" action="{{url(app()->getLocale().'/admin/product_coupons')}}"
                           enctype="multipart/form-data" class="form-horizontal" role="form" id="form">
-                          {{ csrf_field() }}
-                          {{ method_field('PATCH')}}
+                        {{ csrf_field() }}
 
                         <div class="card-header">
                             <h3 class="card-title">{{__('cp.main_info')}}</h3>
@@ -53,29 +52,95 @@
                             <div class="card-body">
 
                                 <div class="row">
+                                    <div class="form-group">
                                  
-                                        <label class="form-group">Product:</label>
+                                        <label class="form-group">type:</label>
+                                    </div>
+
                                         <div class="col-lg-4 col-md-9 col-sm-12">
                                             <div class="dropdown bootstrap-select form-control dropup" >
-                                                <select class="form-control selectpicker" data-size="7" name="product_id" id="product_id" required 
+                                                <select class="form-control selectpicker" data-size="7" name="type" id="type" required 
                                                     title="Choose one of the following..." tabindex="null" data-live-search="true">
-                                                    {{-- <option  value="-1">Select Category</option> --}}
-                                                    @foreach($products as $product)
-                                                    <option value="{{old('product_id', $product->id)}}" {{old('product_id',$productOffer->product_id) == $product->id?'selected':''}} >{{$product->name}}</option>
-                                                    @endforeach
+                                                    <option value="fixed" {{old('type')=='fixed' ? 'selected' : null}}>Fixed</option>
+                                                    <option value="percentage" {{old('type')=='percentage' ? 'selected' : null}}>Percentage</option>
                                                 </select>
                                             </div>
-                                            <span class="form-text text-muted">Please select product</span>
+                                            <span class="form-text text-muted">Please select Type</span>
                                         </div>
-                          {{--           </div> --}}
+                                        
                                 </div>
+
+                                <div class="form-group row mt-4">
+                                    <label class="col-3 col-form-label">{{__('cp.start_date')}}:</label>
+                                    <div class="col-9">
+                                        <input type="date" class="form-control" name="start_date" 
+                                            placeholder="{{__('cp.start_date')}}"  value="{{old('start_date')}}" required/>
+                                        <span class="form-text text-muted">{{__('cp.please_enter')}} {{__('cp.start_date')}}</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row mt-4">
+                                    <label class="col-3 col-form-label">{{__('cp.expire_date')}}:</label>
+                                    <div class="col-9">
+                                        <input type="date" class="form-control" name="expire_date" 
+                                            placeholder="{{__('cp.expire_date')}}" value="{{old('expire_date')}}" />
+                                        <span class="form-text text-muted">{{__('cp.please_enter')}} {{__('cp.expire_date')}}</span>
+                                    </div>
+                                </div>
+                               
+                                {{-- </div> --}}
 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>{{__('cp.discount')}}</label>
-                                            <input type="number" class="form-control form-control-solid" name="discount"
-                                                   value="{{old('discount',$productOffer->discount)}}" required step="0.01" min="0" max="100"/>
+                                            <label>{{__('cp.code')}}</label>
+                                            <input type="text" class="form-control form-control-solid" name="code"
+                                                   value="{{old('code')}}" required />
+                                        </div>
+                                    </div>
+
+                                   
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{__('cp.value')}}</label>
+                                            <input type="number" class="form-control form-control-solid" name="value"
+                                                   value="{{old('value')}}" required step="0.01" min="0" max="100"/>
+                                        </div>
+                                    </div>
+
+                                   
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{__('cp.uses_times')}}</label>
+                                            <input type="number" class="form-control form-control-solid" name="uses_times"
+                                                   value="{{old('uses_times')}}" required />
+                                        </div>
+                                    </div>
+
+                                   
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{__('cp.greater_than')}}</label>
+                                            <input type="number" class="form-control form-control-solid" name="greater_than"
+                                                   value="{{old('greater_than')}}" required />
+                                        </div>
+                                    </div>
+
+                                   
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{__('cp.description')}}</label>
+                                            <textarea class="form-control form-control-solid" name="description" id="description" rows="3"
+                                                    required>
+                                                   {{old('description')}}
+                                            </textarea>
                                         </div>
                                     </div>
 
@@ -84,20 +149,22 @@
 
 
 
-                                <div class="form-group row mt-4">
-                                    <label class="col-3 col-form-label">{{__('cp.start_date')}}:</label>
-                                    <div class="col-9">
-                                        <input type="date" class="form-control" name="start_date" 
-                                            placeholder="{{__('cp.start_date')}}" value="{{old('start_date',$productOffer->start_date)}}"  required/>
-                                        <span class="form-text text-muted">{{__('cp.please_enter')}} {{__('cp.start_date')}}</span>
-                                    </div>
-                                </div>
-                                <div class="form-group row mt-4">
-                                    <label class="col-3 col-form-label">{{__('cp.end_date')}}:</label>
-                                    <div class="col-9">
-                                        <input type="date" class="form-control" name="end_date" value="{{old('end_date',$productOffer->end_date)}}"
-                                            placeholder="{{__('cp.end_date')}}" />
-                                        <span class="form-text text-muted">{{__('cp.please_enter')}} {{__('cp.end_date')}}</span>
+                            
+
+
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">{{__('cp.status')}}</label>
+                                    <div class="col-3">
+                                        <span class="switch switch-outline switch-icon switch-success">
+                                            <label>
+                                               {{-- {{ dd(old( 'freelance_active',$info->freelance_active ) == 'Available');}} --}}
+                                                {{-- <input type="checkbox"  checked="checked"  id="freelance_active"> --}}
+                                                {{-- <option value="fixed" {{old('type')=='fixed' ? 'selected' : null}}>Fixed</option> --}}
+
+                                                <input type="checkbox" @if(old( 'status') == true) checked="checked" @endif   id="status" name="status">
+                                                <span></span>
+                                            </label>
+                                        </span>
                                     </div>
                                 </div>
 

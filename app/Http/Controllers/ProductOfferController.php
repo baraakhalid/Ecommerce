@@ -124,21 +124,20 @@ class ProductOfferController extends Controller
 
         $this->validate($request, $roles);
 
-        // $productoffer= new ProductOffer();
         $productOffer->start_date=$request->get('start_date');
         $productOffer->end_date=$request->get('end_date');
         $productOffer->product_id=$request->get('product_id');
         $productOffer->discount=$request->get('discount');
        
-       $productOffer->save();
+       $isSaved=$productOffer->save();
 
         
   
 
-        // if ($isSaved){
+        if ($isSaved){
             return redirect()->back()->with('status', __('cp.update'));
  
-    // }
+    }
     }
 
     /**
@@ -150,12 +149,9 @@ class ProductOfferController extends Controller
 
      public function destroy(ProductOffer $productOffer)
      {
-        dd(111);
-        //  $item = ProductOffer::query()->findOrFail($id);
-         if ($productOffer && $productOffer->type != 1) {
+    
             $productOffer->delete();
              return "success";
-         }
          return "fail";
      }
  
