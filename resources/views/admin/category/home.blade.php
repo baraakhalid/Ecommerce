@@ -67,18 +67,40 @@
                                                 <input type="text" value="{{request('name')?request('name'):''}}" class="form-control" name="name" placeholder="{{__('cp.name')}}">
                                             </div>
                                         </div>
+
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label class="control-label">{{__('cp.email')}}</label>
-                                                <input type="text" class="form-control" value="{{request('email')?request('email'):''}}" name="email" placeholder="{{__('cp.email')}}">
+                                                <label class="control-label">{{__('cp.status')}}</label>
+                                                <select id="multiple2" class="form-control  "
+                                                        name="status">
+                                                    <option value="">{{__('cp.all')}}</option>
+                                                    <option
+                                                        value="active" {{request('status') == 'active'?'selected':''}}>
+                                                        {{__('cp.active')}}
+                                                    </option>
+                                                    <option
+                                                        value="not_active" {{request('status') == 'not_active'?'selected':''}}>
+                                                        {{__('cp.not_active')}}
+                                                    </option>
+                                                </select>
                                             </div>
                                         </div>
+
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label class="control-label">{{__('cp.mobile')}}</label>
-                                                <input value="{{request('mobile')?request('mobile'):''}}" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')"  type="text" class="form-control" name="mobile" placeholder="{{__('cp.mobile')}}">
+                                                <label>{{__('cp.sort_by')}}</label>
+                                                <select class="form-control  "
+                                                        name="sort_by">
+                                                    <option value=""> @lang('cp.newest') </option>
+                                                    <option
+                                                        value="1" {{request('sort_by')=='1' ? 'selected' :''}}> @lang('cp.a_z') </option>
+                                                    <option
+                                                        value="2" {{request('sort_by')=='2' ? 'selected' :''}}> @lang('cp.z_a') </option>
+                                                </select>
                                             </div>
                                         </div>
+
+                                   
                                         <div class="col-md-4">
                                             <button type="submit" class="btn sbold btn-default btnSearch">{{__('cp.search')}}
                                                 <i class="fa fa-search"></i>

@@ -78,9 +78,9 @@
                                 <form class="form-horizontal" method="get" action="{{url(getLocal().'/admin/products')}}">
                                     <div class="row">
 
-                                        
+                                        {{-- {{dd($products);}} --}}
 
-                                        {{-- <div class="col-md-4">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>{{__('cp.category')}}</label>
                                                 <select class="form-control  "
@@ -92,7 +92,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                        </div> --}}
+                                        </div>
 
                                         <div class="col-md-4">
                                             <div class="form-group">
@@ -110,21 +110,13 @@
 
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label class="control-label">{{__('cp.title')}}</label>
-                                                <input type="text" value="{{request('title')?request('title'):''}}"
-                                                       class="form-control  " name="title"
-                                                       placeholder="{{__('cp.title')}}">
+                                                <label class="control-label">{{__('cp.name')}}</label>
+                                                <input type="text" value="{{request('name')?request('name'):''}}"
+                                                       class="form-control  " name="name"
+                                                       placeholder="{{__('cp.name')}}">
                                             </div>
                                         </div>
 
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="control-label">ID</label>
-                                                <input type="number" value="{{request('id')?request('id'):''}}"
-                                                       class="form-control  " name="id"
-                                                       placeholder="ID">
-                                            </div>
-                                        </div>
 
                                         <div class="col-md-4">
                                             <div class="form-group">
@@ -144,21 +136,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label
-                                                    class="col-6 col-form-label">{{__('cp.un_assigned')}}</label>
-                                                <div class="col-3">
-                                                    <span class="switch">
-                                                        <label>
-                                                            <input type="checkbox"
-                                                                   {{request('un_assigned') == 'on' ? "checked" : ""}}  name="un_assigned"/>
-                                                            <span></span>
-                                                        </label>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
+                            
 
                                         <div class="col-md-4">
                                             <button type="submit"

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProductsExportForAdmin;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Image;
@@ -11,6 +12,8 @@ use App\Models\ProductColorSize;
 use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
@@ -22,10 +25,18 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products=Product::all();
         $categories=Category::all();
+        $products=Product::filter()->orderBy('id', 'desc')->get();
+        // dd($categories);
 
-        return response()->view('admin.products.home',['products'=>$products,'categories '=>$categories ]);        }
+        return response()->view('admin.products.home',['categories'=>$categories  ,'products'=>$products]);  
+    }
+
+    public function exportExcel(Request $request)
+    {
+        activity()->causedBy(auth('admin')->user())->log(' تصدير ملف إكسل لبيانات الوجبات ');
+        return Excel::download(new ProductsExportForAdmin($request), 'products.xlsx');
+    }
 
     /**
      * Show the form for creating a new resource.
