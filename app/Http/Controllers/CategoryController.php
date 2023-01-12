@@ -23,7 +23,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories=Category::all();
+        $categories=Category::filter()->orderBy('id', 'desc')->get();
         return response()->view('admin.category.home',['categories'=>$categories]);    }
 
     /**
