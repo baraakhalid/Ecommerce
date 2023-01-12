@@ -31,7 +31,7 @@
 
                 <div>
                     <div class="btn-group mb-2 m-md-3 mt-md-0 ml-2 ">
-                        <a  class="btn btn-secondary btn_export" href="{{url('admin/export/excel/product_offers')}}">
+                        <a  class="btn btn-secondary btn_export" href="{{url('admin/export/excel/product_coupons')}}">
                             <i class="icon-xl la la-file-excel"></i>
                             <span>{{__('cp.excel')}}</span>
                         </a>
@@ -52,7 +52,7 @@
                         </button>
 
                     </div>
-                    <a href="{{url(getLocal().'/admin/product_offers/create')}}" class="btn btn-secondary  mr-2 btn-success">
+                    <a href="{{url(getLocal().'/admin/product_coupons/create')}}" class="btn btn-secondary  mr-2 btn-success">
                         <i class="icon-xl la la-plus"></i>
                         <span>{{__('cp.add')}}</span>
                     </a>
@@ -75,7 +75,7 @@
                                 class="icon-xl la la-sliders-h"></i>{{__('cp.filter')}}</button>
                         <div class="container box-filter-collapse">
                             <div class="card">
-                                <form class="form-horizontal" method="get" action="{{url(getLocal().'/admin/offers')}}">
+                                <form class="form-horizontal" method="get" action="{{url(getLocal().'/admin/product_coupons')}}">
                                     <div class="row">
 
                                         
@@ -190,19 +190,24 @@
                                         </div>
                                     </th>
                                     <th class="wd-5p">ID</th>
-                                    <th class="wd-5p"> {{ucwords(__('cp.product'))}}</th>
-                                    <th class="wd-5p"> {{ucwords(__('cp.discount'))}}</th>
+                                    <th class="wd-5p"> {{ucwords(__('cp.type'))}}</th>
+                                    <th class="wd-5p"> {{ucwords(__('cp.code'))}}</th>
+                                    <th class="wd-5p"> {{ucwords(__('cp.value'))}}</th>
+                                    <th class="wd-5p"> {{ucwords(__('cp.status'))}}</th>
+                                    <th class="wd-5p"> {{ucwords(__('cp.description'))}}</th>
+                                    <th class="wd-5p"> {{ucwords(__('cp.greater_than'))}}</th>
+                                    <th class="wd-5p"> {{ucwords(__('cp.uses_times'))}}</th>
                                     <th class="wd-10p"> {{ucwords(__('cp.start_date'))}}</th>
-                                    <th class="wd-10p"> {{ucwords(__('cp.end_date'))}}</th>
+                                    <th class="wd-10p"> {{ucwords(__('cp.expire_date'))}}</th>
                                     <th class="wd-15p"> {{ucwords(__('cp.action'))}}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @forelse($product_offers as $one)
+                                @forelse($coupons as $one)
                                     <tr class="odd gradeX" id="tr-{{$one->id}}">
                                         <td class="v-align-middle wd-5p">
 
-                                            @if($one->product_id != '0')
+                                            @if($one->id != '0')
                                             <div class="checkbox-inline">
                                                 <label class="checkbox">
                                                     <input type="checkbox" value="{{$one->id}}" class="checkboxes"
@@ -214,15 +219,18 @@
                                         <td class="v-align-middle wd-5p">{{$one->id}}</td>
 
 
-                                        <td class="v-align-middle wd-25p">{{@$one->product? @$one->product->name : __('cp.un_assigned')}}</td>
-                                        <td class="v-align-middle wd-25p">{{@$one->discount}}</td>
-                                       
-
+                                        <td class="v-align-middle wd-25p">{{@$one->type}}</td>
+                                        <td class="v-align-middle wd-25p">{{@$one->code}}</td>
+                                        <td class="v-align-middle wd-25p">{{@$one->value}}</td>
+                                        <td class="v-align-middle wd-25p">{{@$one->status}}</td>
+                                        <td class="v-align-middle wd-25p">{{@$one->description}}</td>
+                                        <td class="v-align-middle wd-25p">{{@$one->greater_than}}</td>
+                                        <td class="v-align-middle wd-25p">{{@$one->uses_times ?? 0}}</td>
                                         <td class="v-align-middle wd-10p">{{$one->start_date}}</td>
-                                        <td class="v-align-middle wd-10p">{{$one->end_date}}</td>
+                                        <td class="v-align-middle wd-10p">{{$one->expire_date}}</td>
 
                                         <td class="v-align-middle wd-15p optionAddHours">
-                                            <a href="{{url(getLocal().'/admin/product_offers/'.$one->id.'/edit')}}"
+                                            <a href="{{url(getLocal().'/admin/product_coupons/'.$one->id.'/edit')}}"
                                                class="btn btn-sm btn-clean btn-icon" title="{{__('cp.edit')}}">
                                                 <i class="la la-edit"></i>
                                             </a>
@@ -303,7 +311,7 @@
             //alert(id);
             e.preventDefault();
 
-            var url = '{{url(getLocal()."/admin/product_offers")}}/' + id;
+            var url = '{{url(getLocal()."/admin/product_coupons")}}/' + id;
             var csrf_token = '{{csrf_token()}}';
             $.ajax({
                 type: 'delete',
@@ -331,7 +339,7 @@
             //alert(id);
             e.preventDefault();
 
-            var url = '{{url(getLocal()."/admin/product_offers")}}/' + id+'/delete';
+            var url = '{{url(getLocal()."/admin/product_coupons")}}/' + id+'/delete';
             var csrf_token = '{{csrf_token()}}';
             $.ajax({
                 type: 'delete',

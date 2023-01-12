@@ -21,7 +21,7 @@ class Product extends Model
     }
     public function getMainImageAttribute()
     {
-        return $this->images()->first();
+        return $this->images()->first()->url;
 
     }
 
@@ -33,6 +33,14 @@ class Product extends Model
      public function offers()
     {
         return $this->hasMany(ProductOffer::class, 'product_id', 'id');
+    }
+     public function colors()
+    {
+        return $this->hasMany(ProductColorSize::class, 'product_id', 'id');
+    }
+     public function sizes()
+    {
+        return $this->hasMany(ProductColorSize::class, 'product_id', 'id');
     }
 
 

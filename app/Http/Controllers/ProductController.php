@@ -11,6 +11,7 @@ use App\Models\ProductColorSize;
 use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
@@ -172,7 +173,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return response()->view('admin.products.edit',['product'=>$product]);
+        dd($product->colors());
+        $categories=Category::all();
+        $sizes=Size::all();
+        $colors=Color::all();
+        return response()->view('admin.products.edit',['product'=>$product ,'categories'=>$categories ,'sizes'=>$sizes,'colors'=>$colors]);
     }
 
     /**
@@ -195,7 +200,35 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+  
+        if ($product) {
+            $isDeleted=$product->delete();
+            if($isDeleted){
+                $this->deleteImages($product);
+                $this->deleteColorsSizes($product);
+                return "success";
+
+            }
+
+        }
+        return "fail";
+        }
+
+    private function deleteImages(Product $product)
+    {
+        foreach ($product->images as $image) {
+            Storage::delete('public/products/' .$image->name);
+            $image->delete();
+        }
+    }
+    private function deleteColorsSizes(Product $product)
+    {
+        $productColorsSizes= ProductColorSize::where('product_id' , $product->id)->get();
+
+        foreach ($productColorsSizes as $productColorSize) {
+           
+            $productColorSize->delete();
+        }
     }
     
     private function saveImages(Request $request, Product $product, String $key, bool $update = false)
@@ -204,13 +237,12 @@ class ProductController extends Controller
             if ($update) {
                 foreach ($product->images as $image) {
                     if (str_contains($image->name, $key)) {
-                        Storage::delete('products/' . $image->name);
+                        Storage::delete('public/products/' . $image->name);
 
                         $image->delete();
                     }
                 }
             }
-            // dd(22);
             $imageName = time() . '' . str_replace(' ', '', $product->name) . "_product_$key." . $request->file($key)->extension();
             $request->file($key)->storePubliclyAs('products', $imageName, ['disk' => 'public']);
 
