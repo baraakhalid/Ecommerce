@@ -25,7 +25,6 @@ class Product extends Model
 
     }
 
-
     public function category(){
         return $this->belongsto(Category::class ,'category_id','id');
     }
@@ -34,14 +33,25 @@ class Product extends Model
     {
         return $this->hasMany(ProductOffer::class, 'product_id', 'id');
     }
-     public function colors()
+    //  public function colors()
+    // {
+    //     return $this->hasMany(ProductColorSize::class, 'product_id', 'id');
+    // }
+    //  public function sizes()
+    // {
+    //     return $this->hasMany(ProductColorSize::class, 'product_id', 'id');
+    // }
+
+    public function sizes()
     {
-        return $this->hasMany(ProductColorSize::class, 'product_id', 'id');
+        return $this->belongsToMany(Size::class, ProductColorSize::class,'product_id','size_id');
     }
-     public function sizes()
+
+    public function colors()
     {
-        return $this->hasMany(ProductColorSize::class, 'product_id', 'id');
+        return $this->belongsToMany(Color::class, ProductColorSize::class,'product_id','color_id');
     }
+
 
 
     public function getOfferPriceAttribute()

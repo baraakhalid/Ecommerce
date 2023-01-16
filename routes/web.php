@@ -14,6 +14,7 @@
 use App\Http\Controllers\Auth\AuthController;
 // use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
+// use App\Http\Controllers\ProductController;
 // use App\Http\Controllers\InfoController;
 use WEB\Admin\SettingController;
 
@@ -152,15 +153,15 @@ Route::get('/cv',[ App\Http\Controllers\InfoController::class,'downloadCv'])->na
     });
 
 
-Route::get('front', function () {
-    return view('front.parent');
-});
-Route::get('front/index', function () {
-    return view('front.index');
-});
-Route::get('front/product', function () {
-    return view('front.product');
-});
+
+
+    route::prefix('front/')->group(function () {
+
+        route::get('products' ,  'ProductController@index')->name('front.products');
+        
+        Route::get('index', 'FrontController@index')->name('front.index');
+        
+        });
  
 
 
