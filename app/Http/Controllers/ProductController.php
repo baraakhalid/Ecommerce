@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\ProductColorSize;
 use App\Models\Size;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -23,14 +24,30 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if (Auth::guard('admin')->check()){
+
         $categories=Category::all();
         $products=Product::filter()->orderBy('id', 'desc')->get();
-        // dd($categories);
 
         return response()->view('admin.products.home',['categories'=>$categories  ,'products'=>$products]);  
     }
+    else{
+
+        $products = Product::all();
+
+        if($request->has('category_id')){
+            $products =Product::with('sizes')->distinct()->with('colors')->distinct()->where('category_id','=',$request->input('category_id'))->get();}
+            // $product = Product::find('2');
+            //  dd($product->sizes) ;
+
+
+
+    return response()->view('front.product', ['products' => $products ]);}
+
+    }
+
 
     public function exportExcel(Request $request)
     {
