@@ -184,7 +184,6 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        dd($product->colors());
         $categories=Category::all();
         $sizes=Size::all();
         $colors=Color::all();
