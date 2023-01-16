@@ -152,7 +152,15 @@ Route::get('/cv',[ App\Http\Controllers\InfoController::class,'downloadCv'])->na
     });
 
 
-
+Route::get('front', function () {
+    return view('front.parent');
+});
+Route::get('front/index', function () {
+    return view('front.index');
+});
+Route::get('front/product', function () {
+    return view('front.product');
+});
  
 
 
