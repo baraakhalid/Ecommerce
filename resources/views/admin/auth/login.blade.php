@@ -57,13 +57,13 @@
                                 @endif
 
 								<!--begin::Form-->
-								<form class="form" role="form" novalidate="novalidate" id="kt_login_signin_form"  action="{{url(app()->getLocale().'/admin/login')}}" method="post">
+								<form class="form" role="form" novalidate="novalidate" id="kt_login_signin_form" >
 								    @csrf
 									<div class="form-group py-3 m-0">
-										<input class="form-control h-auto border-0 px-0 placeholder-dark-75" type="Email" placeholder="{{__('cp.email')}}" name="email" required autocomplete="off" />
+										<input class="form-control h-auto border-0 px-0 placeholder-dark-75" type="Email" id="email" placeholder="{{__('cp.email')}}" required autocomplete="off" />
 									</div>
 									<div class="form-group py-3 border-top m-0">
-										<input class="form-control h-auto border-0 px-0 placeholder-dark-75" type="Password" placeholder="{{__('cp.password')}}" required name="password" />
+										<input class="form-control h-auto border-0 px-0 placeholder-dark-75" type="Password" id="password"  placeholder="{{__('cp.password')}}" required  />
 									</div>
 									{{-- <div class="form-group d-flex flex-wrap justify-content-between align-items-center mt-3">
 										<label class="checkbox checkbox-outline m-0 text-muted">
@@ -72,7 +72,7 @@
 										<a href="javascript:;" id="kt_login_forgot" class="text-muted text-hover-primary">Forgot Password ?</a>
 									</div> --}}
 									<div class="form-group d-flex flex-wrap justify-content-between align-items-center mt-2">
-										<button id="kt_login_signin_submit" type="submit" class="btn btn-primary font-weight-bold px-9 py-4 my-3" style="background: #46065C;border-color:#46065C">{{__('cp.Sign_in')}}</button>
+										<button id="kt_login_signin_submit" type="button" onclick="performLogin()" class="btn btn-primary font-weight-bold px-9 py-4 my-3" style="background: #46065C;border-color:#46065C">{{__('cp.Sign_in')}}</button>
 									</div>
 								</form>
 								<!--end::Form-->
@@ -114,6 +114,34 @@
 		<!--end::Global Theme Bundle-->
 		<!--begin::Page Scripts(used by this page)-->
 		<script src="{{asset('/admin_assets/js/pages/custom/login/login-general.js')}}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        {{-- <script src="{{asset('cms/plugins/toastr/toastr.min.js')}}"></script> --}}
+
+
+		<script>
+			function performLogin() {
+				
+				axios.post('/login', {
+					email: document.getElementById('email').value,
+					password: document.getElementById('password').value,
+					// remember: document.getElementById('remember').checked,
+				})
+				.then(function (response) {
+					console.log(response);
+					toastr.success(response.data.message);
+					@if ($guard =='admin')
+					   window.location.href = '/admin/home';
+					@else
+					   window.location.href = '/';
+					@endif
+		
+				})
+				.catch(function (error) {
+					console.log(error.response);
+					toastr.error(error.response.data.message);
+				});      
+			}
+		  </script>
 		<!--end::Page Scripts-->
 	</body>
 	<!--end::Body-->

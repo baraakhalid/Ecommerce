@@ -190,9 +190,30 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
-    }
+        // if (Auth::guard('admin')->check()){
 
+         
+        //     $product=Product::filter()->orderBy('id', 'desc')->where('id','=',$product->id)->get();
+    
+        //     return response()->view('admin.products.home',['products'=>$product]);  
+        // }
+        // else{
+    
+    
+            $product =Product::with('sizes')->distinct()->with('colors')->with('images')->distinct()->find($product->id);
+
+            
+                // $product =Product::find($product->id);
+
+            // }
+                // $product = Product::find('2');
+                //  dd($product->sizes) ;
+    
+                return response()->json(['message'=>'success' , 'data' => $product ,'colors'=>$product->colors->unique() ,'sizes'=>$product->sizes->unique()->sortBy('id')]);
+    
+        // return response()->view('front.product', ['product' => $product ]);
+    }
+    
     /**
      * Show the form for editing the specified resource.
      *
