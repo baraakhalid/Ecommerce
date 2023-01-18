@@ -1220,7 +1220,6 @@ $('.js-show-modal1').on('click',function(e){
 	</script>
 <!--===============================================================================================-->
 	<script src="{{asset('front/js/main.js')}}"></script>
-    @yield('scripts')
 
 </body>
 </html>
