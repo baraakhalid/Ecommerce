@@ -1121,7 +1121,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	</script>
 <!--===============================================================================================-->
 	<script src="{{asset('front/js/main.js')}}"></script>
-    @yield('scripts')
 
 </body>
 </html>
