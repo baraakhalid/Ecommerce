@@ -41,13 +41,9 @@ return [
             'provider' => 'admins',
         ],
 
-        'subadmin' => [
-            'driver' => 'session',
-            'provider' => 'subadmins',
-        ],
+        
 
-
-        'web' => [
+        'user' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
@@ -81,10 +77,7 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
-        'subadmins' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Subadmin::class,
-        ],
+    
 
         'users' => [
             'driver' => 'eloquent',
@@ -119,11 +112,7 @@ return [
             'expire' => 60,
         ],
 
-        'subadmins' => [
-            'provider' => 'subadmins',
-            'table' => 'subadmin_password_resets',
-            'expire' => 60,
-        ],
+     
 
         'users' => [
             'provider' => 'users',

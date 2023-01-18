@@ -9,42 +9,98 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password as RulesPassword;
 use Symfony\Component\HttpFoundation\Response;
 
-class AuthController extends Controller
+class Auth1Controller extends Controller
 {
     
-    public function profilePersonalInformation(Request $request)
+    public function showLoginView(Request $request)
     {
-        $user = auth('admin')->user();
-        // dd($user->name);
-        return response()->view('admin.auth.profile.personal-information', ['user' => $user]);
-    }
-
-
-
-
-
-
-    public function updateProfilePersonalInformation(Request $request)
-    {
-        // $guard = auth('admin')->check() ? 'admin' : 'store';
-        $user = auth('admin')->user();
-
-        $validator = Validator($request->all(), [
-            'name' => 'required|string|min:3',
-            'mobile' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'email' => "required|string|email|unique:admins,email," . $user->id,
-        ]);
-
+        $validator = Validator(
+            ['guard' => $request->guard],
+            ['guard' => 'required|string|in:admin,user']
+        );
         if (!$validator->fails()) {
-            $user->name = $request->get('name');
-            $user->mobile = $request->get('mobile');
-            $user->email = $request->get('email');
-            $isSaved = $user->save();
-            return response()->json(['message' => $isSaved ? __('cp.update_success') : __('cp.update_failed')], $isSaved ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST);
+            session()->put('guard', $request->guard);
+            return response()->view('admin.auth.login',['guard'=>$request->guard]);
         } else {
-            return response()->json(['message' => $validator->getMessageBag()->first()], Response::HTTP_BAD_REQUEST);
+            abort(Response::HTTP_NOT_FOUND);
         }
     }
 
+    public function login(Request $request)
+    {
+        $validator = Validator($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|string|min:3',
+            // 'remember' => 'required|boolwebean',
+        ]);
+
+        if (!$validator->fails()) {
+            $credentials = [
+                'email' => $request->input('email'),
+                'password' => $request->input('password'),
+            ];
+            if (Auth::guard(session()->get('guard'))->attempt($credentials, $request->input('remember'))) {
+                return response()->json(['message' => 'Logged in successfully']);
+            } else {
+                return response()->json(['message' => 'Login failed, check credentials'], Response::HTTP_BAD_REQUEST);
+            }
+        } else {
+            return response()->json(
+                ['message' => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
+    public function editPassword(Request $request)
+    {
+        $guard = auth('admin')->check() ? 'admin' : 'user';
+        return response()->view('cms.auth.edit-password',['guard'=>$guard]);
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $guard = auth('admin')->check() ? 'admin' : 'user';
+        $validator = Validator($request->all(), [
+            'password' => 'required|current_password:' . $guard,
+            'new_password' => [
+                'required', 'confirmed',
+                RulesPassword::min(8)
+                    ->symbols()
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->uncompromised(),
+            ],
+        ]);
+
+        if (!$validator->fails()) {
+            // $user = auth($guard)->user();
+            // $user = auth()->user();
+            $user = $request->user();
+            $user->forceFill([
+                'password' => Hash::make($request->input('new_password')),
+            ]);
+            $isSaved = $user->save();
+            return response()->json(
+                ['message' => $isSaved ? 'Password changed successfully' : 'Failed to change password!'],
+                $isSaved ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
+            );
+        } else {
+            return response()->json(
+                ['message' => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
+
+
+    public function logout(Request $request)
+    {
+        // dd($request->guard);
+        $guard = session('guard');
+        Auth::guard($guard)->logout();
+        $request->session()->invalidate();
+        return redirect()->route('cms.login', $guard);
+    }
   
 }

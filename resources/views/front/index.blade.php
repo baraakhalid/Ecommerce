@@ -675,7 +675,7 @@
 						<div class="block2-pic hov-img0">
 							<img src="{{Storage::url($product->main_image ?? '')}}" alt="IMG-PRODUCT">
 
-							<a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+							<a href="#" id= "js-show-modal1" data-id="{{ $product->id }}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
 								Quick View
 							</a>
 						</div>
@@ -866,8 +866,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	</div>
 
 	<!-- Modal1 -->
+	
 
-	<div class="wrap-modal1 js-modal1 p-t-60 p-b-20">
+
+	<div id="product-modal" class="wrap-modal1 js-modal1 p-t-60 p-b-20">
 		<div class="overlay-modal1 js-hide-modal1"></div>
 
 		<div class="container">
@@ -876,60 +878,36 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 					<img src="{{asset('front/images/icons/icon-close.png')}}" alt="CLOSE">
 				</button>
 
-				<div class="row">
+				<div class="row" id="productDetails">
 					<div class="col-md-6 col-lg-7 p-b-30">
 						<div class="p-l-25 p-r-30 p-lr-0-lg">
 							<div class="wrap-slick3 flex-sb flex-w">
 								<div class="wrap-slick3-dots">
-									<ul class="slick3-dots" role="tablist" style="">
-										@foreach ($product->images as $image)
-											
-										<li class="slick-active" role="presentation">
-											<img src="{{Storage::url($image->url ?? '')}}">
-											<div class="slick3-dot-overlay">
-												</div>
-										</li>
-										@endforeach
-
-											
-												
-									</ul>
+									
 								</div>
-								<div class="wrap-slick3-arrows flex-sb-m flex-w"><button class="arrow-slick3 prev-slick3 slick-arrow" style=""><i class="fa fa-angle-left" aria-hidden="true"></i></button><button class="arrow-slick3 next-slick3 slick-arrow" style=""><i class="fa fa-angle-right" aria-hidden="true"></i></button></div>
+								<div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
 
-								<div class="slick3 gallery-lb slick-initialized slick-slider slick-dotted">
-									<div class="item-slick3 slick-slide"><div class="slick-track" style="opacity: 1; width: 1539px;"><div class="item-slick3 slick-slide slick-current slick-active" data-thumb="images/product-detail-01.jpg" data-slick-index="0" aria-hidden="false" tabindex="0" role="tabpanel" id="slick-slide10" aria-describedby="slick-slide-control10" style="width: 513px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;">
-										<div class="wrap-pic-w pos-relative">
-											<img src="{{Storage::url($image->url ?? '')}}" alt="IMG-PRODUCT">
+								<div class="slick3 gallery-lb" id="images-product">
 
-											<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="images/product-detail-01.jpg" tabindex="0">
-												<i class="fa fa-expand"></i>
-											</a>
-										</div>
-									</div>
-									
-								</div></div>
 
-									
-
-									
 								</div>
 							</div>
 						</div>
-					</div>
+					</div>	
 					
+
 					<div class="col-md-6 col-lg-5 p-b-30">
 						<div class="p-r-50 p-t-5 p-lr-0-lg">
-							<h4 class="mtext-105 cl2 js-name-detail p-b-14">
-								{{$product->name}}
+							<h4 id="name" class="mtext-105 cl2 js-name-detail p-b-14">
+								
 							</h4>
 
-							<span class="mtext-106 cl2">
-								{{$product->price}}
+							<span id="price" class="mtext-106 cl2">
+								$ 
 							</span>
 
-							<p class="stext-102 cl3 p-t-23">
-								{{$product->info}}
+							<p id="info" class="stext-102 cl3 p-t-23">
+								
 							</p>
 							
 							<!--  -->
@@ -941,12 +919,12 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 									<div class="size-204 respon6-next">
 										<div class="rs1-select2 bor8 bg0">
-											<select class="js-select2" name="time">
-												<option>Choose an option</option>
-												@foreach ($product->sizes->unique()->sortBy('id') as $size)
+											<select class="js-select2" name="time" id="size_id">
+												<option>Choose an size</option>
+												{{-- @foreach ($product->sizes->unique()->sortBy('id') as $size) --}}
 
-												<option value="{{$size->id}}">{{$size->name}}</option>
-												@endforeach
+												{{-- <option value="{{$size->id}}">{{$size->name}}</option> --}}
+												{{-- @endforeach --}}
 											</select>
 											<div class="dropDownSelect2"></div>
 										</div>
@@ -960,12 +938,14 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 									<div class="size-204 respon6-next">
 										<div class="rs1-select2 bor8 bg0">
-											<select class="js-select2" name="time">
-												<option>Choose an option</option>
+											<select class="js-select2" name="time" id="color_id">
+
+
+												{{-- <option>Choose an option</option>
 												@foreach ($product->colors->unique() as $color)
 
 												<option value="{{$color->id}}">{{$color->name}}</option>
-												@endforeach
+												@endforeach --}}
 											</select>
 											<div class="dropDownSelect2"></div>
 										</div>
@@ -973,7 +953,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 								</div>
 
 								<div class="flex-w flex-r-m p-b-10">
-									<div class="size-204 flex-w flex-m respon6-next">
+									<div class="size-204 flex-w flex-m respon6-next" id="cart">
 										<div class="wrap-num-product flex-w m-r-20 m-tb-10">
 											<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
 												<i class="fs-16 zmdi zmdi-minus"></i>
@@ -985,10 +965,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 												<i class="fs-16 zmdi zmdi-plus"></i>
 											</div>
 										</div>
-
+{{-- 
 										<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
 											Add to cart
-										</button>
+										</button> --}}
 									</div>
 								</div>	
 							</div>
@@ -1029,13 +1009,132 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="{{asset('front/vendor/bootstrap/js/bootstrap.min.js')}}"></script>
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/select2/select2.min.js')}}"></script>
+	<script src="https://unpkg.com/axios@0.27.2/dist/axios.min.js"></script>
+	
 	<script>
+
+$('.js-show-modal1').on('click',function(e){
+        e.preventDefault();
+
+		var productId = $(this).data('id');
+		let button = "";
+		
+				// button += `<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+				// 							Add to cart
+				// 						</button>`;
+		
+				
+		axios.get('/products/' + productId)
+      .then(function (response) {
+		button += ` <a  onclick="performCartStore(${productId}, ${response.data.data.price} )" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">add to cart</a>`;
+
+		document.getElementById('cart').innerHTML = button;
+
+		$('#name').text(response.data.data.name);
+		$('#price').text( '$  '+response.data.data.price );
+		$('#info').text(response.data.data.info);
+		
+
+		$('#color_id').empty();
+            $.each(response.data.colors , function(i, item){
+             $('#color_id').append(new Option(  item['name'] ,item['id'] ))
+             });
+
+		$('#size_id').empty();
+
+            $.each(response.data.sizes , function(i, item){
+             $('#size_id').append(new Option(  item['name'] ,item['id'] ))
+             });
+
+
+			 document.getElementById('images-product').innerHTML = response.data.data.images;
+
+			let imagesHtml = "";
+			 $.each(response.data.data.images , function(i, item){
+                var images=item['url'];
+				var imageUrl = `{{ Storage::url('${images}') }}`;
+				imagesHtml += `<div class="item-slick3" data-thumb="${imageUrl}">
+											<div class="wrap-pic-w pos-relative">
+												<img src="${imageUrl}" alt="IMG-PRODUCT">
+												<a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="${imageUrl}">
+												<i class="fa fa-expand"></i>
+											</a>
+												
+											</div>
+								</div>`;
+
+				document.getElementById('images-product').innerHTML = imagesHtml;
+			
+});
+		
+
+
+
+
+        $('.js-modal1').addClass('show-modal1');
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    });
+
+
+
+    $('.js-hide-modal1').on('click',function(){
+        $('.js-modal1').removeClass('show-modal1');
+    });
+
 		$(".js-select2").each(function(){
 			$(this).select2({
 				minimumResultsForSearch: 20,
 				dropdownParent: $(this).next('.dropDownSelect2')
 			});
-		})
+		});
+
+		function performCartStore(id ,productprice ) {
+			// alert(productprice);
+      axios.post('/carts',{
+            product_id:  id,
+            quantity :1,
+            price:productprice,
+
+      })
+      .then(function (response) {
+          console.log(response);
+          toastr.success(response.data.message);
+          // window.location.href = '/rest/index';
+      })
+      .catch(function (error) {
+          console.log(error.response);
+          toastr.error(error.response.data.message);
+      });
+  }
+
+	// 	function getcolors(productId){
+    //     axios.get('/products/'+productId)
+    //     .then(function (response) {
+    //         console.log(response);
+    //         // console.log(response.data.data);
+    //         $('#sub_category_id').empty();
+    //         $.each(response.data.data , function(i, item){
+    //          $('#sub_category_id').append(new Option(  item['title'] ,item['id'] ))
+    //          });
+           
+            
+    //     }).catch(function (error) {
+    //         console.log(error.response);
+    //     });
+    // }	
+
+
+// 	$(document).ready(function() {
+//   $('#js-show-modal1').click(function() {
+// 	alert(1);
+//     $('#product-modal').modal('show');
+//     $('#product-modal .modal-content').load('/products/' + id);
+//   });
+// });
+
 	</script>
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/daterangepicker/moment.min.js')}}"></script>
@@ -1051,16 +1150,16 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/MagnificPopup/jquery.magnific-popup.min.js')}}"></script>
 	<script>
-		$('.gallery-lb').each(function() { // the containers for all your galleries
-			$(this).magnificPopup({
-		        delegate: 'a', // the selector for gallery item
-		        type: 'image',
-		        gallery: {
-		        	enabled:true
-		        },
-		        mainClass: 'mfp-fade'
-		    });
-		});
+		// $('.gallery-lb').each(function() { // the containers for all your galleries
+		// 	$(this).magnificPopup({
+		//         delegate: 'a', // the selector for gallery item
+		//         type: 'image',
+		//         gallery: {
+		//         	enabled:true
+		//         },
+		//         mainClass: 'mfp-fade'
+		//     });
+		// });
 	</script>
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/isotope/isotope.pkgd.min.js')}}"></script>

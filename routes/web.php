@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\Auth\Auth1Controller;
 use App\Http\Controllers\Auth\AuthController;
 // use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
@@ -44,7 +45,16 @@ Route::group([
     });
 Route::get('/cv',[ App\Http\Controllers\InfoController::class,'downloadCv'])->name('portfolio.cv');
     
-
+// Route::prefix('cms/')->middleware('guest:admin,user')->group(function () {
+//     Route::get('{guard}/login', [AuthController::class, 'showLoginView'])->name('cms.login');
+//     Route::post('login', [AuthController::class, 'login']);
+//     Route::view('user/register',  'cms.auth.register')->name('cms.register');
+//     Route::post('user/register',  [UserController::class, 'store']);
+//     Route::get('forgot-password', [ResetPasswordController::class, 'showForgotPassword'])->name('password.forgot');
+//     Route::post('forgot-password', [ResetPasswordController::class, 'sendResetEmail'])->name('password.email');
+//     Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetPasswordView'])->name('password.reset');
+//     Route::post('reset-password', [ResetPasswordController::class, 'updatePassword'])->name('password.update');
+// });
 
 
    
@@ -77,15 +87,27 @@ Route::get('/cv',[ App\Http\Controllers\InfoController::class,'downloadCv'])->na
 
 
     //ADMIN AUTH ///
-    Route::group(['prefix' => 'admin'], function () {
-        Route::get('/', function () {
-            return route('/login');
-        });
+    // Route::group(['prefix' => 'admin'], function () {
+    //     Route::get('/', function () {
+    //         return route('/login');
+    //     });
 
 
-        Route::get('/login', 'AdminAuth\LoginController@showLoginForm')->name('admin.login.form');
-        Route::post('/login', 'AdminAuth\LoginController@login')->name('admin.login');
-        Route::get('/logout', 'AdminAuth\LoginController@logout')->name('admin.logout');
+    //     Route::get('/login', 'AdminAuth\LoginController@showLoginForm')->name('admin.login.form');
+    //     Route::post('/login', 'AdminAuth\LoginController@login')->name('admin.login');
+    //     Route::get('/logout', 'AdminAuth\LoginController@logout')->name('admin.logout');
+    // });
+
+
+    Route::prefix('/')->middleware('guest:admin,user')->group(function () {
+        Route::get('{guard}/login', [AuthController::class, 'showLoginView'])->name('cms.login');
+        Route::post('login', [AuthController::class, 'login']);
+        // Route::view('user/register',  'cms.auth.register')->name('cms.register');
+        // Route::post('user/register',  [UserController::class, 'store']);
+        // Route::get('forgot-password', [ResetPasswordController::class, 'showForgotPassword'])->name('password.forgot');
+        // Route::post('forgot-password', [ResetPasswordController::class, 'sendResetEmail'])->name('password.email');
+        // Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetPasswordView'])->name('password.reset');
+        // Route::post('reset-password', [ResetPasswordController::class, 'updatePassword'])->name('password.update');
     });
 
 
@@ -135,6 +157,7 @@ Route::get('/cv',[ App\Http\Controllers\InfoController::class,'downloadCv'])->na
         Route::put('profile/personal', [AuthController::class, 'updateProfilePersonalInformation'])->name('admin.profile.update-personal-information');
         
         Route::get('profile/account', [AuthController::class, 'profileAccountInformatiion'])->name('admin.profile.account-information');
+        Route::get('logout', [AuthController::class, 'logout'])->name('admin.logout');
        
 
 
@@ -155,11 +178,14 @@ Route::get('/cv',[ App\Http\Controllers\InfoController::class,'downloadCv'])->na
 
 
 
-    route::prefix('front/')->group(function () {
+    route::prefix('/')->group(function () {
 
         route::get('products' ,  'ProductController@index')->name('front.products');
+        route::get('products/{product}' ,  'ProductController@show')->name('products.show');
+        Route::resource('carts', CartController::class);
+        Route::resource('users', UserController::class);
         
-        Route::get('index', 'FrontController@index')->name('front.index');
+        Route::get('/', 'FrontController@index')->name('front.index');
         
         });
  

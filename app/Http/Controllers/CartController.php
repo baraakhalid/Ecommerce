@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CartController extends Controller
 {
@@ -35,8 +37,41 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator($request->all(), [
+            'Product_id' =>'required|numeric|exists:Products,id',
+            'price' => 'required',
+            'quantity' => 'required|integer|between:1,100',
+            
+
+        ]);
+
+        if (!$validator->fails()) {
+            $Product = Product::find($request->product_id);
+            if (!is_null($Product)) {
+                // if (!$request->user()->carts()->where('product_id', $Product->id)->exists()) {
+                    $cart = new Cart();
+                    $cart->Product_id= $request->Product_id;
+                    $cart->user_id= $request->user()->id;
+                    $cart->price= $request->price;
+                    $cart->quantity= $request->quantity;
+
+
+                    $isSaved = $cart->save();
+                    if ($isSaved)
+                    return response()->json(['message' => 'Product cart added']);
+                
+            } 
+        //     else {
+        //         return response()->json(['message' => 'Product Not Found']);
+        // }
     }
+        else {
+            return response()->json(
+                ['message' => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST,
+            );
+        }
+        }
 
     /**
      * Display the specified resource.
