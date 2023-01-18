@@ -11,8 +11,8 @@
 |
 */
 
-use App\Http\Controllers\Auth\Auth1Controller;
 use App\Http\Controllers\Auth\AuthController;
+// use App\Http\Controllers\Auth\AuthController;
 // use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 // use App\Http\Controllers\ProductController;
@@ -43,7 +43,6 @@ Route::group([
         
         Route::get('/',[ HomeController::class,'index'])->name('app.index');
     });
-Route::get('/cv',[ App\Http\Controllers\InfoController::class,'downloadCv'])->name('portfolio.cv');
     
 // Route::prefix('cms/')->middleware('guest:admin,user')->group(function () {
 //     Route::get('{guard}/login', [AuthController::class, 'showLoginView'])->name('cms.login');

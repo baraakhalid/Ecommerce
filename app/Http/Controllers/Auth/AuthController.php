@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password as RulesPassword;
 use Symfony\Component\HttpFoundation\Response;
 
-class Auth1Controller extends Controller
+class AuthController extends Controller
 {
     
     public function showLoginView(Request $request)
