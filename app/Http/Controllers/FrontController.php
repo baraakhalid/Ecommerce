@@ -15,7 +15,13 @@ class FrontController extends Controller
      
             $categories = Category::all();
             $products=Product::all();
+                        // dd($request->user()->withcount('favorites')->get());
+
+            $favoritesCount=$request->user()->favorites()->count();
+            // $favorites=Product::withcount('favorites')->get();
+
+
         //     $images=Image::where('object_id',)
-            return response()->view('front.index', ['categories' => $categories , 'products'=>$products]);    
+            return response()->view('front.index', ['categories' => $categories , 'products'=>$products,'favoritesCount'=>$favoritesCount]);    
 
     }}

@@ -95,7 +95,7 @@
 							<i class="zmdi zmdi-shopping-cart"></i>
 						</div>
 
-						<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
+						<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" id="favorite-count" data-count="{{ $favoritesCount }}" data-notify={{$favoritesCount}}>
 							<i class="zmdi zmdi-favorite-outline"></i>
 						</a>
 					</div>
@@ -692,10 +692,22 @@
 							</div>
 
 							<div class="block2-txt-child2 flex-r p-t-3">
-								<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+								@if (Auth::guard('user')->check())
+
+								<a onclick="performFavorite({{$product->id }})"  data-product-id="{{$product->id}}" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2" >
+									{{-- @if($product->is_favorite) --}}
+
 									<img class="icon-heart1 dis-block trans-04" src="{{asset('front/images/icons/icon-heart-01.png')}}" alt="ICON">
+									{{-- @else --}}
 									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{{asset('front/images/icons/icon-heart-02.png')}}" alt="ICON">
+									{{-- @endif --}}
 								</a>
+								@else
+								<a href="{{route('cms.login','user')}}"  >
+									<img  src="{{asset('front/images/icons/icon-heart-01.png')}}" alt="ICON">
+									{{-- <img  src="{{asset('front/images/icons/icon-heart-02.png')}}" alt="ICON"> --}}
+								</a>
+								@endif
 							</div>
 						</div>
 					</div>
@@ -1171,36 +1183,60 @@ $('.js-show-modal1').on('click',function(e){
 		});
 
 		$('.js-addwish-b2').each(function(){
-			var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
+			// var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
 			$(this).on('click', function(){
-				swal(nameProduct, "is added to wishlist !", "success");
+				// swal(nameProduct, "is added to wishlist !", "success");
 
 				$(this).addClass('js-addedwish-b2');
-				$(this).off('click');
+				// $(this).off('click');
 			});
 		});
 
-		$('.js-addwish-detail').each(function(){
-			var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
 
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to wishlist !", "success");
-
-				$(this).addClass('js-addedwish-detail');
-				$(this).off('click');
-			});
-		});
-
-		/*---------------------------------------------*/
-
-		$('.js-addcart-detail').each(function(){
-			var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to cart !", "success");
-			});
-		});
 	
 	</script>
+	<script>
+		function updateFavoriteCount(count) {
+    document.querySelector('#favorite-count').setAttribute('data-count', count);
+    document.querySelector('#favorite-count').textContent = count;
+}
+
+	</script>
+	<script>
+    function performFavorite(id) {
+    axios.post('/cms/user/favorites', {
+        product_id: id,
+    })
+    .then(function (response) {
+        let heartIcon = $(`[data-product-id=${id}]`);
+        if (response.data.message === 'Product added to favorite') {
+            heartIcon.addClass('js-addedwish-b2');
+			updateFavoriteCount(response.data.favoritesCount);
+
+        } else {
+            heartIcon.removeClass('js-addedwish-b2');
+			updateFavoriteCount(response.data.favoritesCount);
+
+        }
+        swal(response.data.message, "", "success");
+        // Re-run the script that adds the class 'js-addedwish-b2' to the favorite products
+        $.ajax({
+            url: '/cms/user/favorites',
+            method: 'GET',
+            success: function(response) {
+                response.data.forEach(function(favorite) {
+                    $(`[data-product-id=${favorite.product_id}]`).addClass('js-addedwish-b2');
+                });
+            }
+        });
+    })
+    .catch(function (error) {
+        swal(error.response.data.message, "", "error");
+    });
+}
+
+	</script>
+	
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
 	<script>

@@ -9,4 +9,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable 
 {
     use HasFactory;
+
+    public function favorites()
+    {
+        return $this->hasMany(FavoritProduct::class ,'user_id','id');
+    }
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, FavoritProduct::class,'user_id','product_id');
+    }
 }
