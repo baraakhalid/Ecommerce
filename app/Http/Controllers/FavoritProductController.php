@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\FavoritProduct;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class FavoritProductController extends Controller
 {
@@ -35,8 +37,43 @@ class FavoritProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $validator = Validator($request->all(), [
+            'product_id' => 'required|numeric|exists:products,id'
+                   
+        ]);
+        if (!$validator->fails()) {
+            $product = Product::find($request->product_id);
+            if(!is_null($product)) {
+                if(! $request->user()->favorites()->where('product_id' , $product->id)->exists()){
+                    $isSaved = $request->user()->products()->save($product);
+                      if( $isSaved)
+
+                      return response()->json(
+                        ['message' =>  'Product added to favorite']);
+                    
+                }
+                    else{
+                        $isSaved = $request->user()->products()->detach($product);
+                        if( $isSaved)
+                        return response()->json(
+                            ['message' => 'Product deleted from favorite']);
+                    }
+           
+                   
+               }
+                else{
+                    return response()->json(
+                        ['message' => 'Product not found ']);
+                }
+            
+        }
+        else{
+            return response()->json(
+                ['message' => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST,
+            );
+        }  
+      }
 
     /**
      * Display the specified resource.
