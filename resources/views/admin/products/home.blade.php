@@ -202,7 +202,7 @@
                                         </td>
                                         <td class="v-align-middle wd-5p">{{$one->id}}</td>
 
-                                        <td class="v-align-middle wd-5p"><img src="{{Storage::url($one->main_image ?? '')}}" width="50px"
+                                        <td class="v-align-middle wd-5p"><img src="{{$one->main_image ?? ''}}" width="50px"
                                                                               height="50px"></td>
 
                                         <td class="v-align-middle wd-25p">{{$one->name}}</td>

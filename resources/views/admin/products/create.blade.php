@@ -249,7 +249,7 @@
                                     </div>
                                 </div> --}}
                   
-                    <div class="card-body col-md-12">
+                    {{-- <div class="card-body col-md-12">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -269,7 +269,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                         <div class="card-body">
                         <fieldset>
                             <legend>{{__('cp.more_images')}}</legend>

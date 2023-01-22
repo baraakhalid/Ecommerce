@@ -11,18 +11,27 @@ class Product extends Model
 {
     use HasFactory,Translatable;
     protected $translatedAttributes=['name','info'];
+    protected $appends = ['image_url'];
+
     public function images()
     {
         return $this->morphMany(Image::class, 'object', 'object_type', 'object_id', 'id');
     }
+    
     public function getImageUrlAttribute()
     {
-        return url('storage/' . $this->images()->first()->url);
+        return url('uploads/images/' . $this->images()->first()->url);
     }
     public function getMainImageAttribute()
     {
-        return $this->images()->first()->url;
+        // return $this->images()->first()->url;
+        return  url('uploads/images/' . $this->images()->first()->url);
 
+
+    }
+    public function getImageAttribute($image)
+    {
+        return !is_null($image) ? url('uploads/images/products/' . $image) : url('uploads/images/products/d.jpg');
     }
 
     public function category(){

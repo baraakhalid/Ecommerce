@@ -12,9 +12,11 @@
 */
 
 use App\Http\Controllers\Auth\AuthController;
+// use App\Http\Controllers\CartController;
 // use App\Http\Controllers\Auth\AuthController;
 // use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
+// use App\Http\Controllers\OrderController;
 // use App\Http\Controllers\ProductController;
 // use App\Http\Controllers\InfoController;
 use WEB\Admin\SettingController;
@@ -174,14 +176,26 @@ Route::group([
 
     });
 
+    Route::prefix('/')->middleware(['auth:user'])->group(function () {
+     
+        Route::resource('carts', CartController::class);
+        Route::get('/shopping', [App\Http\Controllers\CartController::class, 'showCart'])->name('front.cart');
+        Route::resource('product_coupons', ProductCouponController::class);
+        Route::resource('orders', OrderController::class);
 
+        // Route::get('/product_coupons', [App\Http\Controllers\ProductCoupon::class, 'index'])->name('cart.coupon');
+        // Route::get('/product_coupons', [App\Http\Controllers\CartController::class, 'getCoupon'])->name('cart.coupon');
+        Route::put('/carts/apply-coupon', [App\Http\Controllers\CartController::class, 'applyCoupon'])->name('cart.apply_coupon');
+        Route::get('logout', [AuthController::class, 'logout'])->name('user.logout'); 
+    
+    });   
 
 
     route::prefix('/')->group(function () {
 
         route::get('products' ,  'ProductController@index')->name('front.products');
         route::get('products/{product}' ,  'ProductController@show')->name('products.show');
-        Route::resource('carts', CartController::class);
+        // Route::resource('carts', CartController::class);
         Route::resource('users', UserController::class);
         
         Route::get('/', 'FrontController@index')->name('front.index');

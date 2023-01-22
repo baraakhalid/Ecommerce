@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductCoupon;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductCouponController extends Controller
 {
@@ -12,12 +13,28 @@ class ProductCouponController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $coupons=ProductCoupon::all();
-        return response()->view('admin.coupons.home',['coupons'=>$coupons]); 
+        // dd(111);
+        if($request->has('code'))
+        {
+          
+            $data=ProductCoupon::where('code' ,'=' ,$request->input('code'))->first();
+            $request->session()->put('code', $data->value);
+            $request->session()->put('type', $data->type);
+		
+            return response()->json(['message'=>'Coupon Applied Successfully' , 'data' => $data ]
+        );
 
+        }
+        else{
+        $coupons=ProductCoupon::all();
+        return response()->view('admin.coupons.home',['coupons'=>$coupons ]); 
+        }
     }
+       
+
+    
 
     /**
      * Show the form for creating a new resource.

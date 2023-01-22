@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\ProductCoupon;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
 class CartController extends Controller
@@ -14,10 +19,52 @@ class CartController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        // dd(111);
+        if(auth('user')->check()){
+            
+            $data=Cart::with('product')->where('user_id' ,'=' ,$request->user()->id)->get();
+            $total=Cart::where('user_id' ,'=' ,$request->user()->id)->sum(DB::raw('quantity * price'));
+
+            return response()->json(['message'=>'success' , 'data' => $data ,'total' => $total]);
+
+        }
     }
+    public function showCart(Request $request)
+    {
+    
+        if(auth('user')->check()){
+            $addresses=Address::where('user_id' ,'=' ,$request->user()->id)->get();
+            
+            $carts=Cart::with('product')->where('user_id' ,'=' ,$request->user()->id)->get();
+            $total=Cart::where('user_id' ,'=' ,$request->user()->id)->sum(DB::raw('quantity * price'));
+            return response()->view('front.cart',['carts'=>$carts ,'total'=>$total ,'addresses'=>$addresses ]);
+
+        }
+    }
+    public function getCoupon(Request $request)
+    {
+        // $validator = Validator($request->all(), [
+        //     'code' =>'required',
+    
+
+        // ]);
+
+        // if (!$validator->fails()) {
+        if(auth('user')->check()){
+            if($request->has('code'))
+            {
+            $coupon=ProductCoupon::where('code' ,'=' ,$request->input('code'))->get();
+            // dd($coupon);
+        }
+            // return response()->view('front.cart',['carts'=>$carts ,'total'=>$total ]);
+
+        }
+    // }
+
+    }
+ 
 
     /**
      * Show the form for creating a new resource.
@@ -38,9 +85,9 @@ class CartController extends Controller
     public function store(Request $request)
     {
         $validator = Validator($request->all(), [
-            'Product_id' =>'required|numeric|exists:Products,id',
+            'product_id' =>'required|numeric|exists:products,id',
             'price' => 'required',
-            'quantity' => 'required|integer|between:1,100',
+            'quantity' => 'required|integer',
             
 
         ]);
@@ -48,9 +95,9 @@ class CartController extends Controller
         if (!$validator->fails()) {
             $Product = Product::find($request->product_id);
             if (!is_null($Product)) {
-                // if (!$request->user()->carts()->where('product_id', $Product->id)->exists()) {
+                if (!$request->user()->carts()->where('product_id', $Product->id)->exists()) {
                     $cart = new Cart();
-                    $cart->Product_id= $request->Product_id;
+                    $cart->product_id= $request->product_id;
                     $cart->user_id= $request->user()->id;
                     $cart->price= $request->price;
                     $cart->quantity= $request->quantity;
@@ -61,18 +108,21 @@ class CartController extends Controller
                     return response()->json(['message' => 'Product cart added']);
                 
             } 
-        //     else {
-        //         return response()->json(['message' => 'Product Not Found']);
-        // }
+            else {
+
+                
+                return response()->json(['message' => 'The product is already in the cart'] , Response::HTTP_BAD_REQUEST,);
+        }
     }
         else {
             return response()->json(
                 ['message' => $validator->getMessageBag()->first()],
                 Response::HTTP_BAD_REQUEST,
             );
+        
         }
-        }
-
+    }
+}
     /**
      * Display the specified resource.
      *
@@ -104,7 +154,63 @@ class CartController extends Controller
      */
     public function update(Request $request, Cart $cart)
     {
-        //
+        // dd(11);
+        $validator = Validator($request->all(), [
+            'quantity' => 'required|integer|min:1',
+           
+        ]);
+
+        if (!$validator->fails()) {
+        
+            $cart->quantity = $request->quantity;
+
+            $isSaved = $cart->save();
+            return response()->json(
+                ['message' => $isSaved ? 'quantity Updated successfully' : 'Save failed!'],
+                $isSaved ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
+            );
+        } else {
+            return response()->json(
+                ['message' => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST,
+            );
+        } 
+    }
+
+    public function applyCoupon(Request $request, Cart $cart)
+    {
+        $validator = Validator($request->all(), [
+            'code' => 'nullable',
+            Rule::exists('coupons')->where(function ($query) {
+                $query->where('expire_date', '>', Carbon::now());
+            }),
+           
+        ]);
+
+        if (!$validator->fails()) {
+            if ($cart->applyCoupon($request->code)) {
+                $cart->coupon_code = $request->code;
+
+                return response()->json(
+                    ['message' => 'Coupon Applied!'],
+                    Response::HTTP_CREATED,
+                );
+            }
+            else{
+                return response()->json(
+                    ['message' => 'Coupon doesnt Applied!'],
+                    Response::HTTP_BAD_REQUEST,
+                );
+            }
+        } else {
+            return response()->json(
+                ['message' => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST,
+            );
+        } 
+        
+       
+        // return redirect()->back()->with('error_message', 'Invalid coupon code.');
     }
 
     /**
@@ -113,8 +219,19 @@ class CartController extends Controller
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cart $cart)
+    public function destroy(Request $request , Cart $cart)
     {
-        //
-    }
+        $product = $cart->product;
+        if (!is_null($product)) {
+    $deleted = $request->user()->productscart()->detach($product);
+    return response()->json(
+        [
+            'title' => $deleted ? 'Deleted!' : 'Delete Failed!',
+            'text' => $deleted ? 'Category deleted successfully' : 'Category deleting failed!',
+            'icon' => $deleted ? 'success' : 'error'
+        ],
+        $deleted ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
+    
+    );  
+}}
 }

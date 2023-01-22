@@ -34,6 +34,8 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{{asset('front/css/util.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{asset('front/css/main.css')}}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
 <!--===============================================================================================-->
 @yield('styles')
 
@@ -82,6 +84,20 @@
 							<li>
 								<a href="contact.html">Contact</a>
 							</li>
+							@if(!Auth::guard('user')->check())
+
+							<li>
+								<a href="{{route('cms.login','user')}}">Login</a>
+							</li>
+							<li>
+								<a href="{{route('users.create')}}">Sign Up</a>
+							</li>
+							@else
+							<li >
+								<a href="#">Hi ,{{Auth::guard('user')->user()->name}}</a>
+							</li>
+							@endif
+							
 						</ul>
 					</div>	
 
@@ -90,14 +106,19 @@
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
 							<i class="zmdi zmdi-search"></i>
 						</div>
+						@if(Auth::guard('user')->check())
 
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="2">
+							
 							<i class="zmdi zmdi-shopping-cart"></i>
 						</div>
 
 						<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
 							<i class="zmdi zmdi-favorite-outline"></i>
 						</a>
+
+				
+						@endif
 					</div>
 				</nav>
 			</div>	
@@ -228,8 +249,8 @@
 			</div>
 			
 			<div class="header-cart-content flex-w js-pscroll">
-				<ul class="header-cart-wrapitem w-full">
-					<li class="header-cart-item flex-w flex-t m-b-12">
+				<ul class="header-cart-wrapitem w-full" id="cart">
+					{{-- <li class="header-cart-item flex-w flex-t m-b-12">
 						<div class="header-cart-item-img">
 							<img src="{{asset('front/images/item-cart-01.jpg')}}" alt="IMG">
 						</div>
@@ -243,9 +264,9 @@
 								1 x $19.00
 							</span>
 						</div>
-					</li>
+					</li> --}}
 
-					<li class="header-cart-item flex-w flex-t m-b-12">
+					{{-- <li class="header-cart-item flex-w flex-t m-b-12">
 						<div class="header-cart-item-img">
 							<img src="{{asset('front/images/item-cart-02.jpg')}}" alt="IMG">
 						</div>
@@ -275,16 +296,16 @@
 								1 x $17.00
 							</span>
 						</div>
-					</li>
+					</li> --}}
 				</ul>
 				
 				<div class="w-full">
-					<div class="header-cart-total w-full p-tb-40">
-						Total: $75.00
+					<div class="header-cart-total w-full p-tb-40" id="total">
+						
 					</div>
 
 					<div class="header-cart-buttons flex-w w-full">
-						<a href="shoping-cart.html" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+						<a href="{{route('front.cart')}}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
 							View Cart
 						</a>
 
@@ -673,7 +694,7 @@
 					<!-- Block2 -->
 					<div class="block2">
 						<div class="block2-pic hov-img0">
-							<img src="{{Storage::url($product->main_image ?? '')}}" alt="IMG-PRODUCT">
+							<img src="{{$product->main_image ?? ''}}" alt="IMG-PRODUCT">
 
 							<a href="#" id= "js-show-modal1" data-id="{{ $product->id }}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
 								Quick View
@@ -941,6 +962,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 											<select class="js-select2" name="time" id="color_id">
 
 
+												 
 												{{-- <option>Choose an option</option>
 												@foreach ($product->colors->unique() as $color)
 
@@ -953,22 +975,29 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 								</div>
 
 								<div class="flex-w flex-r-m p-b-10">
-									<div class="size-204 flex-w flex-m respon6-next" id="cart">
-										<div class="wrap-num-product flex-w m-r-20 m-tb-10">
-											<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-minus"></i>
+									<div class="size-204 flex-w flex-m respon6-next">
+									    <div class="wrap-num-product flex-w m-r-20 m-tb-10">
+											<div class="minus cl8 hov-btn3 trans-04 flex-c-m">
+												<button  type="button" id="minus-button">
+													-
+												</button> 
+												
+												{{-- <i class="fs-16 zmdi zmdi-minus"></i> --}}
 											</div>
 
-											<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
+											<input class="mtext-104 cl3 txt-center num-product" type="number" id="qty" min="1" value="1">
 
-											<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-												<i class="fs-16 zmdi zmdi-plus"></i>
+											<div class="plus cl8 hov-btn3 flex-c-m">
+												<button  type="button" id="plus-button">
+												+	
+												</button> 
+												{{-- <i class="fs-16 zmdi zmdi-plus"></i> --}}
 											</div>
 										</div>
-{{-- 
-										<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-											Add to cart
-										</button> --}}
+									</div>
+
+									<div class="size-204 flex-w flex-m respon6-next" id="cart-modal">
+								
 									</div>
 								</div>	
 							</div>
@@ -1010,25 +1039,58 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/select2/select2.min.js')}}"></script>
 	<script src="https://unpkg.com/axios@0.27.2/dist/axios.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+{{-- <script src="{{asset('assets/js/pages/features/miscellaneous/toastr.min.js')}}"></script> --}}
+
 	
 	<script>
 
+var qty=1;
+  $("#minus-button").click(function() {
+     qty = $("#qty").val();
+    if (qty > 0) {
+      $("#qty").val(parseInt(qty) - 1);
+	  qty = $("#qty").val();
+
+    }
+	// alert(qty);
+
+  });
+
+  $("#plus-button").click(function() {
+     qty = $("#qty").val();
+    $("#qty").val(parseInt(qty) + 1);
+	 qty = $("#qty").val();
+
+
+  });
+
+
+
 $('.js-show-modal1').on('click',function(e){
+	
         e.preventDefault();
+
 
 		var productId = $(this).data('id');
 		let button = "";
 		
-				// button += `<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-				// 							Add to cart
-				// 						</button>`;
-		
 				
 		axios.get('/products/' + productId)
       .then(function (response) {
-		button += ` <a  onclick="performCartStore(${productId}, ${response.data.data.price} )" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">add to cart</a>`;
 
-		document.getElementById('cart').innerHTML = button;
+		// $qty = document.getElementById('qty').value;
+		// <button type='button' onclick="performCartStore(${productId}, ${response.data.data.price})" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+
+		button += `	
+		@if(Auth::guard('user')->check())
+		<button type='button'onclick="performCartStore(${productId}, ${response.data.data.price})" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+											Add to cart
+										</button>
+		@else
+		<a href="{{route('cms.login','user')}}"  class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">add to cart</a>
+        @endif		`
+		document.getElementById('cart-modal').innerHTML = button;
 
 		$('#name').text(response.data.data.name);
 		$('#price').text( '$  '+response.data.data.price );
@@ -1047,12 +1109,13 @@ $('.js-show-modal1').on('click',function(e){
              });
 
 
-			 document.getElementById('images-product').innerHTML = response.data.data.images;
 
 			let imagesHtml = "";
+
 			 $.each(response.data.data.images , function(i, item){
                 var images=item['url'];
-				var imageUrl = `{{ Storage::url('${images}') }}`;
+
+				var imageUrl = `{{ url('uploads/images/${images}') }}`;
 				imagesHtml += `<div class="item-slick3" data-thumb="${imageUrl}">
 											<div class="wrap-pic-w pos-relative">
 												<img src="${imageUrl}" alt="IMG-PRODUCT">
@@ -1066,12 +1129,9 @@ $('.js-show-modal1').on('click',function(e){
 				document.getElementById('images-product').innerHTML = imagesHtml;
 			
 });
+
 		
-
-
-
-
-        $('.js-modal1').addClass('show-modal1');
+    $('.js-modal1').addClass('show-modal1');
       })
       .catch(function (error) {
         console.log(error);
@@ -1079,8 +1139,12 @@ $('.js-show-modal1').on('click',function(e){
     });
 
 
+	
+
+
 
     $('.js-hide-modal1').on('click',function(){
+		// alert(qty);
         $('.js-modal1').removeClass('show-modal1');
     });
 
@@ -1091,11 +1155,15 @@ $('.js-show-modal1').on('click',function(e){
 			});
 		});
 
-		function performCartStore(id ,productprice ) {
-			// alert(productprice);
+
+
+		
+
+		function performCartStore(id ,productprice) {
+			// alert( document.getElementById('qty').value);
       axios.post('/carts',{
             product_id:  id,
-            quantity :1,
+            quantity : parseInt(document.getElementById('qty').value),
             price:productprice,
 
       })
@@ -1110,30 +1178,60 @@ $('.js-show-modal1').on('click',function(e){
       });
   }
 
-	// 	function getcolors(productId){
-    //     axios.get('/products/'+productId)
-    //     .then(function (response) {
-    //         console.log(response);
-    //         // console.log(response.data.data);
-    //         $('#sub_category_id').empty();
-    //         $.each(response.data.data , function(i, item){
-    //          $('#sub_category_id').append(new Option(  item['title'] ,item['id'] ))
-    //          });
-           
-            
-    //     }).catch(function (error) {
-    //         console.log(error.response);
-    //     });
-    // }	
+
+//   $('.js-show-cart').on('click',function(){
+//         $('.js-panel-cart').addClass('show-header-cart');
 
 
-// 	$(document).ready(function() {
-//   $('#js-show-modal1').click(function() {
-// 	alert(1);
-//     $('#product-modal').modal('show');
-//     $('#product-modal .modal-content').load('/products/' + id);
+//     });
+
+
+$('.js-show-cart').on('click',function(e){
+	
+	e.preventDefault();
+	
+			
+	axios.get('/carts').then(function (response) {
+	// alert(response.data.data);
+
+	let cartHtml = "";
+
+$.each(response.data.data , function(i, item){
+	var image=item.product['image_url'];
+
+   cartHtml += `<li class="header-cart-item flex-w flex-t m-b-12">
+						<div class="header-cart-item-img">
+							<img src="${image}" alt="IMG">
+						</div>
+
+						<div class="header-cart-item-txt p-t-8">
+							<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
+								${item.product['name']}
+							</a>
+
+							<span class="header-cart-item-info">
+								${item['quantity']} x $ ${item['price']}
+							</span>
+						</div>
+					</li> `;
+
+   document.getElementById('cart').innerHTML = cartHtml;
+
+});
+	
+document.getElementById('total').innerHTML = 'Total: $'+response.data.total;
+
+$('.js-panel-cart').addClass('show-header-cart');
+  })
+  .catch(function (error) {
+	console.log(error);
 //   });
-// });
+});
+});
+
+    $('.js-hide-cart').on('click',function(){
+        $('.js-panel-cart').removeClass('show-header-cart');
+    });
 
 	</script>
 <!--===============================================================================================-->
@@ -1150,16 +1248,16 @@ $('.js-show-modal1').on('click',function(e){
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/MagnificPopup/jquery.magnific-popup.min.js')}}"></script>
 	<script>
-		// $('.gallery-lb').each(function() { // the containers for all your galleries
-		// 	$(this).magnificPopup({
-		//         delegate: 'a', // the selector for gallery item
-		//         type: 'image',
-		//         gallery: {
-		//         	enabled:true
-		//         },
-		//         mainClass: 'mfp-fade'
-		//     });
-		// });
+		$('.gallery-lb').each(function() { // the containers for all your galleries
+			$(this).magnificPopup({
+		        delegate: 'a', // the selector for gallery item
+		        type: 'image',
+		        gallery: {
+		        	enabled:true
+		        },
+		        mainClass: 'mfp-fade'
+		    });
+		});
 	</script>
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/isotope/isotope.pkgd.min.js')}}"></script>
