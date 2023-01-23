@@ -189,8 +189,10 @@ Route::group([
         
         });
         Route::prefix('cms/user')->middleware('auth:user')->group(function () {
-            Route::post('favorites', 'FavoritProductController@store');
-            Route::get('favorites', 'FavoritProductController@index');
+            Route::post('favorites', 'FavoritProductController@store')->name('wishlist.store');
+            Route::get('favorites', 'FavoritProductController@index')->name('wishlist.index');
+            Route::delete('favorites/{productId}', 'FavoritProductController@destroy')->name('wishlist.destroy');
+
         });
         
  

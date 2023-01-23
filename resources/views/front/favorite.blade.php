@@ -1,12 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<title>Home</title>
 	<meta charset="UTF-8">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-
-	{{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
 <!--===============================================================================================-->	
 	<link rel="icon" type="image/png" href="{{asset('front/images/icons/favicon.png')}}"/>
 <!--===============================================================================================-->
@@ -37,19 +34,17 @@
 	<link rel="stylesheet" type="text/css" href="{{asset('front/css/util.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{asset('front/css/main.css')}}">
 <!--===============================================================================================-->
-@yield('styles')
-
 </head>
 <body class="animsition">
 	
 	<!-- Header -->
-	<header>
+	<header class="header-v4">
 		<!-- Header desktop -->
 		<div class="container-menu-desktop">
 			<!-- Topbar -->
 			
 
-			<div class="wrap-menu-desktop">
+			<div class="wrap-menu-desktop how-shadow1">
 				<nav class="limiter-menu-desktop container">
 					
 					<!-- Logo desktop -->		
@@ -60,12 +55,12 @@
 					<!-- Menu desktop -->
 					<div class="menu-desktop">
 						<ul class="main-menu">
-							<li class="active-menu">
+							<li>
 								<a href="{{route('front.index')}}">Home</a>
 								
 							</li>
 
-							<li>
+							<li class="active-menu">
 								<a href="{{route('front.products')}}">Shop</a>
 							</li>
 
@@ -97,7 +92,7 @@
 							<i class="zmdi zmdi-shopping-cart"></i>
 						</div>
 
-						<a href="{{route('wishlist.index')}}" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" id="favorite-count" >
+						<a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
 							<i class="zmdi zmdi-favorite-outline"></i>
 						</a>
 					</div>
@@ -109,7 +104,7 @@
 		<div class="wrap-header-mobile">
 			<!-- Logo moblie -->		
 			<div class="logo-mobile">
-				<a href="index.html"><img src="{{asset('front/images/icons/logo-01.png')}}" alt="IMG-LOGO"></a>
+				<a href="index.html"><img src="images/icons/logo-01.png" alt="IMG-LOGO"></a>
 			</div>
 
 			<!-- Icon header -->
@@ -169,7 +164,11 @@
 			<ul class="main-menu-m">
 				<li>
 					<a href="index.html">Home</a>
-					
+					<ul class="sub-menu-m">
+						<li><a href="index.html">Homepage 1</a></li>
+						<li><a href="home-02.html">Homepage 2</a></li>
+						<li><a href="home-03.html">Homepage 3</a></li>
+					</ul>
 					<span class="arrow-main-menu-m">
 						<i class="fa fa-angle-right" aria-hidden="true"></i>
 					</span>
@@ -201,7 +200,7 @@
 		<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
 			<div class="container-search-header">
 				<button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
-					<img src="{{asset('front/images/icons/icon-close2.png')}}" alt="CLOSE">
+					<img src="images/icons/icon-close2.png" alt="CLOSE">
 				</button>
 
 				<form class="wrap-search-header flex-w p-l-15">
@@ -213,7 +212,7 @@
 			</div>
 		</div>
 	</header>
-    
+
 	<!-- Cart -->
 	<div class="wrap-header-cart js-panel-cart">
 		<div class="s-full js-hide-cart"></div>
@@ -233,7 +232,7 @@
 				<ul class="header-cart-wrapitem w-full">
 					<li class="header-cart-item flex-w flex-t m-b-12">
 						<div class="header-cart-item-img">
-							<img src="{{asset('front/images/item-cart-01.jpg')}}" alt="IMG">
+							<img src="images/item-cart-01.jpg" alt="IMG">
 						</div>
 
 						<div class="header-cart-item-txt p-t-8">
@@ -249,7 +248,7 @@
 
 					<li class="header-cart-item flex-w flex-t m-b-12">
 						<div class="header-cart-item-img">
-							<img src="{{asset('front/images/item-cart-02.jpg')}}" alt="IMG">
+							<img src="images/item-cart-02.jpg" alt="IMG">
 						</div>
 
 						<div class="header-cart-item-txt p-t-8">
@@ -265,7 +264,7 @@
 
 					<li class="header-cart-item flex-w flex-t m-b-12">
 						<div class="header-cart-item-img">
-							<img src="{{asset('front/images/item-cart-03.jpg')}}" alt="IMG">
+							<img src="images/item-cart-03.jpg" alt="IMG">
 						</div>
 
 						<div class="header-cart-item-txt p-t-8">
@@ -299,133 +298,10 @@
 		</div>
 	</div>
 
-	<!-- Slider -->
-	<section class="section-slide">
-		<div class="wrap-slick1">
-			<div class="slick1">
-				<div class="item-slick1" style="background-image: url({{asset('front/images/slide-01.jpg')}});">
-					<div class="container h-full">
-						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
-							<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
-								<span class="ltext-101 cl2 respon2">
-									Women Collection 2018
-								</span>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800">
-								<h2 class="ltext-201 cl2 p-t-19 p-b-43 respon1">
-									NEW SEASON
-								</h2>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1600">
-								<a href="product.html" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-									Shop Now
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="item-slick1" style="background-image: url({{asset('front/images/slide-02.jpg')}});">
-					<div class="container h-full">
-						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
-							<div class="layer-slick1 animated visible-false" data-appear="rollIn" data-delay="0">
-								<span class="ltext-101 cl2 respon2">
-									Men New-Season
-								</span>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="lightSpeedIn" data-delay="800">
-								<h2 class="ltext-201 cl2 p-t-19 p-b-43 respon1">
-									Jackets & Coats
-								</h2>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="slideInUp" data-delay="1600">
-								<a href="product.html" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-									Shop Now
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="item-slick1" style="background-image: url({{asset('front/images/slide-03.jpg')}});">
-					<div class="container h-full">
-						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
-							<div class="layer-slick1 animated visible-false" data-appear="rotateInDownLeft" data-delay="0">
-								<span class="ltext-101 cl2 respon2">
-									Men Collection 2018
-								</span>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="rotateInUpRight" data-delay="800">
-								<h2 class="ltext-201 cl2 p-t-19 p-b-43 respon1">
-									New arrivals
-								</h2>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="rotateIn" data-delay="1600">
-								<a href="product.html" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-									Shop Now
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-
-	<!-- Banner -->
-
-	<div class="sec-banner bg0 p-t-80 p-b-50">
-		<div class="container">
-			<div class="row">
-				@foreach ( $categories as $category)
-					
-				<div class="col-md-6 col-xl-4 p-b-30 lr-auto">
-					<!-- Block1 -->
-					<div class="block1 wrap-pic-w">
-						<img src="{{Storage::url($category->image ?? '')}}" height="200" alt="IMG-BANNER">
-
-						<a href="{{route('front.products',['category_id'=>$category->id])}}"class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-							<div class="block1-txt-child1 flex-col-l">
-								<span class="block1-name ltext-102 trans-04 p-b-8">
-									{{$category->name}}
-								</span>
-
-								
-							</div>
-
-							<div class="block1-txt-child2 p-b-4 trans-05">
-								<div class="block1-link stext-101 cl0 trans-09">
-									Shop Now
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-				@endforeach
-
-			
-			</div>
-		</div>
-	</div>
-
-
+	
 	<!-- Product -->
-	<section class="bg0 p-t-23 p-b-140">
+	<div class="bg0 m-t-23 p-b-140">
 		<div class="container">
-			<div class="p-b-10">
-				<h3 class="ltext-103 cl5">
-					Product Overview
-					
-				</h3>
-			</div>
-
 			<div class="flex-w flex-sb-m p-b-52">
 				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
@@ -693,22 +569,14 @@
 								</span>
 							</div>
 
-							<div class="block2-txt-child2 flex-r p-t-3">
-								{{-- @if (Auth::guard('user')->check()) --}}
+							<div class="block2 block2-txt-child2 flex-r p-t-3 ">
 
-								<a onclick="performFavorite({{$product->id }})"  data-product-id="{{$product->id}}" class="addToWishlist btn-addwish-b2 dis-block pos-relative js-addwish-b2" >
-									{{-- @if($product->is_favorite) --}}
+								<a href="#" id="{{$product->id}}" value="{{$product->id}}}" data-product-id="{{$product->id}}" class="removeFromWishlist  addToWishlist btn-addwish-b2 dis-block pos-relative js-addwish-b2" >
 									
 									<img class="icon-heart1 dis-block trans-04" src="{{asset('front/images/icons/icon-heart-01.png')}}" alt="ICON">
-								{{-- @else --}}
 									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{{asset('front/images/icons/icon-heart-02.png')}}" alt="ICON">
-								{{-- @endif --}}
 								</a>
-								{{-- @else
-								<a href="{{route('cms.login','user')}}"  >
-									<img  src="{{asset('front/images/icons/icon-heart-01.png')}}" alt="ICON">
-								</a>
-								@endif --}}
+								
 							</div>
 						</div>
 					</div>
@@ -725,7 +593,10 @@
 				</a>
 			</div>
 		</div>
-	</section>
+	</div>
+		
+
+	<!-- Footer -->
 	<footer class="bg3 p-t-75 p-b-32">
 		<div class="container">
 			<div class="row">
@@ -840,29 +711,29 @@
 			<div class="p-t-40">
 				<div class="flex-c-m flex-w p-b-18">
 					<a href="#" class="m-all-1">
-						<img src="{{asset('front/images/icons/icon-pay-01.png')}}" alt="ICON-PAY">
+						<img src="images/icons/icon-pay-01.png" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="{{asset('front/images/icons/icon-pay-02.png')}}" alt="ICON-PAY">
+						<img src="images/icons/icon-pay-02.png" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="{{asset('front/images/icons/icon-pay-03.png')}}" alt="ICON-PAY">
+						<img src="images/icons/icon-pay-03.png" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="{{asset('front/images/icons/icon-pay-04.png')}}" alt="ICON-PAY">
+						<img src="images/icons/icon-pay-04.png" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="{{asset('front/images/icons/icon-pay-05.png')}}" alt="ICON-PAY">
+						<img src="images/icons/icon-pay-05.png" alt="ICON-PAY">
 					</a>
 				</div>
 
 				<p class="stext-107 cl6 txt-center">
 					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved |Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 
 				</p>
@@ -871,7 +742,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	</footer>
 
 
-	<!-- Back to top -->
 	<div class="btn-back-to-top" id="myBtn">
 		<span class="symbol-btn-back-to-top">
 			<i class="zmdi zmdi-chevron-up"></i>
@@ -1179,47 +1049,31 @@ $('.js-show-modal1').on('click',function(e){
 	<script src="{{asset('front/vendor/isotope/isotope.pkgd.min.js')}}"></script>
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/sweetalert/sweetalert.min.js')}}"></script>
+	<script src="{{asset('path/to/your/javascript.js')}}"></script>
 
 	<script>
-		function updateFavoriteCount(count) {
-        document.querySelector('#favorite-count').setAttribute('data-count', count);
-         document.querySelector('#favorite-count').textContent = count;
-} 
 
-function performFavorite(id) {
-	
-    axios.post('/cms/user/favorites', {
-        product_id: id,
-    })
-    .then(function (response) {
-        let heartIcon = $(`[data-product-id=${id}]`);
-        if (response.data.message === 'Product added to favorite') {
-            heartIcon.addClass('js-addedwish-b2');
-			updateFavoriteCount(response.data.favoritesCount);
-        } else {
-            heartIcon.removeClass('js-addedwish-b2');
-			updateFavoriteCount(response.data.favoritesCount);
-        }
-        swal(response.data.message, "", "success");
-        // Re-run the script that adds the class 'js-addedwish-b2' to the favorite products
-        $.ajax({
-            url: '/cms/user/favorites',
-            method: 'GET',
-            success: function(response) {
-                response.data.forEach(function(favorite) {
-                    $(`[data-product-id=${favorite.product_id}]`).addClass('js-addedwish-b2');
-                });
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-    })
-	.catch(function (error) {
-        if(error.response.status === 401) {
-            swal("You must be logged in to manage your wishlist !");
-        }
-});
-
-}
-	</script>
+        $(document).on('click', '.removeFromWishlist', function (e) {
+            e.preventDefault();
+           
+            $.ajax({
+                type: 'delete',
+				url: '/cms/user/favorites/'+ $(this).attr('data-product-id'),
+                data: {
+                    'productId': $(this).attr('data-product-id'),
+                },
+                success: function (data) {
+					swal( "Product deleted from favorite !");  
+                    $(this).closest('.block2').remove();
+                }
+            });
+        });
+    </script>
 	{{-- <script>
 		    $.ajaxSetup({
             headers: {

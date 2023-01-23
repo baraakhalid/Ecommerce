@@ -17,11 +17,11 @@ class FrontController extends Controller
             $products=Product::all();
                         // dd($request->user()->withcount('favorites')->get());
 
-            $favoritesCount=$request->user()->favorites()->count();
+            // $favoritesCount=$request->user()->favorites()->count();
             // $favorites=Product::withcount('favorites')->get();
 
 
         //     $images=Image::where('object_id',)
-            return response()->view('front.index', ['categories' => $categories , 'products'=>$products,'favoritesCount'=>$favoritesCount]);    
+            return response()->view('front.index', ['categories' => $categories , 'products'=>$products]);    
 
     }}

@@ -14,9 +14,11 @@ class FavoritProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $requset)
     {
-        //
+        $products=$requset->user()->products()->latest()->get();
+     
+        return response()->view('front.favorite',['products'=>$products ]);
     }
 
     /**
@@ -37,7 +39,7 @@ class FavoritProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator($request->all(), [
+               $validator = Validator($request->all(), [
             'product_id' => 'required|numeric|exists:products,id'
                    
         ]);
@@ -73,6 +75,11 @@ class FavoritProductController extends Controller
                 Response::HTTP_BAD_REQUEST,
             );
         }  
+        // if (! $request->user()->wishlistHas(request('productId'))) {
+        //     $request->user()->products()->attach(request('productId'));
+        //     return response() -> json(['status' => true , 'wished' => true]);
+        // }
+        // return response() -> json(['status' => true , 'wished' => false]); 
       }
 
     /**
@@ -115,8 +122,14 @@ class FavoritProductController extends Controller
      * @param  \App\Models\FavoritProduct  $favoritProduct
      * @return \Illuminate\Http\Response
      */
-    public function destroy(FavoritProduct $favoritProduct)
+    public function destroy(Request $request, $productId)
     {
-        //
+        if(auth()->check()) {
+            $request->user()->products()->detach($productId);
+        }
+        else {
+            return redirect()->back()->withErrors(['You must be logged in to manage your wishlist !']);
+        }
     }
+    
 }
