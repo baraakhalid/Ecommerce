@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\FavoritProduct;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class FavoritProductController extends Controller
 {
@@ -12,9 +14,11 @@ class FavoritProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $requset)
     {
-        //
+        $products=$requset->user()->products()->latest()->get();
+     
+        return response()->view('front.favorite',['products'=>$products ]);
     }
 
     /**
@@ -35,8 +39,48 @@ class FavoritProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+               $validator = Validator($request->all(), [
+            'product_id' => 'required|numeric|exists:products,id'
+                   
+        ]);
+        if (!$validator->fails()) {
+            $product = Product::find($request->product_id);
+            if(!is_null($product)) {
+                if(! $request->user()->favorites()->where('product_id' , $product->id)->exists()){
+                    $isSaved = $request->user()->products()->save($product);
+                      if( $isSaved)
+
+                      return response()->json(
+                        ['message' =>  'Product added to favorite']);
+                    
+                }
+                    else{
+                        $isSaved = $request->user()->products()->detach($product);
+                        if( $isSaved)
+                        return response()->json(
+                            ['message' => 'Product deleted from favorite']);
+                    }
+           
+                   
+               }
+                else{
+                    return response()->json(
+                        ['message' => 'Product not found ']);
+                }
+            
+        }
+        else{
+            return response()->json(
+                ['message' => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST,
+            );
+        }  
+        // if (! $request->user()->wishlistHas(request('productId'))) {
+        //     $request->user()->products()->attach(request('productId'));
+        //     return response() -> json(['status' => true , 'wished' => true]);
+        // }
+        // return response() -> json(['status' => true , 'wished' => false]); 
+      }
 
     /**
      * Display the specified resource.
@@ -78,8 +122,14 @@ class FavoritProductController extends Controller
      * @param  \App\Models\FavoritProduct  $favoritProduct
      * @return \Illuminate\Http\Response
      */
-    public function destroy(FavoritProduct $favoritProduct)
+    public function destroy(Request $request, $productId)
     {
-        //
+        if(auth()->check()) {
+            $request->user()->products()->detach($productId);
+        }
+        else {
+            return redirect()->back()->withErrors(['You must be logged in to manage your wishlist !']);
+        }
     }
+    
 }

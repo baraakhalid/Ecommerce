@@ -12,7 +12,8 @@
 */
 
 use App\Http\Controllers\Auth\AuthController;
-// use App\Http\Controllers\CartController;
+
+use App\Http\Controllers\FavoritProductController;
 // use App\Http\Controllers\Auth\AuthController;
 // use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
@@ -201,6 +202,13 @@ Route::group([
         Route::get('/', 'FrontController@index')->name('front.index');
         
         });
+        Route::prefix('cms/user')->middleware('auth:user')->group(function () {
+            Route::post('favorites', 'FavoritProductController@store')->name('wishlist.store');
+            Route::get('favorites', 'FavoritProductController@index')->name('wishlist.index');
+            Route::delete('favorites/{productId}', 'FavoritProductController@destroy')->name('wishlist.destroy');
+
+        });
+        
  
 
 

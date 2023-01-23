@@ -1,12 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<title>Home</title>
 	<meta charset="UTF-8">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-
-	{{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
 <!--===============================================================================================-->	
 	<link rel="icon" type="image/png" href="{{asset('front/images/icons/favicon.png')}}"/>
 <!--===============================================================================================-->
@@ -36,22 +33,18 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{{asset('front/css/util.css')}}">
 	<link rel="stylesheet" type="text/css" href="{{asset('front/css/main.css')}}">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
-
 <!--===============================================================================================-->
-@yield('styles')
-
 </head>
 <body class="animsition">
 	
 	<!-- Header -->
-	<header>
+	<header class="header-v4">
 		<!-- Header desktop -->
 		<div class="container-menu-desktop">
 			<!-- Topbar -->
 			
 
-			<div class="wrap-menu-desktop">
+			<div class="wrap-menu-desktop how-shadow1">
 				<nav class="limiter-menu-desktop container">
 					
 					<!-- Logo desktop -->		
@@ -62,12 +55,12 @@
 					<!-- Menu desktop -->
 					<div class="menu-desktop">
 						<ul class="main-menu">
-							<li class="active-menu">
+							<li>
 								<a href="{{route('front.index')}}">Home</a>
 								
 							</li>
 
-							<li>
+							<li class="active-menu">
 								<a href="{{route('front.products')}}">Shop</a>
 							</li>
 
@@ -86,20 +79,6 @@
 							<li>
 								<a href="contact.html">Contact</a>
 							</li>
-							@if(!Auth::guard('user')->check())
-
-							<li>
-								<a href="{{route('cms.login','user')}}">Login</a>
-							</li>
-							<li>
-								<a href="{{route('users.create')}}">Sign Up</a>
-							</li>
-							@else
-							<li >
-								<a href="#">Hi ,{{Auth::guard('user')->user()->name}}</a>
-							</li>
-							@endif
-							
 						</ul>
 					</div>	
 
@@ -108,19 +87,14 @@
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
 							<i class="zmdi zmdi-search"></i>
 						</div>
-						@if(Auth::guard('user')->check())
 
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="2">
-							
 							<i class="zmdi zmdi-shopping-cart"></i>
 						</div>
 
-						<a href="{{route('wishlist.index')}}" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" id="favorite-count" >
+						<a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
 							<i class="zmdi zmdi-favorite-outline"></i>
 						</a>
-
-				
-						@endif
 					</div>
 				</nav>
 			</div>	
@@ -130,7 +104,7 @@
 		<div class="wrap-header-mobile">
 			<!-- Logo moblie -->		
 			<div class="logo-mobile">
-				<a href="index.html"><img src="{{asset('front/images/icons/logo-01.png')}}" alt="IMG-LOGO"></a>
+				<a href="index.html"><img src="images/icons/logo-01.png" alt="IMG-LOGO"></a>
 			</div>
 
 			<!-- Icon header -->
@@ -190,7 +164,11 @@
 			<ul class="main-menu-m">
 				<li>
 					<a href="index.html">Home</a>
-					
+					<ul class="sub-menu-m">
+						<li><a href="index.html">Homepage 1</a></li>
+						<li><a href="home-02.html">Homepage 2</a></li>
+						<li><a href="home-03.html">Homepage 3</a></li>
+					</ul>
 					<span class="arrow-main-menu-m">
 						<i class="fa fa-angle-right" aria-hidden="true"></i>
 					</span>
@@ -222,7 +200,7 @@
 		<div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
 			<div class="container-search-header">
 				<button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
-					<img src="{{asset('front/images/icons/icon-close2.png')}}" alt="CLOSE">
+					<img src="images/icons/icon-close2.png" alt="CLOSE">
 				</button>
 
 				<form class="wrap-search-header flex-w p-l-15">
@@ -234,7 +212,7 @@
 			</div>
 		</div>
 	</header>
-    
+
 	<!-- Cart -->
 	<div class="wrap-header-cart js-panel-cart">
 		<div class="s-full js-hide-cart"></div>
@@ -251,10 +229,10 @@
 			</div>
 			
 			<div class="header-cart-content flex-w js-pscroll">
-				<ul class="header-cart-wrapitem w-full" id="cart">
-					{{-- <li class="header-cart-item flex-w flex-t m-b-12">
+				<ul class="header-cart-wrapitem w-full">
+					<li class="header-cart-item flex-w flex-t m-b-12">
 						<div class="header-cart-item-img">
-							<img src="{{asset('front/images/item-cart-01.jpg')}}" alt="IMG">
+							<img src="images/item-cart-01.jpg" alt="IMG">
 						</div>
 
 						<div class="header-cart-item-txt p-t-8">
@@ -266,11 +244,11 @@
 								1 x $19.00
 							</span>
 						</div>
-					</li> --}}
+					</li>
 
-					{{-- <li class="header-cart-item flex-w flex-t m-b-12">
+					<li class="header-cart-item flex-w flex-t m-b-12">
 						<div class="header-cart-item-img">
-							<img src="{{asset('front/images/item-cart-02.jpg')}}" alt="IMG">
+							<img src="images/item-cart-02.jpg" alt="IMG">
 						</div>
 
 						<div class="header-cart-item-txt p-t-8">
@@ -286,7 +264,7 @@
 
 					<li class="header-cart-item flex-w flex-t m-b-12">
 						<div class="header-cart-item-img">
-							<img src="{{asset('front/images/item-cart-03.jpg')}}" alt="IMG">
+							<img src="images/item-cart-03.jpg" alt="IMG">
 						</div>
 
 						<div class="header-cart-item-txt p-t-8">
@@ -298,16 +276,16 @@
 								1 x $17.00
 							</span>
 						</div>
-					</li> --}}
+					</li>
 				</ul>
 				
 				<div class="w-full">
-					<div class="header-cart-total w-full p-tb-40" id="total">
-						
+					<div class="header-cart-total w-full p-tb-40">
+						Total: $75.00
 					</div>
 
 					<div class="header-cart-buttons flex-w w-full">
-						<a href="{{route('front.cart')}}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+						<a href="shoping-cart.html" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
 							View Cart
 						</a>
 
@@ -320,133 +298,10 @@
 		</div>
 	</div>
 
-	<!-- Slider -->
-	<section class="section-slide">
-		<div class="wrap-slick1">
-			<div class="slick1">
-				<div class="item-slick1" style="background-image: url({{asset('front/images/slide-01.jpg')}});">
-					<div class="container h-full">
-						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
-							<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
-								<span class="ltext-101 cl2 respon2">
-									Women Collection 2018
-								</span>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800">
-								<h2 class="ltext-201 cl2 p-t-19 p-b-43 respon1">
-									NEW SEASON
-								</h2>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1600">
-								<a href="product.html" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-									Shop Now
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="item-slick1" style="background-image: url({{asset('front/images/slide-02.jpg')}});">
-					<div class="container h-full">
-						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
-							<div class="layer-slick1 animated visible-false" data-appear="rollIn" data-delay="0">
-								<span class="ltext-101 cl2 respon2">
-									Men New-Season
-								</span>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="lightSpeedIn" data-delay="800">
-								<h2 class="ltext-201 cl2 p-t-19 p-b-43 respon1">
-									Jackets & Coats
-								</h2>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="slideInUp" data-delay="1600">
-								<a href="product.html" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-									Shop Now
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="item-slick1" style="background-image: url({{asset('front/images/slide-03.jpg')}});">
-					<div class="container h-full">
-						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
-							<div class="layer-slick1 animated visible-false" data-appear="rotateInDownLeft" data-delay="0">
-								<span class="ltext-101 cl2 respon2">
-									Men Collection 2018
-								</span>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="rotateInUpRight" data-delay="800">
-								<h2 class="ltext-201 cl2 p-t-19 p-b-43 respon1">
-									New arrivals
-								</h2>
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="rotateIn" data-delay="1600">
-								<a href="product.html" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-									Shop Now
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-
-	<!-- Banner -->
-
-	<div class="sec-banner bg0 p-t-80 p-b-50">
-		<div class="container">
-			<div class="row">
-				@foreach ( $categories as $category)
-					
-				<div class="col-md-6 col-xl-4 p-b-30 lr-auto">
-					<!-- Block1 -->
-					<div class="block1 wrap-pic-w">
-						<img src="{{Storage::url($category->image ?? '')}}" height="200" alt="IMG-BANNER">
-
-						<a href="{{route('front.products',['category_id'=>$category->id])}}"class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-							<div class="block1-txt-child1 flex-col-l">
-								<span class="block1-name ltext-102 trans-04 p-b-8">
-									{{$category->name}}
-								</span>
-
-								
-							</div>
-
-							<div class="block1-txt-child2 p-b-4 trans-05">
-								<div class="block1-link stext-101 cl0 trans-09">
-									Shop Now
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-				@endforeach
-
-			
-			</div>
-		</div>
-	</div>
-
-
+	
 	<!-- Product -->
-	<section class="bg0 p-t-23 p-b-140">
+	<div class="bg0 m-t-23 p-b-140">
 		<div class="container">
-			<div class="p-b-10">
-				<h3 class="ltext-103 cl5">
-					Product Overview
-					
-				</h3>
-			</div>
-
 			<div class="flex-w flex-sb-m p-b-52">
 				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
@@ -696,7 +551,7 @@
 					<!-- Block2 -->
 					<div class="block2">
 						<div class="block2-pic hov-img0">
-							<img src="{{$product->main_image ?? ''}}" alt="IMG-PRODUCT">
+							<img src="{{Storage::url($product->main_image ?? '')}}" alt="IMG-PRODUCT">
 
 							<a href="#" id= "js-show-modal1" data-id="{{ $product->id }}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
 								Quick View
@@ -714,22 +569,14 @@
 								</span>
 							</div>
 
-							<div class="block2-txt-child2 flex-r p-t-3">
-								{{-- @if (Auth::guard('user')->check()) --}}
+							<div class="block2 block2-txt-child2 flex-r p-t-3 ">
 
-								<a onclick="performFavorite({{$product->id }})"  data-product-id="{{$product->id}}" class="addToWishlist btn-addwish-b2 dis-block pos-relative js-addwish-b2" >
-									{{-- @if($product->is_favorite) --}}
+								<a href="#" id="{{$product->id}}" value="{{$product->id}}}" data-product-id="{{$product->id}}" class="removeFromWishlist  addToWishlist btn-addwish-b2 dis-block pos-relative js-addwish-b2" >
 									
 									<img class="icon-heart1 dis-block trans-04" src="{{asset('front/images/icons/icon-heart-01.png')}}" alt="ICON">
-								{{-- @else --}}
 									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{{asset('front/images/icons/icon-heart-02.png')}}" alt="ICON">
-								{{-- @endif --}}
 								</a>
-								{{-- @else
-								<a href="{{route('cms.login','user')}}"  >
-									<img  src="{{asset('front/images/icons/icon-heart-01.png')}}" alt="ICON">
-								</a>
-								@endif --}}
+								
 							</div>
 						</div>
 					</div>
@@ -746,7 +593,10 @@
 				</a>
 			</div>
 		</div>
-	</section>
+	</div>
+		
+
+	<!-- Footer -->
 	<footer class="bg3 p-t-75 p-b-32">
 		<div class="container">
 			<div class="row">
@@ -861,29 +711,29 @@
 			<div class="p-t-40">
 				<div class="flex-c-m flex-w p-b-18">
 					<a href="#" class="m-all-1">
-						<img src="{{asset('front/images/icons/icon-pay-01.png')}}" alt="ICON-PAY">
+						<img src="images/icons/icon-pay-01.png" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="{{asset('front/images/icons/icon-pay-02.png')}}" alt="ICON-PAY">
+						<img src="images/icons/icon-pay-02.png" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="{{asset('front/images/icons/icon-pay-03.png')}}" alt="ICON-PAY">
+						<img src="images/icons/icon-pay-03.png" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="{{asset('front/images/icons/icon-pay-04.png')}}" alt="ICON-PAY">
+						<img src="images/icons/icon-pay-04.png" alt="ICON-PAY">
 					</a>
 
 					<a href="#" class="m-all-1">
-						<img src="{{asset('front/images/icons/icon-pay-05.png')}}" alt="ICON-PAY">
+						<img src="images/icons/icon-pay-05.png" alt="ICON-PAY">
 					</a>
 				</div>
 
 				<p class="stext-107 cl6 txt-center">
 					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved |Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 
 				</p>
@@ -892,7 +742,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	</footer>
 
 
-	<!-- Back to top -->
 	<div class="btn-back-to-top" id="myBtn">
 		<span class="symbol-btn-back-to-top">
 			<i class="zmdi zmdi-chevron-up"></i>
@@ -975,7 +824,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 											<select class="js-select2" name="time" id="color_id">
 
 
-												 
 												{{-- <option>Choose an option</option>
 												@foreach ($product->colors->unique() as $color)
 
@@ -988,29 +836,22 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 								</div>
 
 								<div class="flex-w flex-r-m p-b-10">
-									<div class="size-204 flex-w flex-m respon6-next">
-									    <div class="wrap-num-product flex-w m-r-20 m-tb-10">
-											<div class="minus cl8 hov-btn3 trans-04 flex-c-m">
-												<button  type="button" id="minus-button">
-													-
-												</button> 
-												
-												{{-- <i class="fs-16 zmdi zmdi-minus"></i> --}}
+									<div class="size-204 flex-w flex-m respon6-next" id="cart">
+										<div class="wrap-num-product flex-w m-r-20 m-tb-10">
+											<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+												<i class="fs-16 zmdi zmdi-minus"></i>
 											</div>
 
-											<input class="mtext-104 cl3 txt-center num-product" type="number" id="qty" min="1" value="1">
+											<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
 
-											<div class="plus cl8 hov-btn3 flex-c-m">
-												<button  type="button" id="plus-button">
-												+	
-												</button> 
-												{{-- <i class="fs-16 zmdi zmdi-plus"></i> --}}
+											<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+												<i class="fs-16 zmdi zmdi-plus"></i>
 											</div>
 										</div>
-									</div>
-
-									<div class="size-204 flex-w flex-m respon6-next" id="cart-modal">
-								
+{{-- 
+										<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+											Add to cart
+										</button> --}}
 									</div>
 								</div>	
 							</div>
@@ -1053,58 +894,25 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/select2/select2.min.js')}}"></script>
 	<script src="https://unpkg.com/axios@0.27.2/dist/axios.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-{{-- <script src="{{asset('assets/js/pages/features/miscellaneous/toastr.min.js')}}"></script> --}}
-
 	
 	<script>
 
-var qty=1;
-  $("#minus-button").click(function() {
-     qty = $("#qty").val();
-    if (qty > 0) {
-      $("#qty").val(parseInt(qty) - 1);
-	  qty = $("#qty").val();
-
-    }
-	// alert(qty);
-
-  });
-
-  $("#plus-button").click(function() {
-     qty = $("#qty").val();
-    $("#qty").val(parseInt(qty) + 1);
-	 qty = $("#qty").val();
-
-
-  });
-
-
-
 $('.js-show-modal1').on('click',function(e){
-	
         e.preventDefault();
-
 
 		var productId = $(this).data('id');
 		let button = "";
 		
+				// button += `<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+				// 							Add to cart
+				// 						</button>`;
+		
 				
 		axios.get('/products/' + productId)
       .then(function (response) {
+		button += ` <a  onclick="performCartStore(${productId}, ${response.data.data.price} )" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">add to cart</a>`;
 
-		// $qty = document.getElementById('qty').value;
-		// <button type='button' onclick="performCartStore(${productId}, ${response.data.data.price})" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-
-		button += `	
-		@if(Auth::guard('user')->check())
-		<button type='button'onclick="performCartStore(${productId}, ${response.data.data.price})" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-											Add to cart
-										</button>
-		@else
-		<a href="{{route('cms.login','user')}}"  class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">add to cart</a>
-        @endif		`
-		document.getElementById('cart-modal').innerHTML = button;
+		document.getElementById('cart').innerHTML = button;
 
 		$('#name').text(response.data.data.name);
 		$('#price').text( '$  '+response.data.data.price );
@@ -1123,13 +931,12 @@ $('.js-show-modal1').on('click',function(e){
              });
 
 
+			 document.getElementById('images-product').innerHTML = response.data.data.images;
 
 			let imagesHtml = "";
-
 			 $.each(response.data.data.images , function(i, item){
                 var images=item['url'];
-
-				var imageUrl = `{{ url('uploads/images/${images}') }}`;
+				var imageUrl = `{{ Storage::url('${images}') }}`;
 				imagesHtml += `<div class="item-slick3" data-thumb="${imageUrl}">
 											<div class="wrap-pic-w pos-relative">
 												<img src="${imageUrl}" alt="IMG-PRODUCT">
@@ -1143,9 +950,12 @@ $('.js-show-modal1').on('click',function(e){
 				document.getElementById('images-product').innerHTML = imagesHtml;
 			
 });
-
 		
-    $('.js-modal1').addClass('show-modal1');
+
+
+
+
+        $('.js-modal1').addClass('show-modal1');
       })
       .catch(function (error) {
         console.log(error);
@@ -1153,12 +963,8 @@ $('.js-show-modal1').on('click',function(e){
     });
 
 
-	
-
-
 
     $('.js-hide-modal1').on('click',function(){
-		// alert(qty);
         $('.js-modal1').removeClass('show-modal1');
     });
 
@@ -1169,15 +975,11 @@ $('.js-show-modal1').on('click',function(e){
 			});
 		});
 
-
-
-		
-
-		function performCartStore(id ,productprice) {
-			// alert( document.getElementById('qty').value);
+		function performCartStore(id ,productprice ) {
+			// alert(productprice);
       axios.post('/carts',{
             product_id:  id,
-            quantity : parseInt(document.getElementById('qty').value),
+            quantity :1,
             price:productprice,
 
       })
@@ -1192,60 +994,30 @@ $('.js-show-modal1').on('click',function(e){
       });
   }
 
+	// 	function getcolors(productId){
+    //     axios.get('/products/'+productId)
+    //     .then(function (response) {
+    //         console.log(response);
+    //         // console.log(response.data.data);
+    //         $('#sub_category_id').empty();
+    //         $.each(response.data.data , function(i, item){
+    //          $('#sub_category_id').append(new Option(  item['title'] ,item['id'] ))
+    //          });
+           
+            
+    //     }).catch(function (error) {
+    //         console.log(error.response);
+    //     });
+    // }	
 
-//   $('.js-show-cart').on('click',function(){
-//         $('.js-panel-cart').addClass('show-header-cart');
 
-
-//     });
-
-
-$('.js-show-cart').on('click',function(e){
-	
-	e.preventDefault();
-	
-			
-	axios.get('/carts').then(function (response) {
-	// alert(response.data.data);
-
-	let cartHtml = "";
-
-$.each(response.data.data , function(i, item){
-	var image=item.product['image_url'];
-
-   cartHtml += `<li class="header-cart-item flex-w flex-t m-b-12">
-						<div class="header-cart-item-img">
-							<img src="${image}" alt="IMG">
-						</div>
-
-						<div class="header-cart-item-txt p-t-8">
-							<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
-								${item.product['name']}
-							</a>
-
-							<span class="header-cart-item-info">
-								${item['quantity']} x $ ${item['price']}
-							</span>
-						</div>
-					</li> `;
-
-   document.getElementById('cart').innerHTML = cartHtml;
-
-});
-	
-document.getElementById('total').innerHTML = 'Total: $'+response.data.total;
-
-$('.js-panel-cart').addClass('show-header-cart');
-  })
-  .catch(function (error) {
-	console.log(error);
+// 	$(document).ready(function() {
+//   $('#js-show-modal1').click(function() {
+// 	alert(1);
+//     $('#product-modal').modal('show');
+//     $('#product-modal .modal-content').load('/products/' + id);
 //   });
-});
-});
-
-    $('.js-hide-cart').on('click',function(){
-        $('.js-panel-cart').removeClass('show-header-cart');
-    });
+// });
 
 	</script>
 <!--===============================================================================================-->
@@ -1262,62 +1034,46 @@ $('.js-panel-cart').addClass('show-header-cart');
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/MagnificPopup/jquery.magnific-popup.min.js')}}"></script>
 	<script>
-		$('.gallery-lb').each(function() { // the containers for all your galleries
-			$(this).magnificPopup({
-		        delegate: 'a', // the selector for gallery item
-		        type: 'image',
-		        gallery: {
-		        	enabled:true
-		        },
-		        mainClass: 'mfp-fade'
-		    });
-		});
+		// $('.gallery-lb').each(function() { // the containers for all your galleries
+		// 	$(this).magnificPopup({
+		//         delegate: 'a', // the selector for gallery item
+		//         type: 'image',
+		//         gallery: {
+		//         	enabled:true
+		//         },
+		//         mainClass: 'mfp-fade'
+		//     });
+		// });
 	</script>
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/isotope/isotope.pkgd.min.js')}}"></script>
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/sweetalert/sweetalert.min.js')}}"></script>
+	<script src="{{asset('path/to/your/javascript.js')}}"></script>
 
 	<script>
-		function updateFavoriteCount(count) {
-        document.querySelector('#favorite-count').setAttribute('data-count', count);
-         document.querySelector('#favorite-count').textContent = count;
-} 
 
-function performFavorite(id) {
-	
-    axios.post('/cms/user/favorites', {
-        product_id: id,
-    })
-    .then(function (response) {
-        let heartIcon = $(`[data-product-id=${id}]`);
-        if (response.data.message === 'Product added to favorite') {
-            heartIcon.addClass('js-addedwish-b2');
-			updateFavoriteCount(response.data.favoritesCount);
-        } else {
-            heartIcon.removeClass('js-addedwish-b2');
-			updateFavoriteCount(response.data.favoritesCount);
-        }
-        swal(response.data.message, "", "success");
-        // Re-run the script that adds the class 'js-addedwish-b2' to the favorite products
-        $.ajax({
-            url: '/cms/user/favorites',
-            method: 'GET',
-            success: function(response) {
-                response.data.forEach(function(favorite) {
-                    $(`[data-product-id=${favorite.product_id}]`).addClass('js-addedwish-b2');
-                });
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-    })
-	.catch(function (error) {
-        if(error.response.status === 401) {
-            swal("You must be logged in to manage your wishlist !");
-        }
-});
-
-}
-	</script>
+        $(document).on('click', '.removeFromWishlist', function (e) {
+            e.preventDefault();
+           
+            $.ajax({
+                type: 'delete',
+				url: '/cms/user/favorites/'+ $(this).attr('data-product-id'),
+                data: {
+                    'productId': $(this).attr('data-product-id'),
+                },
+                success: function (data) {
+					swal( "Product deleted from favorite !");  
+                    $(this).closest('.block2').remove();
+                }
+            });
+        });
+    </script>
 	{{-- <script>
 		    $.ajaxSetup({
             headers: {

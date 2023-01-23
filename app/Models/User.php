@@ -28,5 +28,18 @@ class User extends Authenticatable
     public function addresses()
     {
         return $this->hasMany(Address::class, 'user_id', 'id');
+
+   
+   public function favorites()
+    {
+        return $this->hasMany(FavoritProduct::class ,'user_id','id');
+    }
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, FavoritProduct::class,'user_id','product_id');
+    }
+    public function wishlistHas($productId)
+    {
+        return self::products()->where('product_id', $productId)->exists();
     }
 }

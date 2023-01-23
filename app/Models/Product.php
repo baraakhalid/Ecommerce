@@ -55,7 +55,20 @@ class Product extends Model
     {
         return $this->belongsToMany(Size::class, ProductColorSize::class,'product_id','size_id');
     }
-
+    public function users()
+    {
+        return $this->belongsToMany(User::class, FavoritProduct::class,'product_id','user_id');
+    }
+    public function favorites()
+    {
+        return $this->hasMany(FavoritProduct::class ,'product_id','id');
+    }
+    public function getIsFavoriteAttribute(){
+        if(auth('user')->check()){
+            return $this->favorites()->where('user_id',auth('user')->id())->exists();
+        }
+        return false;
+    }
     public function colors()
     {
         return $this->belongsToMany(Color::class, ProductColorSize::class,'product_id','color_id');
