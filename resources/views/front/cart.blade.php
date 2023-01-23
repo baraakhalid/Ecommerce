@@ -890,7 +890,9 @@ function confirmDelete(id,reference) {
 		
 	})
       .catch(function (error) {
-        console.log(error);
+		toastr.error(error.response.data.message);
+
+        // console.log(error);
       });
 
     }
