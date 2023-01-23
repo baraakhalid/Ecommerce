@@ -18,13 +18,8 @@ class FrontController extends Controller
     //  dd(Auth::guard('user')->user()->id);
             $categories = Category::all();
             $products=Product::all();
-            // if(auth('user')->check() ){
-           
-            //     $total=Cart::where('user_id' ,'=' ,Auth::guard('user')->user()->id)->sum(DB::raw('quantity * price'));
-           
-            //     return response()->view('front.index', ['categories' => $categories , 'products'=>$products, 'total'=>$total]);    
-            // }
-            // else
+
+
             return response()->view('front.index', ['categories' => $categories , 'products'=>$products]);    
 
 
