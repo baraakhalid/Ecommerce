@@ -5,12 +5,18 @@ namespace App\Http\Controllers;
 use App\Exports\ProductsExportForAdmin;
 use App\Models\Category;
 use App\Models\Color;
-use App\Models\Image;
+use App\Models\Image as ModelsImage;
+// use App\Models\Image;
 use App\Models\Language;
 use App\Models\Product;
 use App\Models\ProductColorSize;
 use App\Models\Size;
 use Illuminate\Http\Request;
+use App\Traits\imageTrait;
+use Intervention\Image\Facades\Image;
+
+
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -19,6 +25,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
+
+    use imageTrait;
     /**
      * Display a listing of the resource.
      *
@@ -80,7 +88,7 @@ class ProductController extends Controller
         {
         
             $roles = [
-                'image' => 'required|image|mimes:png,jpg,jpeg',
+                // 'image' => 'required|image|mimes:png,jpg,jpeg',
                 'price' => 'required|numeric|min:1',
                 'category_id' => 'required|numeric|exists:categories,id',
 
@@ -131,7 +139,6 @@ class ProductController extends Controller
                 foreach($request->filename as $one)
                 {
 
-
                     if (isset(explode('/', explode(';', explode(',', $one)[0])[0])[1])) {
                     $fileType = strtolower(explode('/', explode(';', explode(',', $one)[0])[0])[1]);
                     $name = "" .str_random(8) . "" .  "" . time() . "" . rand(1000000, 9999999);
@@ -139,12 +146,19 @@ class ProductController extends Controller
                     if (in_array($fileType, ['jpg','jpeg','png','pmb'])){
                         $newName = $name. ".jpg";
                         $attachType = 1;
-                        // Image::make($one)->resize(800, null, function ($constraint) {$constraint->aspectRatio();})->save("uploads/images/meals/$newName");
+                        Image::make($one)->resize(800, null, function ($constraint) {$constraint->aspectRatio();})->save("uploads/images/products/$newName");
                     }
+                    // $request->file('all_images')->storePubliclyAs('products', $newName, ['disk' => 'public']);
 
 
-                    $this->saveImages($request, $product, 'all_images');
-
+                    //  {{dd(count($request->filename));}}
+                    $image = new ModelsImage();
+                    // dd(1);
+                    $image->name = $newName;
+                    $image->url = 'products/' . $newName;
+                    $product->images()->save($image);
+                    // $image->save();
+                   
                     
                 }
                    
@@ -152,10 +166,10 @@ class ProductController extends Controller
             }
       
  
-            if ($isSaved) {
-                $this->saveImages($request, $product, 'image');
+            // if ($isSaved) {
+            //     $this->saveImages($request, $product, 'image');
               
-            }
+            // }
             if ($request->colors != null) {
                 foreach ($request->colors as $color_id) {
                   $color_sizes = $request->input("sizes_for_color_$color_id");
@@ -190,24 +204,13 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        // if (Auth::guard('admin')->check()){
-
-         
-        //     $product=Product::filter()->orderBy('id', 'desc')->where('id','=',$product->id)->get();
-    
-        //     return response()->view('admin.products.home',['products'=>$product]);  
-        // }
-        // else{
+        
     
     
             $product =Product::with('sizes')->distinct()->with('colors')->with('images')->distinct()->find($product->id);
-
+            //  dd(11);
             
-                // $product =Product::find($product->id);
-
-            // }
-                // $product = Product::find('2');
-                //  dd($product->sizes) ;
+              
     
                 return response()->json(['message'=>'success' , 'data' => $product ,'colors'=>$product->colors->unique() ,'sizes'=>$product->sizes->unique()->sortBy('id')]);
     
@@ -279,27 +282,26 @@ class ProductController extends Controller
         }
     }
     
-    private function saveImages(Request $request, Product $product, String $key, bool $update = false)
-    {
-        if ($request->hasFile($key)) {
-            if ($update) {
-                foreach ($product->images as $image) {
-                    if (str_contains($image->name, $key)) {
-                        Storage::delete('public/products/' . $image->name);
+    // private function saveImages(Request $request, Product $product, String $key, bool $update = false)
+    // {
+    //     if ($request->hasFile($key)) {
+    //         if ($update) {
+    //             foreach ($product->images as $image) {
+    //                 if (str_contains($image->name, $key)) {
+    //                     Storage::delete('public/products/' . $image->name);
 
-                        $image->delete();
-                    }
-                }
-            }
-            $imageName = time() . '' . str_replace(' ', '', $product->name) . "_product_$key." . $request->file($key)->extension();
-            $request->file($key)->storePubliclyAs('products', $imageName, ['disk' => 'public']);
+    //                     $image->delete();
+    //                 }
+    //             }
+    //         }
+    //         $imageName = time() . '' . str_replace(' ', '', $product->name) . "_product_$key." . $request->file($key)->extension();
+    //         $request->file($key)->storePubliclyAs('products', $imageName, ['disk' => 'public']);
 
-
-            $image = new Image();
-            $image->name = $imageName;
-            $image->url = 'products/' . $imageName;
-            $product->images()->save($image);
-        }
-        }
+    //         $image = new Image();
+    //         $image->name = $imageName;
+    //         $image->url = 'products/' . $imageName;
+    //         $product->images()->save($image);
+    //     }
+    // }
 
 }
