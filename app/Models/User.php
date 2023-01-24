@@ -28,8 +28,9 @@ class User extends Authenticatable
     public function addresses()
     {
         return $this->hasMany(Address::class, 'user_id', 'id');
+
     }
-   
+
    public function favorites()
     {
         return $this->hasMany(FavoritProduct::class ,'user_id','id');
