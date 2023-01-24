@@ -475,29 +475,6 @@
 								
 									  </div>
 
-									{{-- <div class="rs1-select2 rs2-select2 bor8 bg0 m-b-12 m-t-9">
-										<select class="js-select2" name="time">
-											<option>Select a country...</option>
-											<option>USA</option>
-											<option>UK</option>
-										</select>
-										<div class="dropDownSelect2"></div>
-									</div>
-
-									<div class="bor8 bg0 m-b-12">
-										<input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="state" placeholder="State /  country">
-									</div>
-
-									<div class="bor8 bg0 m-b-22">
-										<input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="postcode" placeholder="Postcode / Zip">
-									</div>
-									
-									<div class="flex-w">
-										<div class="flex-c-m stext-101 cl2 size-115 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer">
-											Update Totals
-										</div>
-									</div>
-										 --}}
 								</div>
 							</div>
 						</div>
@@ -890,7 +867,9 @@ function confirmDelete(id,reference) {
 		
 	})
       .catch(function (error) {
-        console.log(error);
+		toastr.error(error.response.data.message);
+
+        // console.log(error);
       });
 
     }

@@ -11,7 +11,7 @@ class Product extends Model
 {
     use HasFactory,Translatable;
     protected $translatedAttributes=['name','info'];
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url' ,'is_favorite'];
 
     public function images()
     {

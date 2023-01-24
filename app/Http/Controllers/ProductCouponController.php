@@ -6,6 +6,7 @@ use App\Models\ProductCoupon;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+
 class ProductCouponController extends Controller
 {
     /**
@@ -18,13 +19,30 @@ class ProductCouponController extends Controller
         // dd(111);
         if($request->has('code'))
         {
-          
-            $data=ProductCoupon::where('code' ,'=' ,$request->input('code'))->first();
+        //    dd( request()->input('code'));
+            $validator = Validator(
+
+                ['code' => $request->input('code')],
+                [ 'code' =>'required|exists:product_coupons,code']
+                // 'code' =>'required|exists:product_coupons,code',
+              
+                
+    
+            );
+    
+            if (!$validator->fails()){  
+             $data=ProductCoupon::where('code' ,'=' ,$request->input('code'))->first();
             $request->session()->put('code', $data->value);
             $request->session()->put('type', $data->type);
 		
             return response()->json(['message'=>'Coupon Applied Successfully' , 'data' => $data ]
         );
+    }
+        else
+    {    return response()->json(
+            ['message' => $validator->getMessageBag()->first()],
+            Response::HTTP_BAD_REQUEST,);}
+        // return response()->json(['message'=>'Coupon Not Found!'  , 'data' => 11] ,Response::HTTP_BAD_REQUEST);
 
         }
         else{

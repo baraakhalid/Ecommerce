@@ -714,22 +714,13 @@
 								</span>
 							</div>
 
-							<div class="block2-txt-child2 flex-r p-t-3">
+							<div id="favorite" class="block2-txt-child2 flex-r p-t-3">
 								{{-- @if (Auth::guard('user')->check()) --}}
-
-								<a onclick="performFavorite({{$product->id }})"  data-product-id="{{$product->id}}" class="addToWishlist btn-addwish-b2 dis-block pos-relative js-addwish-b2" >
-									{{-- @if($product->is_favorite) --}}
+								{{-- <a  onclick="performFavorite({{$product->id }})"  data-id="{{$product->id}}" class="addToWishlist btn-addwish-b2 dis-block pos-relative js-addwish-b2" > --}}
 									
-									<img class="icon-heart1 dis-block trans-04" src="{{asset('front/images/icons/icon-heart-01.png')}}" alt="ICON">
-								{{-- @else --}}
-									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{{asset('front/images/icons/icon-heart-02.png')}}" alt="ICON">
-								{{-- @endif --}}
-								</a>
-								{{-- @else
-								<a href="{{route('cms.login','user')}}"  >
-									<img  src="{{asset('front/images/icons/icon-heart-01.png')}}" alt="ICON">
-								</a>
-								@endif --}}
+									{{-- <a id="heart" onclick="performFavorite({{$product->id }})"   data-id="{{$product->id}}" class="fa fa-heart" ></a> --}}
+									<a id="heart_{{$product->id}}" onclick="performFavorite({{$product->id }})"   data-id="{{$product->id}}" @if($product->is_favorite) class="fa fa-heart" @else  class="fa fa-heart-o" @endif></a>
+									
 							</div>
 						</div>
 					</div>
@@ -1093,6 +1084,7 @@ $('.js-show-modal1').on('click',function(e){
 		axios.get('/products/' + productId)
       .then(function (response) {
 
+
 		// $qty = document.getElementById('qty').value;
 		// <button type='button' onclick="performCartStore(${productId}, ${response.data.data.price})" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
 
@@ -1173,7 +1165,7 @@ $('.js-show-modal1').on('click',function(e){
 
 		
 
-		function performCartStore(id ,productprice) {
+	function performCartStore(id ,productprice) {
 			// alert( document.getElementById('qty').value);
       axios.post('/carts',{
             product_id:  id,
@@ -1284,31 +1276,54 @@ $('.js-panel-cart').addClass('show-header-cart');
          document.querySelector('#favorite-count').textContent = count;
 } 
 
+function getProduct(id) {
+	// var productId = $(this).data('id');
+	axios.get('/products/' + id)
+      .then(function (response) {
+		// alert(response.data.data.is_favorite);
+
+	})
+      .catch(function (error) {
+        console.log(error);
+      });
+
+	}
+
+
 function performFavorite(id) {
 	
     axios.post('/cms/user/favorites', {
         product_id: id,
     })
     .then(function (response) {
-        let heartIcon = $(`[data-product-id=${id}]`);
-        if (response.data.message === 'Product added to favorite') {
-            heartIcon.addClass('js-addedwish-b2');
-			updateFavoriteCount(response.data.favoritesCount);
+
+		axios.get('/products/' + id)
+      .then(function (response) {
+
+		if (response.data.data.is_favorite) {
+			
+		$("#heart_" + id).removeClass("fa fa-heart-o");
+			
+		$("#heart_" + id).addClass("fa fa-heart");
+
+
         } else {
-            heartIcon.removeClass('js-addedwish-b2');
-			updateFavoriteCount(response.data.favoritesCount);
+
+			$("#heart_" + id).removeClass("fa fa-heart");
+			$("#heart_" + id).addClass("fa fa-heart-o");
+
+		
         }
-        swal(response.data.message, "", "success");
-        // Re-run the script that adds the class 'js-addedwish-b2' to the favorite products
-        $.ajax({
-            url: '/cms/user/favorites',
-            method: 'GET',
-            success: function(response) {
-                response.data.forEach(function(favorite) {
-                    $(`[data-product-id=${favorite.product_id}]`).addClass('js-addedwish-b2');
-                });
-            }
-        });
+
+	})
+      .catch(function (error) {
+        console.log(error);
+      });
+
+        
+	  swal(response.data.message, "", "success");
+
+      
     })
 	.catch(function (error) {
         if(error.response.status === 401) {
@@ -1318,44 +1333,7 @@ function performFavorite(id) {
 
 }
 	</script>
-	{{-- <script>
-		    $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-      $(document).on('click', '.addToWishlist', function (e) {
-            e.preventDefault();
-            @guest()
-			
-				swal( "You must be logged in to manage your wishlist !");
 
-
-            @endguest
-			var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
-
-            $.ajax({
-                type: 'post',
-                url: "{{Route('wishlist.store')}}",
-                data: {
-                    'productId': $(this).attr('data-product-id'),
-                },
-                success: function (data) {
-
-                    if(data.wished ){
-							swal( nameProduct, "is added to wishlist !", "success");
-							$(this).addClass('js-addedwish-b2');}
-
-     
-			        else
-					{swal( nameProduct, "is deleted from wishlist !", "success");
-					$(this).removeClass('js-addedwish-b2');}
-                }
-            });
-        });
-
-
-	</script> --}}
 	
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
