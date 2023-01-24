@@ -15,12 +15,14 @@ class CreateAddressesTable extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->string('name',45);
+            // $table->string('name',45);
             $table->string('street',45);
-            $table->string('area',45);
+            // $table->string('area',45);
             $table->string('building',45);
             $table->string('flate_num',45);
             $table->foreignId('user_id')->constrained()->restrictOnDelete();
+            $table->foreignId('city_id')->constrained()->restrictOnDelete();
+            $table->foreignId('area_id')->constrained()->restrictOnDelete();
             $table->timestamps();
         });
     }

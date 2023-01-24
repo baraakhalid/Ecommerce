@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Address;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AddressController extends Controller
 {
@@ -35,7 +36,39 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator($request->all(), [
+            'street' => 'required|string|min:3',
+            'building' => 'required|string|min:3',
+            'flat' => 'required|string|min:3',
+            'street' => 'required|string|min:3',
+            'cityId' => 'required|numeric|exists:cities,id',
+            'areaId' => 'required|numeric|exists:areas,id',
+         
+          
+        ]);
+
+        if (!$validator->fails()) {
+            $address = new Address();
+            $address->street = $request->input('street');
+            $address->building = $request->input('building');
+            $address->flate_num	 = $request->input('flat');
+            $address->city_id = $request->input('cityId');
+            $address->area_id = $request->input('areaId');
+
+
+            $isSaved = $request->user()->addresses()->save($address);
+
+           
+            return response()->json(
+                ['message' => $isSaved ? 'Saved successfully' : 'Save failed!'],
+                $isSaved ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST
+            );
+        } else {
+            return response()->json(
+                ['message' => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST,
+            );
+        }
     }
 
     /**
