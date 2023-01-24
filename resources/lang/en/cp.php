@@ -466,6 +466,11 @@ return [
 
 
    'products'=>'Products',
+   'city'=>'City',
+   'area'=>'Area',
+   'street'=>'Street',
+   'building'=>'Building',
+   'flat'=>'Flat Number',
 
 
 

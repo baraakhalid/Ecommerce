@@ -17,4 +17,10 @@ class Address extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+    public function city(){
+        return $this->belongsto(City::class ,'city_id','id');
+    }
+    public function area(){
+        return $this->belongsto(Area::class ,'area_id','id');
+    }
 }

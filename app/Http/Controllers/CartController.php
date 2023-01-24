@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Address;
 use App\Models\Cart;
+use App\Models\City;
 use App\Models\Product;
 use App\Models\ProductCoupon;
 use Carbon\Carbon;
@@ -35,13 +36,22 @@ class CartController extends Controller
     {
     
         if(auth('user')->check()){
-            $addresses=Address::where('user_id' ,'=' ,$request->user()->id)->get();
+            $addresses=Address::where('user_id' ,'=' ,$request->user()->id)->with(['city','area'])->get();
+            $cities=City::get();
             
             $carts=Cart::with('product')->where('user_id' ,'=' ,$request->user()->id)->get();
             $total=Cart::where('user_id' ,'=' ,$request->user()->id)->sum(DB::raw('quantity * price'));
-            return response()->view('front.cart',['carts'=>$carts ,'total'=>$total ,'addresses'=>$addresses ]);
+            return response()->view('front.cart',['carts'=>$carts ,'total'=>$total ,'addresses'=>$addresses ,'cities'=>$cities]);
 
         }
+    }
+
+    public function getareas($cityId)
+    {       
+
+        $city = City::find($cityId);
+        $areas = $city->areas;
+        return response()->json(['message'=> 'dd', 'data'=>$areas]);
     }
     public function getCoupon(Request $request)
     {
