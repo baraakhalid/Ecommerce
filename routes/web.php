@@ -181,6 +181,7 @@ Route::group([
      
         Route::resource('carts', CartController::class);
         Route::get('/shopping', [App\Http\Controllers\CartController::class, 'showCart'])->name('front.cart');
+        Route::get('/total', [App\Http\Controllers\CartController::class, 'getTotal'])->name('cart.total');
         Route::resource('product_coupons', ProductCouponController::class);
         Route::resource('orders', OrderController::class);
 

@@ -43,25 +43,12 @@ class CartController extends Controller
 
         }
     }
-    public function getCoupon(Request $request)
+    public function getTotal(Request $request)
     {
-        // $validator = Validator($request->all(), [
-        //     'code' =>'required',
-    
-
-        // ]);
-
-        // if (!$validator->fails()) {
-        if(auth('user')->check()){
-            if($request->has('code'))
-            {
-            $coupon=ProductCoupon::where('code' ,'=' ,$request->input('code'))->get();
-            // dd($coupon);
-        }
-            // return response()->view('front.cart',['carts'=>$carts ,'total'=>$total ]);
-
-        }
-    // }
+        $total=Cart::where('user_id' ,'=' ,$request->user()->id)->sum(DB::raw('quantity * price'));
+        
+        return response()->json(['message'=>'success','total' => $total]);
+  
 
     }
  
@@ -101,10 +88,12 @@ class CartController extends Controller
                     $cart->user_id= $request->user()->id;
                     $cart->price= $request->price;
                     $cart->quantity= $request->quantity;
-
+                    $request->session()->put('quantity', $cart->quantity);
+                    $request->session()->put('price', $cart->price);
 
                     $isSaved = $cart->save();
                     if ($isSaved)
+                    
                     return response()->json(['message' => 'Product cart added']);
                 
             } 
@@ -165,6 +154,8 @@ class CartController extends Controller
             $cart->quantity = $request->quantity;
 
             $isSaved = $cart->save();
+            // $request->session()->forget('code');
+			// $request->session()->forget('type');
             return response()->json(
                 ['message' => $isSaved ? 'quantity Updated successfully' : 'Save failed!'],
                 $isSaved ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
