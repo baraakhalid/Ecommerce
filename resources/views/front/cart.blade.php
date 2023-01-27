@@ -388,7 +388,7 @@
 											</div>
 										</div>
 									</td>
-									<td  class= "sub-total column-5 total " id="total_{{$item->product->id}}" >{{$item->price * $item->quantity}}</td>
+									<td  class= "sub-total column-5 total " id="total_{{$item->product->id}}" >{{$item->price * $item->quantity}}$</td>
 								</tr>
 
 							@endforeach
@@ -427,7 +427,7 @@
 
 							<div class="size-209">
 								<span class="mtext-110 cl2" id="sub-total">
-									{{$total}}
+									{{$total}}$
 								</span>
 							</div>
 						</div>
@@ -502,21 +502,21 @@
 							<div class="size-209 p-t-1">
 								@if (session()->has('code'))
 
-								<span class="mtext-110 cl2" id="final-total">
+									<span class="mtext-110 cl2" id="final-total">
 									{{-- {{$total}} --}}
-								@if (session()->has('type') && session('type') == 'fixed')
+									@if (session()->has('type') && session('type') == 'fixed')
+									{{$total - session('code')}}$
 
-									{{$total - session('code')}}
-
-								@else
-								{{$total - ($total *(session('code')/100))}}
+									@else
+									{{$total - ($total *(session('code')/100))}}
 									@endif
-								</span>
+									</span>
+								
                                 @else
-								<span class="mtext-110 cl2" id="final-total">
+									<span class="mtext-110 cl2" id="final-total">
 									{{$total}}
 									
-								</span>
+									</span>
 								@endif
 
 							</div>
@@ -879,8 +879,10 @@ $(".minus-button").click(function() {
 	  qty = $("#qty_" + productId).val();
 	  total = qty * response.data.data.price;
 	//   $("#total").val(parseInt(total) * qty );
-	  $('#total_' + productId).text(total);
+	  $('#total_' + productId).text(total +'$');
+	  
 	  getTotal();
+	  applayCoupon();
 
     }
 	
@@ -905,8 +907,9 @@ $(".minus-button").click(function() {
     $("#qty_" + productId).val(parseInt(qty) + 1);
 	 qty = $("#qty_" + productId).val();
 	 total = qty * response.data.data.price;
-	  $('#total_' + productId).text( total);
+	  $('#total_' + productId).text( total +'$');
 	  getTotal();
+	  applayCoupon();
 
 		
 	})
@@ -932,33 +935,44 @@ axios.post('/carts/'+ id ,formData)
 
 .then(function (response) {
 
-	toastr.success(response.data.message);
+	toastr.success(response.data.message ,'' ,{positionClass: 'toast-bottom-right'});
 	// getTotal();
 })
 .catch(function (error) {
 	// alert(11);
 	// console.log(error.response);
 	
-	toastr.error(error.response.data.message);
+	toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
 });
 
 }
+
   function getTotal() {
 
-	// var arr = document.getElementsByName('qty').value;
-	var total = 0;
-    $(".total").each(function() {
-    var itemPrice = parseFloat($(this).text());
-    total += itemPrice;
+	axios.get('/total')
+		.then(function (response) {
+			$.total = response.data.total;
+		//  total = response.data.total;
+		// var subTotal = response.data.total;
+	$('#sub-total').text( $.total +'$');
 
-});
-$('#sub-total').text( total);
+    $('#final-total').text( $.total  +'$');
 
-$('#final-total').text( total);
+		})
+      .catch(function (error) {
+		toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
+
+        // console.log(error);
+      });
+
+	 
 
 }
 
-function confirmDelete(id,reference) {
+getTotal();
+
+function confirmDelete(id,reference)
+ {
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -973,67 +987,78 @@ function confirmDelete(id,reference) {
         }
         });
     }
-	function applayCoupon() {
+
+
+
+
+
+
+
+function applayCoupon() {
 		
 		axios.get('/product_coupons?code=' + $("#code").val())
 		.then(function (response) {
 
-                // alert(response.data.data.value);
+        //  alert($.total);
+		var currentDate = moment().format("YYYY-MM-DD");
+		// alert(currentDate);
+		var startDate = response.data.data.start_date;
+		var endDate = response.data.data.expire_date;
+		// alert(currentDate);
+		if($.total >= parseFloat(response.data.data.greater_than) &&( currentDate >= startDate && currentDate <= endDate)){
 
-		if( parseFloat($('#sub-total').text()) >= parseFloat(response.data.data.greater_than) ){
 			if(response.data.data.type == 'fixed'){
-				// alert(11);
-			// toastr.success($code);
-			// alert($code);
-			toastr.success(response.data.message);
-
-              $('#discount').text(response.data.data.value);
-			//   $('#final-total').text( parseFloat($('#sub-total').text()) - 
-			//   (parseFloat($('#sub-total').text()) * ( parseFloat(response.data.data.value) / 100))
-			//   );
-              $('#final-total').text( parseFloat($('#sub-total').text()) - parseFloat(response.data.data.value));
+                // alert(response.data.data.value);
+	
+				
+				toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
+				$('#discount').text(response.data.data.value +'$');
+				
+              $('#final-total').text( $.total - parseFloat(response.data.data.value) +'$');
+			  $.finalTotal = $.total - parseFloat(response.data.data.value);
 
 			}
 			else{
-			toastr.success(response.data.message);
+			toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
+			$('#discount').text(response.data.data.value +'$');
 
-				$('#final-total').text( parseFloat($('#sub-total').text()) - 
-			  (parseFloat($('#sub-total').text()) * ( parseFloat(response.data.data.value) / 100))
-			  );
+				$('#final-total').text( $.total - ( $.total * (parseFloat(response.data.data.value) / 100) ) +'$');
+			  $.finalTotal = $.total -( $.total * (parseFloat(response.data.data.value) / 100) );
+
+ 
 			}
 			
-			
-         
 		}
 		else{
-			toastr.error('Total Price must be >=' + response.data.data.value);
+			toastr.error('The Total: '+$.total+' must be >=' + response.data.data.greater_than + ' OR Coupon Date Expire!','' ,{positionClass: 'toast-bottom-right'});
 
 		}
 
 		
 	})
       .catch(function (error) {
-		toastr.error(error.response.data.message);
+		toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
 
         // console.log(error);
       });
 
     }
+	// applayCoupon();
 
 	
 function performPlaceOrder() {
         axios.post('/orders', {
-            total:$('#final-total').text(),
+            total: $.finalTotal,
             address_id: document.querySelector('input[type=radio][name=address]:checked').value,
        })
         .then(function (response) {
             console.log(response);
-            toastr.success(response.data.message);
+            toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
             window.location.href = '/';
         })
         .catch(function (error) {
             console.log(error.response);
-            toastr.error(error.response.data.message);
+            toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
         });
     }
 
@@ -1095,6 +1120,7 @@ function performPlaceOrder() {
 	</script>
 <!--===============================================================================================-->
 <script src="{{asset('front/js/main.js')}}"></script>
+<script src="{{asset('front/js/moment.min.js')}}"></script>
 
 
 </body>

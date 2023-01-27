@@ -30,8 +30,8 @@ class ProductCouponController extends Controller
     
             );
     
-            if (!$validator->fails()){  
-             $data=ProductCoupon::where('code' ,'=' ,$request->input('code'))->first();
+            if (!$validator->fails()){    
+            $data=ProductCoupon::where('code' ,'=' ,$request->input('code'))->first();
             $request->session()->put('code', $data->value);
             $request->session()->put('type', $data->type);
 		
