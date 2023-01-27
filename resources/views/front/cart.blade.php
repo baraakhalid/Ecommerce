@@ -448,28 +448,20 @@
 									{{-- <span class="stext-112 cl8">
 										Calculate Shipping
 									</span> --}}
-									<div class="payment_item active">
-										@forelse ( $addresses as $address)
+									<div id="myList" class="payment_item active">
+										@foreach ( $addresses as $address)
 										<div class="radion_btn">
-											<input type="radio" id="{{$address->id}}" name="address"  value="{{$address->id}}"/>
-											<label for="f-option6">{{$address->name}} | {{$address->street}} | {{$address->area}} | {{$address->building}} | {{$address->flate_num}} </label>
-										  </div>
-										@empty
-										<div class="bor8 bg0 m-b-12">
-											<input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="state" placeholder="State /  country">
+											<input type="radio" id="{{$address->id}}"  value="{{$address->id}}"/>
+											<label for="f-option6">{{$address->city->name}} | {{$address->area->name}} | {{$address->street}} | {{$address->building}} | {{$address->flate_num}} </label>
 										</div>
-	
-										<div class="bor8 bg0 m-b-22">
-											<input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="postcode" placeholder="Postcode / Zip">
-										</div>
+										  
 										
+										@endforeach
 										<div class="flex-w">
-											<div class="flex-c-m stext-101 cl2 size-115 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer">
-												Update Totals
-											</div>
+											<a href="#" id= "js-show-modal1" class="flex-c-m stext-101 cl2 size-115 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer js-show-modal1">
+												New Address
+											</a>
 										</div>
-											
-										@endforelse
 										
 										
 								
@@ -694,6 +686,96 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			<i class="zmdi zmdi-chevron-up"></i>
 		</span>
 	</div>
+<!-- Moddal-->
+	<div  class="wrap-modal1 js-modal1 p-t-100 p-b-30">
+		<div class="overlay-modal1 js-hide-modal1"></div>
+
+		<div class="container" style="max-width: 600px">
+			<div class="bg0 p-t-60 p-b-30 p-lr-15-lg how-pos3-parent">
+				<button class="how-pos3 hov3 trans-04 js-hide-modal1">
+					<img src="{{asset('front/images/icons/icon-close.png')}}"  alt="CLOSE">
+				</button>
+
+				{{-- <div class="row">	 --}}
+					<div class=" p-b-30">
+						<div class="p-r-50 p-t-5 p-lr-0-lg">
+							
+                    <form id="create-form" >
+							<div class="p-t-25">
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-203 flex-c-m respon6">
+										{{__('cp.city')}}
+									</div>
+
+									<div class="size-204 respon6-next">
+										<div class="rs1-select2 bor8 bg0">
+											<select id="cityId" class="js-select2" name="time">
+												<option>Choose an option</option>
+												@foreach ($cities as $city)
+												<option value="{{$city->id}}">{{$city->name}}</option>
+												@endforeach
+											</select>
+											<div class="dropDownSelect2"></div>
+										</div>
+									</div>
+								</div>
+
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-203 flex-c-m respon6">
+										{{__('cp.area')}}
+									</div>
+
+									<div class="size-204 respon6-next">
+										<div class="rs1-select2 bor8 bg0">
+											<select id="areaId" class="js-select2" name="time">
+												<option>Choose an option</option>
+												
+											</select>
+											<div class="dropDownSelect2"></div>
+										</div>
+									</div>
+								</div>
+
+							
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-203 flex-c-m respon6">
+										{{__('cp.street')}}
+									</div>
+									<input id="street" style="height: 45px" class="bor8 p-lr-28 size-204 respon6-next" type="text" name="text" >
+								</div>
+
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-203 flex-c-m respon6">
+										{{__('cp.building')}}
+									</div>
+									<input id="building" style="height: 45px" class="bor8 size-204 p-lr-28 respon6-next" type="text" name="text" >
+								</div>
+
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-203 flex-c-m respon6">
+										{{__('cp.flat')}}
+									</div>
+									<input id="flat" style="height: 45px" class="bor8 size-204 p-lr-28 respon6-next" type="text" name="text" >
+								</div>
+
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-204 flex-w flex-m respon6-next">
+										
+
+										<button type="button" onclick="performStore()" style="float: right" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+											Save
+										</button>
+									</div>
+								</div>	
+							</div>
+                    </form>
+							
+						</div>
+					</div>
+				{{-- </div> --}}
+			</div>
+		</div>
+	</div>
 
 <!--===============================================================================================-->	
 	<script src="{{asset('front/vendor/jquery/jquery-3.2.1.min.js')}}"></script>
@@ -715,6 +797,70 @@ var qty=1;
 var total=0;
 
 
+
+
+   $('.js-show-modal1').on('click',function(e){
+        e.preventDefault();
+        $('.js-modal1').addClass('show-modal1');
+    });
+
+    $('.js-hide-modal1').on('click',function(){
+        $('.js-modal1').removeClass('show-modal1');
+    });
+	$('#cityId').on('change',function(){
+        // alert('Value: '+this.value);
+        getareas(this.value);
+    });
+    function getareas(cityId){
+        axios.get('/areas/'+cityId)         
+       .then(function (response) {
+           console.log(response);
+           console.log(response.data.data);
+
+           $('#areaId').empty();
+           $.each(response.data.data , function(i , item){
+            console.log('Id: '+item['id']);
+            $('#areaId').append(new Option(item['name'],item['id']));
+
+           });
+          
+       })
+       .catch(function (error) {
+     
+       });
+
+    } 
+
+	function performStore() {
+       
+	   axios.post('/addresses', {
+		street: document.getElementById('street').value,
+		building: document.getElementById('building').value,
+		flat: document.getElementById('flat').value,
+		cityId: document.getElementById('cityId').value,
+		areaId: document.getElementById('areaId').value,
+
+
+	   })
+	   .then(function (response) {
+		console.log("response received")
+		   console.log(response);
+		   toastr.success(response.data.message);
+		   document.getElementById('create-form').reset();
+		   var newAddress = response.data.data;
+
+        var newAddressHTML = '<div class="radion_btn">' +
+                              '<input type="radio" id="'+newAddress.id+'" name="address" value="'+newAddress.id+'"/>' +
+                              '<label for="f-option6">'+newAddress.city.name+' | '+newAddress.area.name+' | '+newAddress.street+' | '+newAddress.building+' | '+newAddress.flat_num+' </label>' +
+                            '</div>';
+        $("#myList").append(newAddressHTML);
+
+	   })
+	   .catch(function (error) {
+		   console.log(error.response);
+		   toastr.error(error.response.data.message);
+	   });
+   }
 
 $(".minus-button").click(function() {
 
