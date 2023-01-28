@@ -13,7 +13,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 
-use App\Http\Controllers\FavoritProductController;
+// use App\Http\Controllers\FavoritProductController;
 // use App\Http\Controllers\Auth\AuthController;
 // use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
@@ -138,7 +138,6 @@ Route::group([
         Route::post('/updateMyPassword', 'WEB\Admin\AdminController@updateMyPassword')->name('admins.updateMyPassword');
 
 
-        // Sawsan
         Route::get('/categories/{id}/meals', 'WEB\Admin\CategoryController@meals');
         // Route::resource('/categories', 'WEB\Admin\CategoryController');
 
@@ -187,7 +186,7 @@ Route::group([
 
         Route::resource('product_coupons', ProductCouponController::class);
         Route::resource('orders', OrderController::class);
-
+        Route::resource('favorit_products',  FavoritProductController::class);
         // Route::get('/product_coupons', [App\Http\Controllers\ProductCoupon::class, 'index'])->name('cart.coupon');
         // Route::get('/product_coupons', [App\Http\Controllers\CartController::class, 'getCoupon'])->name('cart.coupon');
         Route::put('/carts/apply-coupon', [App\Http\Controllers\CartController::class, 'applyCoupon'])->name('cart.apply_coupon');
@@ -206,12 +205,12 @@ Route::group([
         Route::get('/', 'FrontController@index')->name('front.index');
         
         });
-        Route::prefix('cms/user')->middleware('auth:user')->group(function () {
-            Route::post('favorites', 'FavoritProductController@store')->name('wishlist.store');
-            Route::get('favorites', 'FavoritProductController@index')->name('wishlist.index');
-            Route::delete('favorites/{productId}', 'FavoritProductController@destroy')->name('wishlist.destroy');
+        // Route::prefix('cms/user')->middleware('auth:user')->group(function () {
+        //     Route::post('favorites', 'FavoritProductController@store')->name('wishlist.store');
+        //     Route::get('favorites', 'FavoritProductController@index')->name('wishlist.index');
+        //     Route::delete('favorites/{productId}', 'FavoritProductController@destroy')->name('wishlist.destroy');
 
-        });
+        // });
         
  
 

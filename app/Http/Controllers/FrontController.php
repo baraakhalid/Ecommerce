@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Category;
+use App\Models\FavoritProduct;
 use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -18,9 +19,12 @@ class FrontController extends Controller
     //  dd(Auth::guard('user')->user()->id);
             $categories = Category::all();
             $products=Product::all();
+            $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
+            $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
 
 
-            return response()->view('front.index', ['categories' => $categories , 'products'=>$products]);    
+
+            return response()->view('front.index', ['categories' => $categories , 'products'=>$products,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart]);    
 
 
     }}

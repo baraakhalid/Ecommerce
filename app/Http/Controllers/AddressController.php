@@ -13,9 +13,15 @@ class AddressController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if(auth('user')->check()){
+            
+            $addresses=Address::with(['city','area'])->where('user_id' , $request->user()->id)->get();
+
+            return response()->json(['message'=>'success' , 'addresses' => $addresses]);
+
+        }
     }
 
     /**
@@ -55,12 +61,12 @@ class AddressController extends Controller
             $address->city_id = $request->input('cityId');
             $address->area_id = $request->input('areaId');
 
-
             $isSaved = $request->user()->addresses()->save($address);
-
+            $addressId = $address->id;
+           
            
             return response()->json(
-                ['message' => $isSaved ? 'Saved successfully' : 'Save failed!'],
+                ['message' => $isSaved ? 'Saved successfully' : 'Save failed!' ,'id'=>$addressId],
                 $isSaved ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST
             );
         } else {
@@ -79,7 +85,10 @@ class AddressController extends Controller
      */
     public function show(Address $address)
     {
-        //
+        $data=Address::with(['city','area'])->where('id',$address->id)->first();
+
+        return response()->json(['message'=>'success' , 'data' => $data]);
+
     }
 
     /**
