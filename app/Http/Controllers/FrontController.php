@@ -19,12 +19,16 @@ class FrontController extends Controller
     //  dd(Auth::guard('user')->user()->id);
             $categories = Category::all();
             $products=Product::all();
+        if(auth('user')->check()){
+
             $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
             $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
 
 
 
             return response()->view('front.index', ['categories' => $categories , 'products'=>$products,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart]);    
+        }
+        return response()->view('front.index', ['categories' => $categories , 'products'=>$products]);    
 
 
     }}

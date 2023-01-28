@@ -29,7 +29,9 @@
 	<!-- Shoping Cart -->
 	<form class="bg0 p-t-75 p-b-85">
 		<div class="container">
+			@if($isFull)
 			<div class="row">
+
 				<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
 					<div class="m-l-25 m-r--38 m-lr-0-xl">
 						<div class="wrap-table-shopping-cart">
@@ -42,7 +44,7 @@
 									<th class="column-5">Total</th>
 								</tr>
 
-							@foreach ($carts as $item)
+							@forelse ($carts as $item)
 								
 								<tr class="table_row">
 									<td class="column-1">
@@ -78,8 +80,10 @@
 									</td>
 									<td  class= "sub-total column-5 total " id="total_{{$item->product->id}}" >{{$item->price * $item->quantity}}$</td>
 								</tr>
+								@empty
+								No Item In Cart
 
-							@endforeach
+							@endforelse
 
 							</table>
 						</div>
@@ -221,6 +225,11 @@
 				</div>
 			</div>
 		</div>
+
+		@endif
+		<div class="row">
+			No Item In Cart!
+		</div>
 	</form>
 		
 	
@@ -332,75 +341,6 @@ var total=0;
 
 
 
-//    $('.js-show-modal1').on('click',function(e){
-//         e.preventDefault();
-//         $('.js-modal1').addClass('show-modal1');
-//     });
-
-//     $('.js-hide-modal1').on('click',function(){
-//         $('.js-modal1').removeClass('show-modal1');
-//     });
-// 	$('#cityId').on('change',function(){
-//         // alert('Value: '+this.value);
-//         getareas(this.value);
-//     });
-//     function getareas(cityId){
-//         axios.get('/areas/'+cityId)         
-//        .then(function (response) {
-         
-//            $('#areaId').empty();
-//            $.each(response.data.data , function(i , item){
-//             console.log('Id: '+item['id']);
-//             $('#areaId').append(new Option(item['name'],item['id']));
-
-//            });
-          
-//        })
-//        .catch(function (error) {
-     
-//        });
-
-//     } 
-
-// 	function performStore() {
-       
-// 	   axios.post('/addresses', {
-// 		street: document.getElementById('street').value,
-// 		building: document.getElementById('building').value,
-// 		flat: document.getElementById('flat').value,
-// 		cityId: document.getElementById('cityId').value,
-// 		areaId: document.getElementById('areaId').value,
-
-
-// 	   })
-// 	   .then(function (response) {
-// 		toastr.success(response.data.message);
-// 		   document.getElementById('create-form').reset();
-
-// 		var addressId = response.data.id;
-
-// 		// alert(addressId)
-
-// 		axios.get('/addresses/' + addressId)
-//       .then(function (response) {
-// 		let addresses = "";
-// 		 addresses = `<div class="radion_btn">
-// 			<input type="radio" id="${addressId}"  value="${addressId}"/>
-// 		 	  <label for="f-option6">${response.data.data.city.name} | ${response.data.data.area.name} |${response.data.data.building} |${response.data.data.street} |${response.data.data.flate_num}  </label>
-
-// 		 		</div>`;
-// 		console.log(addresses)
-
-//         $("#myList").append(addresses);
-
-// 	})
-//       .catch(function (error) {
-//         console.log(error);
-//       });
-
-// 	   });
-//    }
-
    $('.js-show-modal1').on('click',function(e){
         e.preventDefault();
         $('.js-modal1').addClass('show-modal1');
@@ -416,8 +356,7 @@ var total=0;
     function getareas(cityId){
         axios.get('/areas/'+cityId)         
        .then(function (response) {
-   
-
+         
            $('#areaId').empty();
            $.each(response.data.data , function(i , item){
             console.log('Id: '+item['id']);
@@ -431,11 +370,8 @@ var total=0;
        });
 
     } 
-	axios.defaults.headers.common = {
-        'X-Requested-With': 'XMLHttpRequest',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    };
-		function performStore() {
+
+	function performStore() {
        
 	   axios.post('/addresses', {
 		street: document.getElementById('street').value,
@@ -473,36 +409,6 @@ var total=0;
 
 	   });
    }
-
-// 	function performStore() {
-       
-// 	   axios.post('/addresses', {
-// 		street: document.getElementById('street').value,
-// 		building: document.getElementById('building').value,
-// 		flat: document.getElementById('flat').value,
-// 		cityId: document.getElementById('cityId').value,
-// 		areaId: document.getElementById('areaId').value,
-
-
-// 	   })
-// 	   .then(function (response) {
-// 		   toastr.success(response.data.message);
-// 		   document.getElementById('create-form').reset();
-// 		   var newAddress = response.data.data;
-
-// 		var newAddressHTML = '<div class="radion_btn">' +
-//                                       '<input type="radio" id="'+newAddress.id+'" name="address" value="'+newAddress.id+'"/>' +
-//                                       '<label for="f-option6">'+newAddress.city.name+' | '+newAddress.area.name+' | '+newAddress.street+' | '+newAddress.building+' | '+newAddress.flate_num+' </label>' +
-//                                     '</div>';
-//                 $("#myList").append(newAddressHTML);
-
-
-// 	   })
-// 	   .catch(function (error) {
-// 		   console.log(error.response);
-// 		   toastr.error(error.response.data.message);
-// 	   });
-//    }
 
 $(".minus-button").click(function() {
 
