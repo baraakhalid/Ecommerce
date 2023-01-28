@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ProductsExportForAdmin;
+use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Color;
+use App\Models\FavoritProduct;
 use App\Models\Image as ModelsImage;
 // use App\Models\Image;
 use App\Models\Language;
@@ -46,13 +48,16 @@ class ProductController extends Controller
         $products = Product::all();
 
         if($request->has('category_id')){
-            $products =Product::with('sizes')->distinct()->with('colors')->distinct()->where('category_id','=',$request->input('category_id'))->get();}
-            // $product = Product::find('2');
-            //  dd($product->sizes) ;
+            $products =Product::with('sizes')->distinct()->with('colors')->distinct()->where('category_id','=',$request->input('category_id'))->get();
+           
+        }
+        $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
+        $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
+            
 
 
 
-    return response()->view('front.product', ['products' => $products ]);}
+    return response()->view('front.product', ['products' => $products,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart ]);}
 
     }
 
@@ -88,23 +93,10 @@ class ProductController extends Controller
         {
         
             $roles = [
-                // 'image' => 'required|image|mimes:png,jpg,jpeg',
                 'price' => 'required|numeric|min:1',
                 'category_id' => 'required|numeric|exists:categories,id',
-
                 'colors' => 'required',      
                 // 'sizes' => 'required',
-
-
-                            // 'image' => 'nullable|image|mimes:jpg,png|max:2048',
-            // 'image_1' => 'required|image|mimes:jpg,png|max:2048',
-            // 'image_2' => 'nullable|image|mimes:jpg,png|max:2048',
-            // 'image_3' => 'nullable|image|mimes:jpg,png|max:2048',
-
-
-
-
-
             ];
             $locales = Language::all()->pluck('lang');
             foreach ($locales as $locale) {
@@ -166,10 +158,6 @@ class ProductController extends Controller
             }
       
  
-            // if ($isSaved) {
-            //     $this->saveImages($request, $product, 'image');
-              
-            // }
             if ($request->colors != null) {
                 foreach ($request->colors as $color_id) {
                   $color_sizes = $request->input("sizes_for_color_$color_id");
@@ -228,6 +216,8 @@ class ProductController extends Controller
         $categories=Category::all();
         $sizes=Size::all();
         $colors=Color::all();
+        $product->load('images');
+
         return response()->view('admin.products.edit',['product'=>$product ,'categories'=>$categories ,'sizes'=>$sizes,'colors'=>$colors]);
     }
 
@@ -240,7 +230,96 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        
+        
+            $roles = [
+                'price' => 'required|numeric|min:1',
+                'category_id' => 'required|numeric|exists:categories,id',
+                // 'colors' => 'required',      
+                // 'sizes' => 'required',
+                // 'quantity'=>'nullable'
+            ];
+            $locales = Language::all()->pluck('lang');
+            foreach ($locales as $locale) {
+                $roles['name_' . $locale] = 'required';
+            }
+            foreach ($locales as $locale) {
+                $roles['info_' . $locale] = 'required';
+            }
+          
+            $this->validate($request, $roles);
+            $product->category_id = $request->category_id;
+            $product->price = $request->price;
+            // $product->quantity = $request->quantity;
+
+            foreach ($locales as $locale)
+            {
+                $product->translateOrNew($locale)->name = $request->get('name_' . $locale);
+                $product->translateOrNew($locale)->info = $request->get('info_' . $locale);
+            }
+            $product->save();
+
+       
+        
+    
+            
+            $imgsIds = $product->images->pluck('id')->toArray();
+            $newImgsIds = ($request->has('oldImages'))? $request->oldImages:[];
+            $diff = array_diff($imgsIds,$newImgsIds);
+            ModelsImage::whereIn('id',$diff)->delete();
+    
+            if($request->has('filename')  && !empty($request->filename))
+            {
+                foreach($request->filename as $one)
+                {
+                    if (isset(explode('/', explode(';', explode(',', $one)[0])[0])[1])) {
+                        $fileType = strtolower(explode('/', explode(';', explode(',', $one)[0])[0])[1]);
+                        $name = "" .str_random(8) . "" .  "" . time() . "" . rand(1000000, 9999999);
+                        $attachType = 0;
+                        if (in_array($fileType, ['jpg','jpeg','png','pmb'])){
+                            $newName = $name. ".jpg";
+                            $attachType = 1;
+                            Image::make($one)->resize(800, null, function ($constraint) {$constraint->aspectRatio();})->save("uploads/images/products/$newName");
+                        }
+                        $image=new ModelsImage();
+                       
+                        $image->name = $newName;
+                        $image->url = 'products/' . $newName;
+                        $product->images()->save($image);
+                    }
+                }
+            }
+            ProductColorSize::where('product_id', $product->id)->delete();
+
+            if ($request->colors != null) {
+                foreach ($request->colors as $color_id) {
+                  $color_sizes = $request->input("sizes_for_color_$color_id");
+                  if ($color_sizes != null) {
+                    foreach ($color_sizes as $size_id){
+                      $quantity = $request->input("quantities_for_color_$color_id" . "_size_" . "$size_id");
+                      $values[] = [
+                        'product_id' => $product->id,
+                        'color_id' => $color_id,
+                        'size_id' => $size_id,
+                        'quantity' => $quantity,
+                      ];
+                    }
+                  }
+                }
+                ProductColorSize::insert($values);
+              }
+    
+            return redirect()->back()->with('status', __('cp.update'));
+
+
+
+    
+    
+            
+      
+ 
+          
+     
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\FavoritProduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -17,8 +18,10 @@ class FavoritProductController extends Controller
     public function index(Request $requset)
     {
         $products=$requset->user()->products()->latest()->get();
+        $numOfProductsFavorite=FavoritProduct::where('user_id' , $requset->user()->id)->count();
+        $numOfProductsCart=Cart::where('user_id' , $requset->user()->id)->count();       
      
-        return response()->view('front.favorite',['products'=>$products ]);
+        return response()->view('front.favorite',['products'=>$products,'numOfProductsFavorite'=>$numOfProductsFavorite, 'numOfProductsCart'=>$numOfProductsCart]);
     }
 
     /**
@@ -45,20 +48,28 @@ class FavoritProductController extends Controller
         ]);
         if (!$validator->fails()) {
             $product = Product::find($request->product_id);
+            // $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
             if(!is_null($product)) {
                 if(! $request->user()->favorites()->where('product_id' , $product->id)->exists()){
                     $isSaved = $request->user()->products()->save($product);
-                      if( $isSaved)
+                      if( $isSaved){
+            $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
+                        
 
                       return response()->json(
-                        ['message' =>  'Product added to favorite']);
+                        ['message' =>  'Product added to favorite' ,'numOfProductsFavorite'=>$numOfProductsFavorite]);
+                    }
                     
                 }
                     else{
                         $isSaved = $request->user()->products()->detach($product);
                         if( $isSaved)
+                     {  
+            $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
+
+
                         return response()->json(
-                            ['message' => 'Product deleted from favorite']);
+                            ['message' => 'Product deleted from favorite' ,'numOfProductsFavorite'=>$numOfProductsFavorite]);}
                     }
            
                    

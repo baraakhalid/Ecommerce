@@ -39,10 +39,10 @@
             <div class="container">
                 <!--begin::Card-->
                 <div class="card card-custom gutter-b example example-compact">
-                    <form method="post" action="{{url(app()->getLocale().'/admin/products')}}"
-                          enctype="multipart/form-data" class="form-horizontal" role="form" id="form">
-                        {{ csrf_field() }}
-
+                    <form method="post" action="{{url(app()->getLocale().'/admin/products/'.$product->id)}}"
+                        enctype="multipart/form-data"  class="form-horizontal" role="form" id="form">
+                          {{ csrf_field() }}
+                          {{ method_field('PATCH')}}         
                         <div class="card-header">
                             <h3 class="card-title">{{__('cp.main_info')}}</h3>
                         </div>
@@ -68,7 +68,6 @@
                                             </div>
                                             <span class="form-text text-muted">Please select category</span>
                                         </div>
-                          {{--           </div> --}}
                                 </div>
 
                                 <div class="row">
@@ -126,6 +125,7 @@
                                                 <input type="checkbox" id="colors"
                                                 name="colors[]" value="{{$color->id}}"
                                                 {{old('colors') && in_array($color->id, $product->colors() ) ? 'checked' : ''}}
+                                                 {{$product->colors->contains($color->id) ? 'checked' : ''}}
                                                 
                                                 /> {{$color->name}}
                                                 <span></span>
@@ -144,6 +144,7 @@
                                                     <input type="checkbox"  id="sizes"
                                                     name="sizes_for_color_{{$color->id}}[]" value="{{$size->id}}" 
                                                     {{old("sizes_for_color_{$color->id}") && in_array($size->id, old("sizes_for_color_{$color->id}")) ? 'checked' : ''}}
+                                                     {{$product->sizes->contains($size->id) ? 'checked' : ''}}
                                                     /> {{$size->name}}
                                                     <div class="col-12" >
                                                      <input type="number" name="quantities_for_color_{{$color->id}}_size_{{$size->id}}" 
@@ -161,56 +162,45 @@
                                 @endforeach
 
 
-                          
-                  
-                    <div class="card-body col-md-12">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>{{__('cp.image')}}</label>
-                                    <div class="fileinput-new thumbnail"
-                                         onclick="document.getElementById('edit_image').click()"
-                                         style="cursor:pointer">
-                                        <img src="{{choose()}}" id="editImage" alt="">
-                                    </div>
-                                    <div class="btn red"
-                                         onclick="document.getElementById('edit_image').click()">
-                                        <i class="fa fa-pencil"></i>
-                                    </div>
-                                    <input type="file" class="form-control" name="image"
-                                           id="edit_image"
-                                           style="display:none">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                        <div class="card-body">
-                        <fieldset>
-                            <legend>{{__('cp.more_images')}}</legend>
-                            <div class="form-group {{ $errors->has('image') ? ' has-error' : '' }}">
-                                <div class="col-md-12 col-md-offset-0">
-                                    @if ($errors->has('image'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('image') }}</strong>
-                                        </span>
-                                    @endif
-                                    <div class="imageupload" style="display:flex;flex-wrap:wrap">
-
-                                    </div>
-                                    <div class="input-group control-group increment">
-                                        <div class="input-group-btn"
-                                             onclick="document.getElementById('all_images').click()">
-                                            <button class="btn btn-success" type="button"><i
-                                                    class="glyphicon glyphicon-plus"></i>{{__("cp.addImages")}}
-                                            </button>
+                                <div class="card-body">
+                                    <fieldset>
+                                        <legend>{{__('cp.images')}}</legend>
+                                        <div class="form-group {{ $errors->has('image') ? ' has-error' : '' }}">
+                                            <div class="col-md-12 col-md-offset-0">
+                                                @if ($errors->has('image'))
+                                                    <span class="help-block">
+                                                <strong>{{ $errors->first('image') }}</strong>
+                                            </span>
+                                                @endif
+                                                <div class="imageupload" style="display:flex;flex-wrap:wrap">
+                                                    @foreach($product->images as $image)
+                                                        <div class="imageBox text-center"
+                                                             style="width:150px;height:190px;margin:5px">
+                                                            <img src="{{$image->url ?? ''}}"
+                                                                 style="width:150px;height:150px">
+                                                            <button class="btn btn-danger deleteImage"
+                                                                    type="button">{{__("cp.remove")}}</button>
+                                                            <input class="attachedValues" type="hidden" name="oldImages[]"
+                                                                   value="{{$image->id}}">
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                                <div class="input-group control-group increment">
+                                                    <div class="input-group-btn"
+                                                         onclick="document.getElementById('all_images').click()">
+                                                        <button class="btn btn-success" type="button"><i
+                                                                class="glyphicon glyphicon-plus"></i>{{__("cp.addImages")}}
+                                                        </button>
+                                                    </div>
+                                                    <input type="file" class="form-control hidden" accept="image/*"
+                                                           id="all_images" multiple/>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <input type="file" class="form-control hidden" accept="image/*"
-                                               id="all_images" name="all_images" multiple/>
-                                    </div>
+                                    </fieldset>
                                 </div>
-                            </div>
-                        </fieldset>
-                    </div>
+                  
+                       
             
 
                             </div>

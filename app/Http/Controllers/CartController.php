@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Address;
 use App\Models\Cart;
 use App\Models\City;
+use App\Models\FavoritProduct;
 use App\Models\Product;
 use App\Models\ProductCoupon;
 use Carbon\Carbon;
@@ -38,16 +39,19 @@ class CartController extends Controller
         if(auth('user')->check()){
             $addresses=Address::where('user_id' ,'=' ,$request->user()->id)->with(['city','area'])->get();
             $cities=City::get();
-            
+            $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
+            $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
             $carts=Cart::with('product')->where('user_id' ,'=' ,$request->user()->id)->get();
             $total=Cart::where('user_id' ,'=' ,$request->user()->id)->sum(DB::raw('quantity * price'));
-            return response()->view('front.cart',['carts'=>$carts ,'total'=>$total ,'addresses'=>$addresses ,'cities'=>$cities]);
+            return response()->view('front.cart',['carts'=>$carts ,'total'=>$total ,'addresses'=>$addresses ,'cities'=>$cities,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart]);
 
         }
     } 
     
     
-    public function getTotal(Request $request)
+    public function getTotal(Request $request){
+        
+    }
 
 
     public function getareas($cityId)
