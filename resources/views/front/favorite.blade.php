@@ -21,12 +21,13 @@
 </div> --}}
 	
 	<!-- Product -->
+	
 	<div class="bg0 m-t-23 p-b-140">
 		<div class="container">
 			<div class="row isotope-grid">
-				@foreach ($products as $product )
+				@forelse ($products as $product )
 					
-				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
+				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women" id="favorit_div">
 					<!-- Block2 -->
 					<div class="block2">
 						<div class="block2-pic hov-img0">
@@ -48,19 +49,21 @@
 								</span>
 							</div>
 
-							<div class="block2 block2-txt-child2 flex-r p-t-3 ">
-
-								<a href="#" id="{{$product->id}}" value="{{$product->id}}}" data-product-id="{{$product->id}}" class="removeFromWishlist  addToWishlist btn-addwish-b2 dis-block pos-relative js-addwish-b2" >
+							<div id="favorite" class="block2-txt-child2 flex-r p-t-3">
+									<a id="heart_{{$product->id}}" onclick="performFavorite({{$product->id }})"   data-id="{{$product->id}}" class="fa fa-heart" ></a>
 									
-									<img class="icon-heart1 dis-block trans-04" src="{{asset('front/images/icons/icon-heart-01.png')}}" alt="ICON">
-									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{{asset('front/images/icons/icon-heart-02.png')}}" alt="ICON">
-								</a>
-								
 							</div>
 						</div>
+
 					</div>
+
 				</div>
-				@endforeach
+				@empty
+				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women" id="favorit_div">
+					No Favorite Products !
+
+				</div>
+				@endforelse
 
 		
 			</div>
@@ -377,6 +380,76 @@ $('.js-show-modal1').on('click',function(e){
 				ps.update();
 			})
 		});
+
+		
+function performFavorite(id) {
+	
+    axios.post('/favorit_products', {
+        product_id: id,
+    })
+    .then(function (response) {
+		console.log(id);
+		axios.get('/favorit') 
+		.then(function (response) {
+		console.log(response.data.data);
+     
+		let products = "";
+
+		$("#favorit_div").detach();
+// $.each(response.data.data , function(i, item){
+
+//    $("#favorit_div").innerHTML(`
+  
+// 					<!-- Block2 -->
+// 					<div class="block2">
+// 						<div class="block2-pic hov-img0">
+// 							<img src="${response.data.data.main_image ?? ''}" alt="IMG-PRODUCT">
+
+// 							<a href="#" id= "js-show-modal1" data-id="${response.data.data.id}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+// 								Quick View
+// 							</a>
+// 						</div>
+
+// 						<div class="block2-txt flex-w flex-t p-t-14">
+// 							<div class="block2-txt-child1 flex-col-l ">
+// 								<a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+// 									${response.data.data.name}
+// 								</a>
+
+// 								<span class="stext-105 cl3">
+// 									${response.data.data.price}
+// 								</span>
+// 							</div>
+
+// 							<div id="favorite" class="block2-txt-child2 flex-r p-t-3">
+// 									<a id="heart_${response.data.data.id}" onclick="performFavorite(${response.data.data.id})"   data-id="${response.data.data.id}" class="fa fa-heart" ></a>
+									
+// 							</div>
+// 						</div>
+
+// 					</div>
+
+//    `);
+
+
+// 	})
+	})
+	  
+      .catch(function (error) {
+        console.log(error);
+      });
+        console.log( response.data);
+	  swal(response.data.message, "", "success");
+	  $("#numOfProductsFavorite").attr("data-notify", response.data.numOfProductsFavorite);
+		// document.getElementById('numOfProductsFavorite').innerHTML = response.data.numOfProductsFavorite;
+      
+    })
+	.catch(function (error) {
+        if(error.response.status === 401) {
+            swal("You must be logged in to manage your wishlist !");
+        }
+});
+}
 	</script>
 <!--===============================================================================================-->
 	<script src="{{asset('front/js/main.js')}}"></script>

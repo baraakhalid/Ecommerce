@@ -187,7 +187,7 @@ Route::group([
         Route::resource('product_coupons', ProductCouponController::class);
         Route::resource('orders', OrderController::class);
         Route::resource('favorit_products',  FavoritProductController::class);
-        // Route::get('/product_coupons', [App\Http\Controllers\ProductCoupon::class, 'index'])->name('cart.coupon');
+        Route::get('/favorit', [App\Http\Controllers\FavoritProductController::class, 'showFavorit']);
         // Route::get('/product_coupons', [App\Http\Controllers\CartController::class, 'getCoupon'])->name('cart.coupon');
         Route::put('/carts/apply-coupon', [App\Http\Controllers\CartController::class, 'applyCoupon'])->name('cart.apply_coupon');
         Route::get('logout', [AuthController::class, 'logout'])->name('user.logout'); 

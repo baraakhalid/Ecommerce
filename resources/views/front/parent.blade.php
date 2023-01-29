@@ -79,6 +79,7 @@
 							<li>
 								<a href="about.html">About</a>
 							</li>
+						
 
 							<li>
 								<a href="contact.html">Contact</a>
@@ -101,17 +102,17 @@
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
 							<i class="zmdi zmdi-search"></i>
 						</div>
+						@if(auth('user')->check())
 
 						<div id= "numOfProductsCart" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="{{$numOfProductsCart}}">
 							<i class="zmdi zmdi-shopping-cart"></i>
 						</div>
 
-						{{-- <a href="{{route('wishlist.index')}}" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="{{session('numOfProductsFavorite')}}">
-							<i class="zmdi zmdi-favorite-outline"></i>
-						</a> --}}
+					
 						<a href="{{route('favorit_products.index')}}" id= "numOfProductsFavorite" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify = "{{$numOfProductsFavorite}}">
 							<i class="zmdi zmdi-favorite-outline"></i>
 						</a>
+						@endif
 					</div>
 				</nav>
 			</div>	
@@ -130,13 +131,17 @@
 					<i class="zmdi zmdi-search"></i>
 				</div>
 
-				<div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="2">
+				@if(auth('user')->check())
+
+				<div id= "numOfProductsCart" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="{{$numOfProductsCart}}">
 					<i class="zmdi zmdi-shopping-cart"></i>
 				</div>
 
-				<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="0">
+			
+				<a href="{{route('favorit_products.index')}}" id= "numOfProductsFavorite" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify = "{{$numOfProductsFavorite}}">
 					<i class="zmdi zmdi-favorite-outline"></i>
 				</a>
+				@endif
 			</div>
 
 			<!-- Button show menu -->

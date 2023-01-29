@@ -20,7 +20,7 @@ class Product extends Model
     
     public function getImageUrlAttribute()
     {
-        return url('uploads/images/' . $this->images()->first()->url);
+        return 'uploads/images/' . $this->images()->first()->url;
     }
     public function getMainImageAttribute()
     {

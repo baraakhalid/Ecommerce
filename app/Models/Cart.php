@@ -36,13 +36,5 @@ class Cart extends Model
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    public function getIsFullAttribute()
-    {
-        if (auth('user')->check()) {
-         
-            return $this->where('user_id', auth('user')->id())->exists();
-        }
-        return false;
-
-    }
+ 
 }

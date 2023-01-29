@@ -39,18 +39,20 @@ class CartController extends Controller
         if(auth('user')->check()){
             $addresses=Address::where('user_id' ,'=' ,$request->user()->id)->with(['city','area'])->get();
             $cities=City::get();
+            $isFull=Cart::where('user_id', auth('user')->id())->exists();
             $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
             $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
             $carts=Cart::with('product')->where('user_id' ,'=' ,$request->user()->id)->get();
             $total=Cart::where('user_id' ,'=' ,$request->user()->id)->sum(DB::raw('quantity * price'));
-            return response()->view('front.cart',['carts'=>$carts ,'total'=>$total ,'addresses'=>$addresses ,'cities'=>$cities,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart]);
+            return response()->view('front.cart',['carts'=>$carts,'isFull'=>$isFull ,'total'=>$total ,'addresses'=>$addresses ,'cities'=>$cities,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart]);
 
         }
     } 
     
     
     public function getTotal(Request $request){
-        
+        $total=Cart::where('user_id' ,'=' ,$request->user()->id)->sum(DB::raw('quantity * price'));
+        return response()->json(['message'=>'success' ,'total' => $total]);
     }
 
 
@@ -108,12 +110,13 @@ class CartController extends Controller
                     $cart->quantity= $request->quantity;
                     $request->session()->put('quantity', $cart->quantity);
                     $request->session()->put('price', $cart->price);
-
-                    $isSaved = $cart->save();
-                    if ($isSaved)
                     
-                    return response()->json(['message' => 'Product cart added']);
-                
+                    $isSaved = $cart->save();
+                    if ($isSaved){
+                    $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
+                    
+                    return response()->json(['message' => 'Product cart added' ,'numOfProductsCart'=>$numOfProductsCart]);
+                }
             } 
             else {
 
@@ -233,11 +236,13 @@ class CartController extends Controller
         $product = $cart->product;
         if (!is_null($product)) {
     $deleted = $request->user()->productscart()->detach($product);
+    $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
     return response()->json(
         [
             'title' => $deleted ? 'Deleted!' : 'Delete Failed!',
             'text' => $deleted ? 'Category deleted successfully' : 'Category deleting failed!',
-            'icon' => $deleted ? 'success' : 'error'
+            'icon' => $deleted ? 'success' : 'error',
+            'numOfProductsCart'=>$numOfProductsCart
         ],
         $deleted ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
     
