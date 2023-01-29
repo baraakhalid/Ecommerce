@@ -751,12 +751,12 @@ $('.js-show-modal1').on('click',function(e){
 		$("#numOfProductsCart").attr("data-notify", response.data.numOfProductsCart);
 
           console.log(response);
-          toastr.success(response.data.message);
+          toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
           // window.location.href = '/rest/index';
       })
       .catch(function (error) {
           console.log(error.response);
-          toastr.error(error.response.data.message);
+          toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
       });
   }
 

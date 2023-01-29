@@ -23,6 +23,14 @@ class FavoritProductController extends Controller
      
         return response()->view('front.favorite',['products'=>$products,'numOfProductsFavorite'=>$numOfProductsFavorite, 'numOfProductsCart'=>$numOfProductsCart]);
     }
+    
+    public function showFavorit(Request $requset)
+    {
+        $data=$requset->user()->products()->latest()->get();
+         
+        return response()->json(['message'=>'success' , 'data' => $data]);
+
+    }
 
     /**
      * Show the form for creating a new resource.
