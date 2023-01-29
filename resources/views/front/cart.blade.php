@@ -338,15 +338,10 @@
 var qty=1;
 var total=0;
 
-
-
-
-
-   $('.js-show-modal1').on('click',function(e){
+$('.js-show-modal1').on('click',function(e){
         e.preventDefault();
         $('.js-modal1').addClass('show-modal1');
     });
-
     $('.js-hide-modal1').on('click',function(){
         $('.js-modal1').removeClass('show-modal1');
     });
@@ -357,20 +352,19 @@ var total=0;
     function getareas(cityId){
         axios.get('/areas/'+cityId)         
        .then(function (response) {
-         
+   
            $('#areaId').empty();
            $.each(response.data.data , function(i , item){
             console.log('Id: '+item['id']);
             $('#areaId').append(new Option(item['name'],item['id']));
-
            });
           
        })
        .catch(function (error) {
      
        });
-
     } 
+
 
 	function performStore() {
        
@@ -643,7 +637,10 @@ function performPlaceOrder() {
 
 
 
-
+axios.defaults.headers.common = {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    };
 
 
 		$(".js-select2").each(function(){
