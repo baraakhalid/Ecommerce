@@ -136,10 +136,10 @@
 									{{-- <span class="stext-112 cl8">
 										Calculate Shipping
 									</span> --}}
-									<div id="myList" class="payment_item active">
+									<div id="myList"  class="payment_item active">
 										@foreach ( $addresses as $address)
 										<div class="radion_btn">
-											<input type="radio" id="{{$address->id}}"  value="{{$address->id}}"/>
+											<input name="address" type="radio" id="{{$address->id}}"  value="{{$address->id}}"/>
 											<label for="f-option6">{{$address->city->name}} | {{$address->area->name}} | {{$address->street}} | {{$address->building}} | {{$address->flate_num}} </label>
 										</div>
 										  
@@ -332,35 +332,7 @@ var total=0;
 
 
 
-//    $('.js-show-modal1').on('click',function(e){
-//         e.preventDefault();
-//         $('.js-modal1').addClass('show-modal1');
-//     });
 
-//     $('.js-hide-modal1').on('click',function(){
-//         $('.js-modal1').removeClass('show-modal1');
-//     });
-// 	$('#cityId').on('change',function(){
-//         // alert('Value: '+this.value);
-//         getareas(this.value);
-//     });
-//     function getareas(cityId){
-//         axios.get('/areas/'+cityId)         
-//        .then(function (response) {
-         
-//            $('#areaId').empty();
-//            $.each(response.data.data , function(i , item){
-//             console.log('Id: '+item['id']);
-//             $('#areaId').append(new Option(item['name'],item['id']));
-
-//            });
-          
-//        })
-//        .catch(function (error) {
-     
-//        });
-
-//     } 
 
 // 	function performStore() {
        
@@ -594,6 +566,7 @@ axios.post('/carts/'+ id ,formData)
 	axios.get('/total')
 		.then(function (response) {
 			$.total = response.data.total;
+			
 		//  total = response.data.total;
 		// var subTotal = response.data.total;
 	$('#sub-total').text( $.total +'$');
@@ -689,12 +662,14 @@ function applayCoupon() {
 
 	
 function performPlaceOrder() {
+
         axios.post('/orders', {
             total: $.finalTotal,
             address_id: document.querySelector('input[type=radio][name=address]:checked').value,
        })
         .then(function (response) {
             console.log(response);
+
             toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
             window.location.href = '/';
         })
