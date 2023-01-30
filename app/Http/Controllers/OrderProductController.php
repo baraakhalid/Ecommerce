@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
+use App\Models\FavoritProduct;
 use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 
@@ -12,9 +14,21 @@ class OrderProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if($request->has('order_id')){
+            $detailsorders = OrderProduct::with(['order' ,'product'])->where('order_id','=',$request->input('order_id'))->get();
+        if(auth('user')->check() ){
+            $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
+            $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
+        
+            return response()->view('front.orderdetails',['detailsorders'=>$detailsorders,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart ]);
+    }
+    elseif(auth('admin')->check() ){
+        return response()->view('admin.order-details.home',['detailsorders'=>$detailsorders]);
+        
+    }
+}
     }
 
     /**

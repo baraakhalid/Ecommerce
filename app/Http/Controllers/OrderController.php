@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Cart;
+use App\Models\FavoritProduct;
+use App\Models\Language;
+use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderProduct;
+use App\Models\Token;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,9 +22,71 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if(auth('user')->check()){
+       
+            $orders=Order::where('user_id' ,'=' ,$request->user()->id)->get();
+            $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
+            $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
+            return response()->view('front.order',['orders'=>$orders,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart]);
+
+        }
+        elseif(auth('admin')->check()){
+            $orders=Order::all();
+            return response()->view('admin.orders.home',['orders'=>$orders]);
+
+        }
+      
+    }
+    public function changeStatus($id, $status)
+    {
+        $item = Order::where('id', $id)->first();
+        if ($item->status != 'Delivered') {
+            $item->status = $status;
+            $item->save();
+
+            // if ($item->status == 'Waitting') {
+                return redirect()->back();
+            // } else {
+
+            //     $message_en = '';
+            //     $message_ar = '';
+            //     if ($item->status == 'Processing') {
+            //         $message_en = 'You order is Being Prepared';
+            //         $message_ar = 'طلبك قيد التحضير';
+            //     }elseif ($item->status == 'Delivered') {
+            //         $message_en = 'Your order has been picked up';
+            //         $message_ar = 'تم تسليم طلبك';
+            //     } else {
+            //         $message_en = 'Sorry! Your order has been cancelled, please contact our customer service.';
+            //         $message_ar = 'نأسف ! تم الغاء طلبك , يرجى التواصل مع خدمة العملاء';
+            //     }
+            //     $locales = Language::all()->pluck('lang');
+            //     $usersIDs = User::query()->where('notifications', '1')->where('id', $item->user_id)->pluck('id')->toArray();
+                // $notify = new Notification();
+
+                // $notify->translateOrNew('en')->title = 'Order #' . $item->id;
+                // $notify->translateOrNew('ar')->title = $item->id . 'طلب #';
+                // $notify->translateOrNew('en')->message = $message_en;
+                // $notify->translateOrNew('ar')->message = $message_ar;
+                // $notify->target_id = $item->id;
+                // $notify->user_id = $item->user_id;
+                // $notify->fcm_token = $item->fcm_token;
+                // $notify->type = '2';
+                // $notify->save();
+
+                // $tokens_en = Token::where('lang', 'en')->whereIn('user_id', $usersIDs)->orWhere('fcm_token', $item->fcm_token)->pluck('fcm_token')->toArray();
+                // $tokens_ar = Token::where('lang', 'ar')->whereIn('user_id', $usersIDs)->orWhere('fcm_token', $item->fcm_token)->pluck('fcm_token')->toArray();
+                // sendNotificationToUsers($tokens_en, '2', $item->id, 'Order #' . $item->id, $message_en);
+                // sendNotificationToUsers($tokens_ar, '2', $item->id, $item->id . 'طلب #', $message_ar);
+
+                // activity($item->id)->causedBy(auth('admin')->user())->log('تعديل في حالة الطلب ');
+
+            // }
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -67,6 +134,7 @@ class OrderController extends Controller
                     $order_product->order_id = $order->id;
                     $order_product->product_id = $cartproduct->product_id;
                     $order_product->quantity = $cartproduct->quantity;
+                    $order_product->total = $cartproduct->quantity * $cartproduct->price;
                     $isSaved = $order_product->save();
             }
 
