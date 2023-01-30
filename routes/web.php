@@ -128,7 +128,10 @@ Route::group([
 
 
         Route::get('/admins', 'WEB\Admin\AdminController@index')->name('admins.all');
-        Route::post('/admins/changeStatus', 'WEB\Admin\AdminController@changeStatus')->name('admin_changeStatus');
+       
+        Route::get('/orders/changeStatus/{id}/{status}', 'OrderController@changeStatus')->name('changeOrderStatus');
+        Route::get('/order_products', 'OrderProductController@index');
+         Route::post('/admins/changeStatus', 'WEB\Admin\AdminController@changeStatus')->name('admin_changeStatus');
         Route::delete('admins/{id}', 'WEB\Admin\AdminController@destroy')->name('admins.destroy');
         Route::post('/admins', 'WEB\Admin\AdminController@store')->name('admins.store');
         Route::get('/admins/create', 'WEB\Admin\AdminController@create')->name('admins.create');
@@ -150,6 +153,7 @@ Route::group([
         Route::resource('product_offers', ProductOfferController::class);
         Route::resource('product_coupons', ProductCouponController::class);
         Route::resource('banners', BannerController::class);
+        Route::get('orders','OrderController@index')->name('admin.orders');
 
 
         Route::resource('messages', MessageController::class)->except([ 'store']);
@@ -186,7 +190,9 @@ Route::group([
 
         Route::resource('product_coupons', ProductCouponController::class);
         Route::resource('orders', OrderController::class);
+        Route::resource('order_products', OrderProductController::class);
         Route::resource('favorit_products',  FavoritProductController::class);
+        // Route::resource('orders',  OrderController::class);
         Route::get('/favorit', [App\Http\Controllers\FavoritProductController::class, 'showFavorit']);
         // Route::get('/product_coupons', [App\Http\Controllers\CartController::class, 'getCoupon'])->name('cart.coupon');
         Route::put('/carts/apply-coupon', [App\Http\Controllers\CartController::class, 'applyCoupon'])->name('cart.apply_coupon');

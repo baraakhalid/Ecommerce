@@ -19,7 +19,7 @@
 		</span>
 	</div>
 </div> --}}
-	
+
 	<!-- Product -->
 	
 	<div class="bg0 m-t-23 p-b-140">
@@ -27,7 +27,7 @@
 			<div class="row isotope-grid">
 				@forelse ($products as $product )
 					
-				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women" id="favorit_div">
+				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women" id="favorit_div_{{$product->id}}">
 					<!-- Block2 -->
 					<div class="block2">
 						<div class="block2-pic hov-img0">
@@ -395,7 +395,7 @@ function performFavorite(id) {
      
 		let products = "";
 
-		$("#favorit_div").detach();
+		$("#favorit_div_"+id).detach();
 // $.each(response.data.data , function(i, item){
 
 //    $("#favorit_div").innerHTML(`

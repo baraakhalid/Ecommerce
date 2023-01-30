@@ -381,6 +381,7 @@ $('.js-show-modal1').on('click',function(e){
 		toastr.success(response.data.message);
 		   document.getElementById('create-form').reset();
 
+          $('.js-modal1').removeClass('show-modal1');
 		var addressId = response.data.id;
 
 		// alert(addressId)
@@ -495,6 +496,7 @@ axios.post('/carts/'+ id ,formData)
 	axios.get('/total')
 		.then(function (response) {
 			$.total = response.data.total;
+			$.finalTotal = response.data.total;
 			
 		//  total = response.data.total;
 		// var subTotal = response.data.total;
@@ -513,10 +515,9 @@ axios.post('/carts/'+ id ,formData)
 
 }
 
-// getTotal();
+getTotal();
 
-function confirmDelete(id,reference)
- {
+function confirmDelete(id,reference){
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -530,7 +531,7 @@ function confirmDelete(id,reference)
             performDelete(id,reference);
         }
         });
-    }
+    								}
 
 
 
@@ -543,7 +544,6 @@ function applayCoupon() {
 		axios.get('/product_coupons?code=' + $("#code").val())
 		.then(function (response) {
 
-        //  alert($.total);
 		var currentDate = moment().format("YYYY-MM-DD");
 		// alert(currentDate);
 		var startDate = response.data.data.start_date;
@@ -581,6 +581,7 @@ function applayCoupon() {
 		
 	})
       .catch(function (error) {
+
 		toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
 
         // console.log(error);
@@ -588,19 +589,19 @@ function applayCoupon() {
 
     }
 	// applayCoupon();
-
 	
 function performPlaceOrder() {
+// getTotal();
 
         axios.post('/orders', {
-            total: $.finalTotal,
+            total: parseFloat($.finalTotal),
             address_id: document.querySelector('input[type=radio][name=address]:checked').value,
        })
         .then(function (response) {
             console.log(response);
 
             toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-            window.location.href = '/';
+            window.location.href = '/orders';
         })
         .catch(function (error) {
             console.log(error.response);
