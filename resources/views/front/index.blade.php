@@ -437,9 +437,37 @@
 									{{$product->name}}
 								</a>
 
+								@php
+								$currentDate = \Carbon\Carbon::now();
+							    @endphp
+								@if($product->has_offer && ($product->price > $product->offer_price))
+								@if($currentDate->between($product->offers()->first()->start_date , $product->offers()->first()->end_date))
+
+								{{-- {{$product->has_offer}} --}}
+								{{-- @if($product->has_offer) --}}
+								<del class="stext-105 cl3">
+									{{$product->price}}$
+									{{-- {{$product->offer_price}} --}}
+
+								</del>
+
 								<span class="stext-105 cl3">
-									{{$product->price}}
+									{{$product->price - $product->offer_price}}$
+
 								</span>
+								@else
+								<span class="stext-105 cl3">
+									{{$product->price}}$
+
+								</span>
+								@endif
+								@else
+								<span class="stext-105 cl3">
+									{{$product->price}}$
+
+								</span>
+								@endif
+
 							</div>
 
 							<div id="favorite" class="block2-txt-child2 flex-r p-t-3">
@@ -653,6 +681,7 @@ $('.js-show-modal1').on('click',function(e){
 				
 		axios.get('/products/' + productId)
       .then(function (response) {
+		// console.log(response.data.data.has_offer});
 
 
 		// $qty = document.getElementById('qty').value;
@@ -660,7 +689,7 @@ $('.js-show-modal1').on('click',function(e){
 
 		button += `	
 		@if(Auth::guard('user')->check())
-		<button type='button'onclick="performCartStore(${productId}, ${response.data.data.price})" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+		<button type='button'onclick="performCartStore(${productId},  ${response.data.data.price} )" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
 											Add to cart
 										</button>
 		@else
