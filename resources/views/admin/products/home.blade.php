@@ -213,23 +213,31 @@
                                     @php
                                         $currentDate = \Carbon\Carbon::now();
                                     @endphp
-                                    {{-- {{dd( $currentDate)}} --}}
-
                                     {{-- Current date: {{ $currentDate->toDateString() }} --}}
 
                                         {{-- @if() --}}
                                         <td class="v-align-middle wd-25p">
-                                            @if($currentDate->between($one->offers()->first()->start_date ?? null, $one->offers()->first()->end_date ?? null))
+                                            @if($one->has_offer  && ($one->price > $one->offer_price ))
+                                            @if($currentDate->between($one->offers()->first()->start_date , $one->offers()->first()->end_date))
                                             
-                                            {{@$one->offers->first()->discount ?? '0'  }}
+                                            {{@$one->offer_price }}
+                                            {{-- {{@$one->offers->first()->discount ?? '0'  }} --}}
+                                            @else{{'0'}}
+                                            @endif
+
                                             @else{{'0'}}
                                             @endif
                                         
                                         </td>
                                         {{-- <td class="v-align-middle wd-25p">{{if($currentDate->toDateString()->between($startDate, $endDate)) ?  @$one->offers->first()->discount : 0   }}</td> --}}
                                         <td class="v-align-middle wd-25p">
-                                            @if($currentDate->between($one->offers()->first()->start_date ?? null, $one->offers()->first()->end_date ?? null))
-                                            {{@$one->offer_price??  @$one->price}}
+                                            @if($one->has_offer && $one->price > $one->offer_price)
+                                            @if($currentDate->between($one->offers()->first()->start_date , $one->offers()->first()->end_date))
+
+                                            {{@$one->price-@$one->offer_price??  @$one->price}}
+                                            @else{{@$one->price}}
+                                            @endif
+
                                             @else{{@$one->price}}
                                             @endif
                                         

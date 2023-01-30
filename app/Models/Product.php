@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Translatable;
-
+use Carbon\Carbon;
 
 class Product extends Model
 {
     use HasFactory,Translatable;
     protected $translatedAttributes=['name','info'];
-    protected $appends = ['image_url' ,'is_favorite'];
+    protected $appends = ['image_url' ,'is_favorite' ,'has_offer','offer_price'];
 
     public function images()
     {
@@ -76,10 +76,19 @@ class Product extends Model
 
 
 
+    public function getHasOfferAttribute()
+    {
+        // $currentDate = Carbon::now()->format("YYYY-MM-DD");
+        if ( $this->offers()->count() > 0){
+       
+            return true;
+        }
+        return false;
+    }
     public function getOfferPriceAttribute()
     {
         if ($this->offers()->count() > 0) {
-            return $this->offers()->first()->offer_price;
+            return $this->offers()->first()->discount;
         }
         return null;
     }
