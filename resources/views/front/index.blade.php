@@ -184,26 +184,22 @@
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
 						All Products
 					</button>
+					@foreach ($categories as $category )
+						
 
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
-						Women
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" id="{{$category->id}}" >
+						{{$category->name}}
 					</button>
+					@endforeach
 
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".men">
-						Men
-					</button>
 
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".bag">
-						Bag
-					</button>
+				
 
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".shoes">
-						Shoes
-					</button>
+					
 
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".watches">
-						Watches
-					</button>
+				
+
+					
 				</div>
 
 				<div class="flex-w flex-c-m m-tb-10">
@@ -716,8 +712,24 @@ $('.js-show-modal1').on('click',function(e){
       .catch(function (error) {
         console.log(error);
       });
-    });
+    }); 
+	
+	$(document).ready(function() {
+    $('.filter-tope-group button').click(function() {
+      var categoryId = $(this).attr('id');
 
+      $.ajax({
+        url: '/get-affiliate-products',
+        method: 'GET',
+        data: {
+          category_id: categoryId
+        },
+        success: function(data) {
+          console.log(data);
+        }
+      });
+    });
+  });
 
 	
 

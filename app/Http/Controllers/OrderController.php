@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\Admin;
 use App\Models\Cart;
+use App\Models\City;
 use App\Models\FavoritProduct;
 use App\Models\Language;
 use App\Models\Notification;
@@ -13,6 +15,7 @@ use App\Models\Token;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends Controller
@@ -94,9 +97,19 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+
+        if(auth('user')->check()){
+            
+            $addresses=Address::with(['city','area'])->where('user_id' , $request->user()->id)->get();
+        $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
+        $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
+        $cities=City::all();
+        $total=Cart::where('user_id' ,'=' ,$request->user()->id)->sum(DB::raw('quantity * price'));
+
+        return response()->view('front.checkout',['numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart,'addresses'=>$addresses,'cities'=>$cities,'total'=>$total]);
+        }
     }
 
     /**

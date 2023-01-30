@@ -209,14 +209,11 @@ Route::group([
         Route::resource('users', UserController::class);
         
         Route::get('/', 'FrontController@index')->name('front.index');
+        Route::get('/get-affiliate-products', 'FrontController@getAffiliateProducts');
+
         
         });
-        // Route::prefix('cms/user')->middleware('auth:user')->group(function () {
-        //     Route::post('favorites', 'FavoritProductController@store')->name('wishlist.store');
-        //     Route::get('favorites', 'FavoritProductController@index')->name('wishlist.index');
-        //     Route::delete('favorites/{productId}', 'FavoritProductController@destroy')->name('wishlist.destroy');
 
-        // });
         
  
 
