@@ -16,7 +16,6 @@ class FrontController extends Controller
     public function index(Request $request)
     {
  
-    //  dd(Auth::guard('user')->user()->id);
             $categories = Category::all();
             $products=Product::all();
         if(auth('user')->check()){
@@ -31,4 +30,13 @@ class FrontController extends Controller
         return response()->view('front.index', ['categories' => $categories , 'products'=>$products]);    
 
 
-    }}
+    }
+
+    public function getAffiliateProducts(Request $request)
+   {
+  $categoryId = $request->category_id;
+  $affiliateProducts = Product::where('category_id', $categoryId)->where('affiliate', 1)->get();
+
+  return response()->json($affiliateProducts);
+   }
+}
