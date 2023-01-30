@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    protected $appends = ['image_url' ,'customer_name'];
+    protected $appends = [ 'customer_name'];
 
     public function user(){
         return $this->belongsto(User::class ,'user_id','id');

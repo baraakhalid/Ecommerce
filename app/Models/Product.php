@@ -11,7 +11,7 @@ class Product extends Model
 {
     use HasFactory,Translatable;
     protected $translatedAttributes=['name','info'];
-    protected $appends = ['image_url' ,'is_favorite' ,'has_offer','offer_price'];
+    protected $appends = ['image_url' ,'is_favorite' ,'has_offer','offer_price','start_date','end_date'];
 
     public function images()
     {
@@ -20,7 +20,8 @@ class Product extends Model
     
     public function getImageUrlAttribute()
     {
-        return 'uploads/images/' . $this->images()->first()->url;
+        return  url('uploads/images/' . $this->images()->first()->url);
+
     }
     public function getMainImageAttribute()
     {
@@ -91,6 +92,24 @@ class Product extends Model
             return $this->offers()->first()->discount;
         }
         return null;
+    }
+    public function getStartDateAttribute()
+    {
+        if ($this->offers()->count() > 0) {
+            return $this->offers()->first()->start_date;
+
+        }
+        return null;
+
+    }
+    public function getEndDateAttribute()
+    {
+        if ($this->offers()->count() > 0) {
+            return $this->offers()->first()->end_date;
+
+        }
+        return null;
+
     }
 
 

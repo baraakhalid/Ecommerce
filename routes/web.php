@@ -196,6 +196,8 @@ Route::group([
         Route::get('/favorit', [App\Http\Controllers\FavoritProductController::class, 'showFavorit']);
         // Route::get('/product_coupons', [App\Http\Controllers\CartController::class, 'getCoupon'])->name('cart.coupon');
         Route::put('/carts/apply-coupon', [App\Http\Controllers\CartController::class, 'applyCoupon'])->name('cart.apply_coupon');
+        Route::resource('messages', MessageController::class)->except([  'index' ,'destroy','show']);
+        
         Route::get('logout', [AuthController::class, 'logout'])->name('user.logout'); 
     
     });   
@@ -210,6 +212,7 @@ Route::group([
         
         Route::get('/', 'FrontController@index')->name('front.index');
         Route::get('/get-affiliate-products', 'FrontController@getAffiliateProducts');
+        Route::view('/about','front.about')->name('front.about');
 
         
         });

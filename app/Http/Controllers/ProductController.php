@@ -40,8 +40,7 @@ class ProductController extends Controller
 
         $categories=Category::all();
         $products=Product::filter()->orderBy('id', 'desc')->get();
-        $productOffers=Product::has('offers')->orderBy('id', 'desc')->get();
-        // dd($productOffers);
+  
 
         return response()->view('admin.products.home',['categories'=>$categories  ,'products'=>$products]);  
     }

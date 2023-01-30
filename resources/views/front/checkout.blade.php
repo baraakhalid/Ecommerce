@@ -462,90 +462,8 @@ $('.js-show-modal1').on('click',function(e){
 	   });
    }
 
-$(".minus-button").click(function() {
 
 
-	// alert(11);
-	  var productId = $(this).data('id');
-	// changequantity(productId);
-
-
-	axios.get('/products/' + productId)
-      .then(function (response) {
-
-		qty = $("#qty_" + productId).val();
-    if (qty > 1) {
-      $("#qty_" + productId).val(parseInt(qty) - 1);
-	  qty = $("#qty_" + productId).val();
-	  total = qty * response.data.data.price;
-	//   $("#total").val(parseInt(total) * qty );
-	  $('#total_' + productId).text(total +'$');
-	  
-	  getTotal();
-	  applayCoupon();
-
-    }
-	
-		
-	})
-      .catch(function (error) {
-        console.log(error);
-      });
-
-    
-	// alert(qty);
-
-  });
-
-  $(".plus-button").click(function() {
-
-	var productId = $(this).data('id');
-	// changequantity(productId);
-	axios.get('/products/' + productId)
-      .then(function (response) {
-     qty = $("#qty_" + productId).val();
-    $("#qty_" + productId).val(parseInt(qty) + 1);
-	 qty = $("#qty_" + productId).val();
-	 total = qty * response.data.data.price;
-	  $('#total_' + productId).text( total +'$');
-	  getTotal();
-	  applayCoupon();
-
-		
-	})
-      .catch(function (error) {
-        console.log(error);
-      });
-
-
-    
-  });
-
-  function changequantity(id ,productId ,plus) {
-
-	var formData = new FormData();
-	if(plus)
-        formData.append('quantity', parseInt(document.getElementById('qty_' + productId).value) +1);
-	else
-	formData.append('quantity',parseInt(document.getElementById('qty_' + productId).value) - 1);
-
-        formData.append('_method','PUT');     
-
-axios.post('/carts/'+ id ,formData)
-
-.then(function (response) {
-
-	toastr.success(response.data.message ,'' ,{positionClass: 'toast-bottom-right'});
-	// getTotal();
-})
-.catch(function (error) {
-	// alert(11);
-	// console.log(error.response);
-	
-	toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-});
-
-}
 
   function getTotal() {
 
@@ -642,6 +560,8 @@ function applayCoupon() {
 
         // console.log(error);
       });
+
+	  return  $.finalTotal;
 
     }
 	// applayCoupon();
