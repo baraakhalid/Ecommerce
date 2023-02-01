@@ -187,6 +187,7 @@ Route::group([
         Route::get('/shopping', [App\Http\Controllers\CartController::class, 'showCart'])->name('front.cart');
         Route::get('/total', [App\Http\Controllers\CartController::class, 'getTotal'])->name('cart.total');
         Route::get('/areas/{cityId}', [App\Http\Controllers\CartController::class, 'getareas']);
+        Route::get('/products/{categoryId}', [App\Http\Controllers\FrontController::class, 'getproducts']);
 
         Route::resource('product_coupons', ProductCouponController::class);
         Route::resource('orders', OrderController::class);
@@ -211,8 +212,11 @@ Route::group([
         Route::resource('users', UserController::class);
         
         Route::get('/', 'FrontController@index')->name('front.index');
+
+
         Route::get('/get-affiliate-products', 'FrontController@getAffiliateProducts');
         Route::view('/about','front.about')->name('front.about');
+
 
         
         });
