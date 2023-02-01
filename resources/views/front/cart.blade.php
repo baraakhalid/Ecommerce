@@ -306,7 +306,7 @@ $(".minus-button").click(function() {
 	  $('#total_' + productId).text(total +'$');
 	  
 	  getTotal();
-	  applayCoupon();
+	//   applayCoupon();
 
     }
 	
@@ -333,7 +333,7 @@ $(".minus-button").click(function() {
 	 total = qty * response.data.data.price;
 	  $('#total_' + productId).text( total +'$');
 	  getTotal();
-	  applayCoupon();
+	//   applayCoupon();
 
 		
 	})

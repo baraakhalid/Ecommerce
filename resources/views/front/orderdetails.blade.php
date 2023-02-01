@@ -68,6 +68,12 @@
 							@endforelse
 
 							</table>
+							<div class= "sub-total column-5 total ">
+								Sub Total (Befor Discount): {{$subTotal}} $
+							</div>
+							<div class= "sub-total column-5 total ">
+								Final Total (After Discount): {{$finalTotal}} $
+							</div>
 						</div>
 
 					</div>

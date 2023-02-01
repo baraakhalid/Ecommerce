@@ -13,6 +13,7 @@ use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Token;
 use App\Models\User;
+use App\Traits\imageTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends Controller
 {
+    use imageTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -102,7 +105,7 @@ class OrderController extends Controller
 
         if(auth('user')->check()){
             
-            $addresses=Address::with(['city','area'])->where('user_id' , $request->user()->id)->get();
+        $addresses=Address::with(['city','area'])->where('user_id' , $request->user()->id)->get();
         $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
         $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
         $cities=City::all();
@@ -148,6 +151,7 @@ class OrderController extends Controller
                     $order_product->product_id = $cartproduct->product_id;
                     $order_product->quantity = $cartproduct->quantity;
                     $order_product->total = $cartproduct->quantity * $cartproduct->price;
+                    // $order_product->total =  $order->total;
                     $isSaved = $order_product->save();
             }
 

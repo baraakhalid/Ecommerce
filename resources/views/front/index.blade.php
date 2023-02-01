@@ -681,7 +681,19 @@ $('.js-show-modal1').on('click',function(e){
 				
 		axios.get('/products/' + productId)
       .then(function (response) {
-		// console.log(response.data.data.has_offer});
+		var currentDate = moment().format("YYYY-MM-DD");
+		var startDate = response.data.data.start_date;
+		var endDate = response.data.data.end_date;
+		// console.log(startDate);
+		var offer_price = response.data.data.price;
+		var price = response.data.data.price;
+		if(response.data.data.has_offer  &&( currentDate >= startDate && currentDate <= endDate))
+		 offer_price =response.data.data.offer_price;
+		 else
+		 offer_price =response.data.data.price;
+
+
+
 
 
 		// $qty = document.getElementById('qty').value;
@@ -689,7 +701,7 @@ $('.js-show-modal1').on('click',function(e){
 
 		button += `	
 		@if(Auth::guard('user')->check())
-		<button type='button'onclick="performCartStore(${productId},  ${response.data.data.price} )" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+		<button type='button'onclick="performCartStore(${productId}, ${price}-${offer_price} )" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
 											Add to cart
 										</button>
 		@else

@@ -77,12 +77,12 @@
 							</li>
 
 							<li>
-								<a href="about.html">About</a>
+								<a href="#">About</a>
 							</li>
 						
 
 							<li>
-								<a href="contact.html">Contact</a>
+								<a href="{{route('messages.create')}}">Contact</a>
 							</li>
 
 							@if(Auth::guard('user')->check())
@@ -221,7 +221,7 @@
 				</li>
 
 				<li>
-					<a href="contact.html">Contact</a>
+					<a href="{{route('messages.create')}}">Contact</a>
 				</li>
 				@if(Auth::guard('user')->check())
 				<li>

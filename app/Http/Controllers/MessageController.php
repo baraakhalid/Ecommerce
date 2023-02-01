@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
+use App\Models\FavoritProduct;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,9 +26,12 @@ class MessageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
+        $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
+        return response()->view('front.contact',['name'=>$request->user()->name ,'email'=>$request->user()->email  ,'numOfProductsFavorite'=>$numOfProductsFavorite ,'numOfProductsCart'=>$numOfProductsCart]);
+
     }
 
     /**
@@ -39,7 +44,7 @@ class MessageController extends Controller
     {
         $validator = Validator($request->all(), [
             'name' => 'required|string|min:3',
-            'email' => 'required|email|unique:admins,email',
+            'email' => 'required|email|exists:users,email',
             'message' => 'required|string|min:3',
 
 
