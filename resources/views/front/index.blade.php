@@ -180,14 +180,14 @@
 			</div>
 
 			<div class="flex-w flex-sb-m p-b-52">
-				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
+				<div   class="flex-w flex-l-m filter-tope-group m-tb-10">
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
 						All Products
 					</button>
 					@foreach ($categories as $category )
 						
 
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" id="{{$category->id}}" >
+					<button id="categoryId" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" value="{{ $category->id }}" >
 						{{$category->name}}
 					</button>
 					@endforeach
@@ -417,7 +417,7 @@
 				</div>
 			</div>
 
-			<div class="row isotope-grid">
+			<div id="productId" class="row isotope-grid">
 				@foreach ($products as $product )
 					
 				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
@@ -742,23 +742,50 @@ $('.js-show-modal1').on('click',function(e){
         console.log(error);
       });
     }); 
-	
-	$(document).ready(function() {
-    $('.filter-tope-group button').click(function() {
-      var categoryId = $(this).attr('id');
 
-      $.ajax({
-        url: '/get-affiliate-products',
-        method: 'GET',
-        data: {
-          category_id: categoryId
-        },
-        success: function(data) {
-          console.log(data);
-        }
-      });
+// 	$(document).ready(function() {
+//   $('.filter-tope-group button').click(function() {
+//     var categoryId = $(this).data('category-id');
+//     alert(categoryId);
+
+//     $.ajax({
+//       url: '/',
+//       method: 'GET',
+//       data: {
+//         category_id: categoryId
+//       },
+//       success: function(response) {
+//         console.log(response.data.products);
+//         // Update the isotope grid with the new data
+//         // $('#row isotope-grid').html(data);
+//       }
+//     });
+//   });
+// });
+$('#categoryId').on('click',function(){
+        // alert('Value: '+this.value);
+        getproducts(this.value);
     });
-  });
+function getproducts(categoryId){
+        axios.get('/products/'+categoryId)         
+       .then(function (response) {
+   
+           $('#productId').empty();
+           $.each(response.data.data , function(i , item){
+			        // $('#row isotope-grid').html(item);
+
+            console.log('Id: '+item['id']);
+
+            $('#productId').append(new Option(item['name'],item['id']));
+           });
+          
+       })
+       .catch(function (error) {
+     
+       });
+    } 
+
+
 
 	
 
