@@ -15,9 +15,17 @@ class FrontController extends Controller
 {
     public function index(Request $request)
     {
- 
-            $categories = Category::all();
-            $products=Product::all();
+
+        $products=Product::all();
+        $categoryId = $request->category_id;
+        if($request->has('categoryId')){
+
+            $products = Product::where('category_id', $categoryId)->get();
+            return response()->json(['message'=>'success' ,'products' => $products]);
+
+
+        }
+        $categories = Category::all();
         if(auth('user')->check()){
 
             $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
@@ -32,11 +40,20 @@ class FrontController extends Controller
 
     }
 
-    public function getAffiliateProducts(Request $request)
-   {
-  $categoryId = $request->category_id;
-  $affiliateProducts = Product::where('category_id', $categoryId)->where('affiliate', 1)->get();
+    public function getproducts($categoryId)
+    {       
 
-  return response()->json($affiliateProducts);
-   }
+        $category = Category::find($categoryId);
+        $products = $category->products;
+        return response()->json(['message'=> 'dd', 'data'=>$products]);
+    }
+
+//     public function getAffiliateProducts(Request $request)
+//    {
+//   $categoryId = $request->category_id;
+//   $affiliateProducts = Product::where('category_id', $categoryId)->get();
+
+//   return response()->json($affiliateProducts);
+//    }
 }
+ 
