@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\WEB\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
+use App\Models\FavoritProduct;
 use App\Models\Language;
 use App\Models\Setting;
 use App\Models\SettingCopy;
@@ -22,6 +24,16 @@ class SettingController extends Controller
         // dd($settings);
         // $languages = Language::all();
         return view('admin.settings.index',['settings'=>$settings]);
+    }
+    public function showAboutPage(Request $request)
+    {
+        if(auth('user')->check()){
+        $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
+        $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
+        return view('front.about',['numOfProductsFavorite'=>$numOfProductsFavorite ,'numOfProductsCart'=>$numOfProductsCart]);
+
+        }
+        return view('front.about');
     }
 
     public function create()

@@ -53,7 +53,11 @@
 										</button>
 									</td>
 									<td class="column-2">{{$item->product->name}}</td>
-									<td class="column-3">$ {{$item->price}}</td>
+									<td class="column-3">$ @if ($item->has_offer)
+										{{$item->offer_price}}
+										@else
+										{{$item->price}}
+									@endif</td>
 									<td class="column-4">
 										<div class="wrap-num-product flex-w m-l-auto m-r-0">
 											<div class="minus cl8 hov-btn3 trans-04 flex-c-m">
@@ -296,11 +300,15 @@ $(".minus-button").click(function() {
 
 	axios.get('/products/' + productId)
       .then(function (response) {
-
+		var has_offer = response.data.data.has_offer;
 		qty = $("#qty_" + productId).val();
     if (qty > 1) {
       $("#qty_" + productId).val(parseInt(qty) - 1);
 	  qty = $("#qty_" + productId).val();
+	  if(response.data.data.has_offer){
+	  total = qty * response.data.data.offer_price;
+	  }
+	  else
 	  total = qty * response.data.data.price;
 	//   $("#total").val(parseInt(total) * qty );
 	  $('#total_' + productId).text(total +'$');
@@ -323,14 +331,21 @@ $(".minus-button").click(function() {
 
   $(".plus-button").click(function() {
 
+
 	var productId = $(this).data('id');
 	// changequantity(productId);
 	axios.get('/products/' + productId)
       .then(function (response) {
+	console.log(response.data.data.has_offer);
+
+		var has_offer = response.data.data.has_offer;
      qty = $("#qty_" + productId).val();
     $("#qty_" + productId).val(parseInt(qty) + 1);
 	 qty = $("#qty_" + productId).val();
-	 total = qty * response.data.data.price;
+	 if(has_offer)
+	  total = qty * response.data.data.offer_price;
+	  else
+	  total = qty * response.data.data.price;
 	  $('#total_' + productId).text( total +'$');
 	  getTotal();
 	//   applayCoupon();
@@ -411,7 +426,8 @@ function confirmDelete(id,reference){
             performDelete(id,reference);
         }
         });
-    								}
+    			
+	}
 
 
 
@@ -419,75 +435,7 @@ function confirmDelete(id,reference){
 
 
 
-function applayCoupon() {
-		
-		axios.get('/product_coupons?code=' + $("#code").val())
-		.then(function (response) {
 
-		var currentDate = moment().format("YYYY-MM-DD");
-		// alert(currentDate);
-		var startDate = response.data.data.start_date;
-		var endDate = response.data.data.expire_date;
-		// alert(currentDate);
-		if($.total >= parseFloat(response.data.data.greater_than) &&( currentDate >= startDate && currentDate <= endDate)){
-
-			if(response.data.data.type == 'fixed'){
-                // alert(response.data.data.value);
-	
-				
-				toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-				$('#discount').text(response.data.data.value +'$');
-				
-              $('#final-total').text( $.total - parseFloat(response.data.data.value) +'$');
-			  $.finalTotal = $.total - parseFloat(response.data.data.value);
-
-			}
-			else{
-			toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-			$('#discount').text(response.data.data.value +'$');
-
-				$('#final-total').text( $.total - ( $.total * (parseFloat(response.data.data.value) / 100) ) +'$');
-			  $.finalTotal = $.total -( $.total * (parseFloat(response.data.data.value) / 100) );
-
- 
-			}
-			
-		}
-		else{
-			toastr.error('The Total: '+$.total+' must be >=' + response.data.data.greater_than + ' OR Coupon Date Expire!','' ,{positionClass: 'toast-bottom-right'});
-
-		}
-
-		
-	})
-      .catch(function (error) {
-
-		toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-
-        // console.log(error);
-      });
-
-    }
-	// applayCoupon();
-	
-function performPlaceOrder() {
-// getTotal();
-
-        axios.post('/orders', {
-            total: parseFloat($.finalTotal),
-            address_id: document.querySelector('input[type=radio][name=address]:checked').value,
-       })
-        .then(function (response) {
-            console.log(response);
-
-            toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-            window.location.href = '/orders';
-        })
-        .catch(function (error) {
-            console.log(error.response);
-            toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-        });
-    }
 
 
     function performDelete(id, reference) {

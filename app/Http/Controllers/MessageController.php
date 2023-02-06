@@ -28,9 +28,13 @@ class MessageController extends Controller
      */
     public function create(Request $request)
     {
+        if(auth('user')->check()){
+
         $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
         $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
         return response()->view('front.contact',['name'=>$request->user()->name ,'email'=>$request->user()->email  ,'numOfProductsFavorite'=>$numOfProductsFavorite ,'numOfProductsCart'=>$numOfProductsCart]);
+        }
+        return response()->view('front.contact');
 
     }
 

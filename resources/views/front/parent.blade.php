@@ -77,7 +77,7 @@
 							</li>
 
 							<li>
-								<a href="#">About</a>
+								<a href="{{route('front.about')}}">About</a>
 							</li>
 						
 
@@ -209,7 +209,7 @@
 				</li>
 
 				<li>
-					<a href="shoping-cart.html" class="label1 rs1" data-label1="hot">Features</a>
+					<a href="#" class="label1 rs1" data-label1="hot">Features</a>
 				</li>
 
 				<li>
