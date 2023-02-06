@@ -146,6 +146,32 @@ class ProductCouponController extends Controller
      */
     public function update(Request $request, ProductCoupon $productCoupon)
     {
+        if(auth('user')->check()){
+
+            $validator = Validator($request->all(), [
+                'used_times' => 'required|integer',
+               
+            ]);
+    
+            if (!$validator->fails()) {
+            
+                $productCoupon->used_times = $request->used_times;
+    
+                $isSaved = $productCoupon->save();
+               
+                return response()->json(
+                    ['message' => $isSaved ? 'Used Times Increased successfully' : 'Save failed!'],
+                    $isSaved ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
+                );
+            } else {
+                return response()->json(
+                    ['message' => $validator->getMessageBag()->first()],
+                    Response::HTTP_BAD_REQUEST,
+                );
+            } 
+        }
+        else{
+
         $roles = [
             'start_date' => 'required|date|before:expire_date',
             'expire_date' => 'required|date|after:start_date',
@@ -180,7 +206,9 @@ class ProductCouponController extends Controller
         if ($isSaved){
             return redirect()->back()->with('status', __('cp.update'));
  
-    }}
+    }
+        }
+    }
 
     /**
      * Remove the specified resource from storage.

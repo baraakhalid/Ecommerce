@@ -20,12 +20,12 @@ use App\Http\Controllers\HomeController;
 // use App\Http\Controllers\OrderController;
 // use App\Http\Controllers\ProductController;
 // use App\Http\Controllers\InfoController;
-use WEB\Admin\SettingController;
+// use WEB\Admin\SettingController;
 
 // use ExperienceController;
 // use EducationController;
 use App\Models\Cart;
-use App\Models\Setting;
+// use App\Models\Setting;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -149,6 +149,9 @@ Route::group([
         Route::resource('categories', CategoryController::class);
         Route::resource('products', ProductController::class);
         Route::get('/export/excel/products', 'ProductController@exportExcel');
+        Route::get('/export/excel/orders', 'OrderController@exportExcel');
+        Route::get('/pdfOrders', 'OrderController@pdfOrders');
+        // Route::get('/report/orders', 'OrderController@report')->name('ordersReport');
 
         Route::resource('product_offers', ProductOfferController::class);
         Route::resource('product_coupons', ProductCouponController::class);
@@ -187,7 +190,6 @@ Route::group([
         Route::get('/shopping', [App\Http\Controllers\CartController::class, 'showCart'])->name('front.cart');
         Route::get('/total', [App\Http\Controllers\CartController::class, 'getTotal'])->name('cart.total');
         Route::get('/areas/{cityId}', [App\Http\Controllers\CartController::class, 'getareas']);
-        Route::get('/products/{categoryId}', [App\Http\Controllers\FrontController::class, 'getproducts']);
 
         Route::resource('product_coupons', ProductCouponController::class);
         Route::resource('orders', OrderController::class);
@@ -197,7 +199,6 @@ Route::group([
         Route::get('/favorit', [App\Http\Controllers\FavoritProductController::class, 'showFavorit']);
         // Route::get('/product_coupons', [App\Http\Controllers\CartController::class, 'getCoupon'])->name('cart.coupon');
         Route::put('/carts/apply-coupon', [App\Http\Controllers\CartController::class, 'applyCoupon'])->name('cart.apply_coupon');
-        Route::resource('messages', MessageController::class)->except([  'index' ,'destroy','show']);
         
         Route::get('logout', [AuthController::class, 'logout'])->name('user.logout'); 
     
@@ -208,15 +209,16 @@ Route::group([
 
         route::get('products' ,  'ProductController@index')->name('front.products');
         route::get('products/{product}' ,  'ProductController@show')->name('products.show');
+        route::get('productscategory/' ,  'ProductController@showProducts');
         // Route::resource('carts', CartController::class);
         Route::resource('users', UserController::class);
         
         Route::get('/', 'FrontController@index')->name('front.index');
-
-
         Route::get('/get-affiliate-products', 'FrontController@getAffiliateProducts');
-        Route::view('/about','front.about')->name('front.about');
+        Route::get('/about', 'web\admin\SettingController@showAboutPage')->name('front.about');
+        Route::resource('messages', MessageController::class)->except([  'index' ,'destroy','show']);
 
+        // Route::view('/about','front.about')->name('front.about');
 
         
         });

@@ -124,17 +124,20 @@
 							<div class="size-209 p-t-1">
 								@if (session()->has('code'))
 
-									<span class="mtext-110 cl2" id="final-total">
+									<span class="mtext-110 cl2" >
 									@if (session()->has('type') && session('type') == 'fixed')
+								
 									{{$total - session('code')}}$
 
 									@else
+									
 									{{$total - ($total *(session('code')/100))}}
 									@endif
 									</span>
 								
                                 @else
 									<span class="mtext-110 cl2" id="final-total">
+										
 									{{$total}}
 									
 									</span>
@@ -146,7 +149,7 @@
 							<div class="flex-w flex-m m-r-20 m-tb-5">
 								<input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" id="code" placeholder="Coupon Code">
 									
-								<button type="button" onclick="applayCoupon()" class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
+								<button id="coupon" type="button" onclick="applayCoupon()" class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
 									Apply coupon
 								</button >
 							</div>
@@ -512,45 +515,59 @@ function confirmDelete(id,reference){
 
 
 
-
 function applayCoupon() {
-		
-		axios.get('/product_coupons?code=' + $("#code").val())
-		.then(function (response) {
+	
+	
+	axios.get('/product_coupons?code=' + $("#code").val())
+	.then(function (response) {
+		// getTotal();
+
+		var used_times=response.data.data.used_times;
+		console.log(used_times);
 
 		var currentDate = moment().format("YYYY-MM-DD");
-		// alert(currentDate);
 		var startDate = response.data.data.start_date;
 		var endDate = response.data.data.expire_date;
-		// alert(currentDate);
-		if($.total >= parseFloat(response.data.data.greater_than) &&( currentDate >= startDate && currentDate <= endDate)){
+		// while(response.data.data.used_times <= response.data.data.uses_times){
+		if( response.data.data.used_times <= response.data.data.uses_times){
+			if($.total>= parseFloat(response.data.data.greater_than) &&( currentDate >= startDate && currentDate <= endDate)){
 
-			if(response.data.data.type == 'fixed'){
-                // alert(response.data.data.value);
+         if(response.data.data.type == 'fixed'){
+
 	
-				
-				toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-				$('#discount').text(response.data.data.value +'$');
-				
-              $('#final-total').text( $.total - parseFloat(response.data.data.value) +'$');
-			  $.finalTotal = $.total - parseFloat(response.data.data.value);
+	toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
+	$('#discount').text(response.data.data.value +'$');
+	
+  $('#final-total').text( $.total - parseFloat(response.data.data.value) +'$');
+  $.finalTotal = $.total - parseFloat(response.data.data.value);
 
-			}
-			else{
-			toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-			$('#discount').text(response.data.data.value +'$');
+}
+else{
+toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
+$('#discount').text(response.data.data.value +'$');
 
-				$('#final-total').text( $.total - ( $.total * (parseFloat(response.data.data.value) / 100) ) +'$');
-			  $.finalTotal = $.total -( $.total * (parseFloat(response.data.data.value) / 100) );
+	$('#final-total').text( $.total - ( $.total * (parseFloat(response.data.data.value) / 100) ) +'$');
+  $.finalTotal = $.total -( $.total * (parseFloat(response.data.data.value) / 100) );
 
- 
-			}
-			
-		}
-		else{
+
+}
+changeUsedTimeCoupon(response.data.data.id ,++used_times );
+console.log(response);
+
+}
+else{
 			toastr.error('The Total: '+$.total+' must be >=' + response.data.data.greater_than + ' OR Coupon Date Expire!','' ,{positionClass: 'toast-bottom-right'});
 
+    }
+
+		} 
+
+	
+		else{
+			toastr.error('The number of times used has expired','' ,{positionClass: 'toast-bottom-right'});
+
 		}
+		
 
 		
 	})
@@ -561,9 +578,35 @@ function applayCoupon() {
         // console.log(error);
       });
 
-	  return  $.finalTotal;
+	//   return  $.finalTotal;
 
     }
+
+function changeUsedTimeCoupon(id ,used_times) {
+
+var formData = new FormData();
+// if(plus)
+	formData.append('used_times', used_times);
+// else
+// formData.append('quantity',parseInt(document.getElementById('qty_' + productId).value) - 1);
+
+	formData.append('_method','PUT');     
+
+axios.post('/product_coupons/'+ id ,formData)
+
+.then(function (response) {
+
+toastr.success(response.data.message ,'' ,{positionClass: 'toast-bottom-right'});
+// getTotal();
+})
+.catch(function (error) {
+// alert(11);
+// console.log(error.response);
+
+toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
+});
+
+}
 	// applayCoupon();
 	
 function performPlaceOrder() {

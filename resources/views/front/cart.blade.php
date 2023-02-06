@@ -53,7 +53,11 @@
 										</button>
 									</td>
 									<td class="column-2">{{$item->product->name}}</td>
-									<td class="column-3">$ {{$item->price}}</td>
+									<td class="column-3">$ @if ($item->has_offer)
+										{{$item->offer_price}}
+										@else
+										{{$item->price}}
+									@endif</td>
 									<td class="column-4">
 										<div class="wrap-num-product flex-w m-l-auto m-r-0">
 											<div class="minus cl8 hov-btn3 trans-04 flex-c-m">
@@ -296,11 +300,15 @@ $(".minus-button").click(function() {
 
 	axios.get('/products/' + productId)
       .then(function (response) {
-
+		var has_offer = response.data.data.has_offer;
 		qty = $("#qty_" + productId).val();
     if (qty > 1) {
       $("#qty_" + productId).val(parseInt(qty) - 1);
 	  qty = $("#qty_" + productId).val();
+	  if(response.data.data.has_offer){
+	  total = qty * response.data.data.offer_price;
+	  }
+	  else
 	  total = qty * response.data.data.price;
 	//   $("#total").val(parseInt(total) * qty );
 	  $('#total_' + productId).text(total +'$');
@@ -323,14 +331,21 @@ $(".minus-button").click(function() {
 
   $(".plus-button").click(function() {
 
+
 	var productId = $(this).data('id');
 	// changequantity(productId);
 	axios.get('/products/' + productId)
       .then(function (response) {
+	console.log(response.data.data.has_offer);
+
+		var has_offer = response.data.data.has_offer;
      qty = $("#qty_" + productId).val();
     $("#qty_" + productId).val(parseInt(qty) + 1);
 	 qty = $("#qty_" + productId).val();
-	 total = qty * response.data.data.price;
+	 if(has_offer)
+	  total = qty * response.data.data.offer_price;
+	  else
+	  total = qty * response.data.data.price;
 	  $('#total_' + productId).text( total +'$');
 	  getTotal();
 	//   applayCoupon();

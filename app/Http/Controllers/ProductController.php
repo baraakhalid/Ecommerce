@@ -40,7 +40,6 @@ class ProductController extends Controller
 
         $categories=Category::all();
         $products=Product::filter()->orderBy('id', 'desc')->get();
-  
 
         return response()->view('admin.products.home',['categories'=>$categories  ,'products'=>$products]);  
     }
@@ -61,6 +60,27 @@ class ProductController extends Controller
     return response()->view('front.product', ['products' => $products,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart ]);}
 
     }
+    
+    public function showProducts(Request $request)
+    {
+      
+ 
+
+        if($request->has('category_id')){
+            $products =Product::with('sizes')->distinct()->with('colors')->distinct()->where('category_id','=',$request->input('category_id'))->get();
+           
+            return response()->json(['message'=>'success' , 'products' => $products ]);
+        }
+        else{
+            $products=Product::all();
+            return response()->json(['message'=>'success' , 'products' => $products ]);
+
+       
+        }
+
+    }
+
+
 
 
     public function exportExcel(Request $request)

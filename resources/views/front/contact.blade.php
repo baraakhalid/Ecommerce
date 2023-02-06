@@ -30,11 +30,11 @@
 						</h4>
 
 						<div class="bor8 m-b-20 how-pos4-parent">
-							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" id="name" value="{{$name}}">
+							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" id="name" @if(Auth::guard('user')->check()) value="{{$name}}" @else  placeholder="You Name" @endif >
 							<img class="how-pos4 pointer-none" src="{{asset('front/images/icons/icon-email.png')}}" alt="ICON">
 						</div>
 						<div class="bor8 m-b-20 how-pos4-parent">
-							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="email"  id="email" value="{{$email}}">
+							<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="email"  id="email"   @if(Auth::guard('user')->check()) value="{{$email}}" @else  placeholder="You Email" @endif>
 							<img class="how-pos4 pointer-none" src="{{asset('front/images/icons/icon-email.png')}}" alt="ICON">
 						</div>
 

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
+use DateTime;
 
 class Product extends Model
 {
@@ -79,17 +80,45 @@ class Product extends Model
 
     public function getHasOfferAttribute()
     {
-        // $currentDate = Carbon::now()->format("YYYY-MM-DD");
-        if ( $this->offers()->count() > 0){
+        $currentDate = Carbon::now()->format('Y-m-d H:i:s');
        
+
+        if ( $this->offers()->count() > 0){
+            $start_date = $this->offers()->first()->start_date;
+            // $date = DateTime::createFromFormat('Y-M-D', $start_date);
+            // $formattedDate = $date->format('Y-m-d');
+
+            $startDate = new DateTime($start_date);
+            $end_date = $this->offers()->first()->end_date;
+            $formattedStartDate = $startDate->format('Y-m-d H:i:s');
+            $endDate = new DateTime($end_date);
+            $formattedEndDate = $endDate->format('Y-m-d H:i:s');
+         
+            // dd($formattedEndDate);
+            // dd ($currentDate >= $formattedStartDate && $currentDate <= $formattedEndDate);
+            if ($currentDate >= $formattedStartDate && $currentDate <= $formattedEndDate)
+           
             return true;
+            // else return false;
+            // 2023-Jan-Tue
+            // "2023-Feb-Sat"
         }
+        
+        else
         return false;
+        // return true;
+    }
+    public function getDiscountAttribute()
+    {
+        if ($this->offers()->count() > 0) {
+            return $this->offers()->first()->discount;
+        }
+        return null;
     }
     public function getOfferPriceAttribute()
     {
         if ($this->offers()->count() > 0) {
-            return $this->offers()->first()->discount;
+            return $this->price - $this->offers()->first()->discount;
         }
         return null;
     }
@@ -110,6 +139,10 @@ class Product extends Model
         }
         return null;
 
+    }
+    public function getActiveOfferAttribute()
+    {
+        return $this->has_offer ? 'Enabled' : 'Disabled';
     }
 
 

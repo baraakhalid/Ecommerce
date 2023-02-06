@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OrdersExportForAdmin;
 use App\Models\Address;
 use App\Models\Admin;
 use App\Models\Cart;
@@ -17,6 +18,8 @@ use App\Traits\imageTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use niklasravnsborg\LaravelPdf\Facades\Pdf;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends Controller
@@ -39,12 +42,27 @@ class OrderController extends Controller
 
         }
         elseif(auth('admin')->check()){
-            $orders=Order::all();
+            $orders=Order::filter()->orderBy('id', 'desc')->get();
             return response()->view('admin.orders.home',['orders'=>$orders]);
 
         }
       
     }
+
+    public function exportExcel(Request $request)
+    {
+        activity()->causedBy(auth('admin')->user())->log(' تصدير ملف إكسل لبيانات الطلبات ');
+        return Excel::download(new OrdersExportForAdmin($request), 'orders.xlsx');
+    }
+    
+    public function pdfOrders(Request $request)
+    {
+        activity()->causedBy(auth('admin')->user())->log(' تصدير ملف PDF لبيانات الطلبات ');
+        $items = Order::orderByDesc('id')->get();
+        $pdf = PDF::loadView('admin.orders.export_pdf', ['items' => $items]);
+        return $pdf->download('orders.pdf');
+    }
+
     public function changeStatus($id, $status)
     {
         $item = Order::where('id', $id)->first();
