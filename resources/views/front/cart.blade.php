@@ -426,7 +426,8 @@ function confirmDelete(id,reference){
             performDelete(id,reference);
         }
         });
-    								}
+    			
+	}
 
 
 
@@ -434,75 +435,7 @@ function confirmDelete(id,reference){
 
 
 
-function applayCoupon() {
-		
-		axios.get('/product_coupons?code=' + $("#code").val())
-		.then(function (response) {
 
-		var currentDate = moment().format("YYYY-MM-DD");
-		// alert(currentDate);
-		var startDate = response.data.data.start_date;
-		var endDate = response.data.data.expire_date;
-		// alert(currentDate);
-		if($.total >= parseFloat(response.data.data.greater_than) &&( currentDate >= startDate && currentDate <= endDate)){
-
-			if(response.data.data.type == 'fixed'){
-                // alert(response.data.data.value);
-	
-				
-				toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-				$('#discount').text(response.data.data.value +'$');
-				
-              $('#final-total').text( $.total - parseFloat(response.data.data.value) +'$');
-			  $.finalTotal = $.total - parseFloat(response.data.data.value);
-
-			}
-			else{
-			toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-			$('#discount').text(response.data.data.value +'$');
-
-				$('#final-total').text( $.total - ( $.total * (parseFloat(response.data.data.value) / 100) ) +'$');
-			  $.finalTotal = $.total -( $.total * (parseFloat(response.data.data.value) / 100) );
-
- 
-			}
-			
-		}
-		else{
-			toastr.error('The Total: '+$.total+' must be >=' + response.data.data.greater_than + ' OR Coupon Date Expire!','' ,{positionClass: 'toast-bottom-right'});
-
-		}
-
-		
-	})
-      .catch(function (error) {
-
-		toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-
-        // console.log(error);
-      });
-
-    }
-	// applayCoupon();
-	
-function performPlaceOrder() {
-// getTotal();
-
-        axios.post('/orders', {
-            total: parseFloat($.finalTotal),
-            address_id: document.querySelector('input[type=radio][name=address]:checked').value,
-       })
-        .then(function (response) {
-            console.log(response);
-
-            toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-            window.location.href = '/orders';
-        })
-        .catch(function (error) {
-            console.log(error.response);
-            toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
-        });
-    }
 
 
     function performDelete(id, reference) {

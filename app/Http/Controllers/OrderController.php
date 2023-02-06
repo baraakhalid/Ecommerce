@@ -141,6 +141,8 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+
+        
         $validator = Validator($request->all(), [
             'total' => 'required',
             'address_id' => 'required|numeric|exists:addresses,id',
@@ -154,6 +156,8 @@ class OrderController extends Controller
             $isSaved = $request->user()->orders()->save($order);
             if($isSaved)
            { $request->session()->forget('code');
+
+            
 			$request->session()->forget('type');}
             // $admins=Admin::all();
             // foreach ($admins as $admin) {
@@ -184,6 +188,7 @@ class OrderController extends Controller
                 Response::HTTP_BAD_REQUEST,
             );
         }
+
     }
 
     /**

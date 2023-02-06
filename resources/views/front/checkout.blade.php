@@ -629,30 +629,7 @@ function performPlaceOrder() {
     }
 
 
-    function performDelete(id, reference) {
-        axios.delete('/carts/'+id)
-        .then(function (response) {
-		$("#numOfProductsCart").attr("data-notify", response.data.numOfProductsCart);
 
-            console.log(response);
-            // toastr.success(response.data.message);
-            reference.closest('tr').remove();
-
-            showMessage(response.data);
-        })
-        .catch(function (error) {
-            console.log(error.response);
-            // toastr.error(error.response.data.message);
-            showMessage(error.response.data);
-        });
-    }
-	function showMessage(data) {
-        Swal.fire(
-            data.title,
-            data.text,
-            data.icon
-        );
-    }
 
 
 
