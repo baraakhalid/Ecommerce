@@ -116,6 +116,14 @@
                                                        placeholder="{{__('cp.name')}}">
                                             </div>
                                         </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="control-label">price</label>
+                                                <input type="number" value="{{request('price')?request('price'):''}}"
+                                                       class="form-control  " name="price"
+                                                       placeholder="price">
+                                            </div>
+                                        </div>
 
 
                                         <div class="col-md-4">

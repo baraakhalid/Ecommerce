@@ -507,8 +507,8 @@
 
 									<div class="size-204 respon6-next">
 										<div class="rs1-select2 bor8 bg0">
-											<select class="js-select2" name="time" id="size_id">
-												<option>Choose an size</option>
+											<select class="js-select2"  id="size_id" name="time">
+												{{-- <option>Choose an size</option> --}}
 												{{-- @foreach ($product->sizes->unique()->sortBy('id') as $size) --}}
 
 												{{-- <option value="{{$size->id}}">{{$size->name}}</option> --}}
@@ -525,8 +525,8 @@
 									</div>
 
 									<div class="size-204 respon6-next">
-										<div class="rs1-select2 bor8 bg0">
-											<select class="js-select2" name="time" id="color_id">
+										<div class="rs1-select2 bor8 bg0 ">
+											<select class="js-select2" id="color_id" name="time">
 
 
 												 
@@ -632,8 +632,9 @@ $('.js-show-modal1').on('click',function(e){
 		var productId = $(this).data('id');
 		let button = "";
 		
-				
-		axios.get('/products/' + productId)
+		let selectedColorId = document.getElementById("color_id").value;
+	
+		axios.get('/products/' + productId + '?color_id=' + selectedColorId)
       .then(function (response) {
 		var currentDate = moment().format("YYYY-MM-DD");
 		var startDate = response.data.data.start_date;
@@ -641,6 +642,7 @@ $('.js-show-modal1').on('click',function(e){
 		// console.log(startDate);
 		var offer_price = response.data.data.price;
 		var price = response.data.data.price;
+		var colors = response.data.colors;
 		if(response.data.data.has_offer)
 		 price = response.data.data.offer_price;
 		 else
@@ -659,18 +661,36 @@ $('.js-show-modal1').on('click',function(e){
 		$('#name').text(response.data.data.name);
 		$('#price').text( '$  '+ price );
 		$('#info').text(response.data.data.info);
+		var sizeHtml = '';
+		var colorHtml = '';
+
 		
 
 		$('#color_id').empty();
+		colorHtml += `<option >Choose an Color</option>`;
+
             $.each(response.data.colors , function(i, item){
-             $('#color_id').append(new Option(  item['name'] ,item['id'] ))
+				console.log(item.name);
+				console.log('Id: '+item['id']);
+				colorHtml += `<option value="${item.id}">${item.name}</option>`;
+            //  $('#color_id').append(new Option(  item['name'] ,item['id'] ))
              });
 
 		$('#size_id').empty();
+		sizeHtml += `<option >Choose an Size</option>`;
 
             $.each(response.data.sizes , function(i, item){
-             $('#size_id').append(new Option(  item['name'] ,item['id'] ))
+				// console.log(item.name);
+				// console.log('Id: '+item['id']);
+
+			// $('#size_id').append(new Option(item['name'],item['id']));
+			 sizeHtml += `<option value="${item.id}">${item.name}</option>`;
+
              });
+			document.getElementById('size_id').innerHTML = sizeHtml;
+			document.getElementById('color_id').innerHTML = colorHtml;
+
+
 
 
 
@@ -692,10 +712,10 @@ $('.js-show-modal1').on('click',function(e){
 
 				document.getElementById('images-product').innerHTML = imagesHtml;
 			
-});
+     });
 
 		
-    $('.js-modal1').addClass('show-modal1');
+       $('.js-modal1').addClass('show-modal1');
       })
       .catch(function (error) {
         console.log(error);
@@ -711,12 +731,7 @@ $('.js-show-modal1').on('click',function(e){
         $('.js-modal1').removeClass('show-modal1');
     });
 
-		$(".js-select2").each(function(){
-			$(this).select2({
-				minimumResultsForSearch: 20,
-				dropdownParent: $(this).next('.dropDownSelect2')
-			});
-		});
+	
 
 
 
@@ -727,6 +742,8 @@ $('.js-show-modal1').on('click',function(e){
       axios.post('/carts',{
             product_id:  id,
             quantity : parseInt(document.getElementById('qty').value),
+			size_id: document.getElementById('size_id').value,
+		    color_id: document.getElementById('color_id').value,
             price:productprice,
 
       })

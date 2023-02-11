@@ -213,18 +213,18 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        
+        $product = Product::with('sizes')->distinct()->with('colors')->distinct()->with('images')->distinct()->find($product->id);
+        $selectedColor = request()->input('color_id');
+        // dd($selectedColor);
+        if ($selectedColor) {
+            $sizes = $product->sizes->where('color_id', $selectedColor)->sortBy('id');
+        } else {
+            $sizes = $product->sizes->unique()->sortBy('id');
+        }
     
-    
-            $product =Product::with('sizes')->distinct()->with('colors')->with('images')->distinct()->find($product->id);
-            //  dd(11);
-            
-              
-    
-                return response()->json(['message'=>'success' , 'data' => $product ,'colors'=>$product->colors->unique() ,'sizes'=>$product->sizes->unique()->sortBy('id')]);
-    
-        // return response()->view('front.product', ['product' => $product ]);
+        return response()->json(['message'=>'success', 'data' => $product, 'colors' => $product->colors->unique(), 'sizes' => $sizes]);
     }
+    
     
     /**
      * Show the form for editing the specified resource.

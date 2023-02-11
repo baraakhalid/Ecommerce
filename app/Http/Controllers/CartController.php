@@ -93,6 +93,8 @@ class CartController extends Controller
     {
         $validator = Validator($request->all(), [
             'product_id' =>'required|numeric|exists:products,id',
+            'size_id'=>'required|numeric|exists:sizes,id',
+            'color_id'=>'required|numeric|exists:colors,id',
             'price' => 'required',
             'quantity' => 'required|integer',
             
@@ -108,6 +110,8 @@ class CartController extends Controller
                     $cart->user_id= $request->user()->id;
                     $cart->price= $request->price;
                     $cart->quantity= $request->quantity;
+                    $cart->color_id= $request->color_id;
+                    $cart->size_id= $request->size_id;
                     $request->session()->put('quantity', $cart->quantity);
                     $request->session()->put('price', $cart->price);
                     
@@ -132,7 +136,7 @@ class CartController extends Controller
         
         }
     }
-}
+    }
     /**
      * Display the specified resource.
      *

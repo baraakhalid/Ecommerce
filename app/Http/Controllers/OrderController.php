@@ -12,6 +12,8 @@ use App\Models\Language;
 use App\Models\Notification;
 use App\Models\Order;
 use App\Models\OrderProduct;
+use App\Models\Product;
+use App\Models\ProductColorSize;
 use App\Models\Token;
 use App\Models\User;
 use App\Traits\imageTrait;
@@ -159,22 +161,42 @@ class OrderController extends Controller
 
             
 			$request->session()->forget('type');}
-            // $admins=Admin::all();
-            // foreach ($admins as $admin) {
-            //     $admin->notify(new NewOrderNotification($order));
-            // }
+          
 
             $cartproducts=Cart::where('user_id' ,'=' , $request->user()->id)->get();
-            // dd($cartmeals);
             foreach($cartproducts as $cartproduct){
-                $order_product = new OrderProduct();
+                // dd($cartproduct->size_id);
 
+                $order_product = new OrderProduct();
+                $product_id = $cartproduct->product_id;
+                $color_id = $cartproduct->color_id;
+                $size_id = $cartproduct->size_id;
+                $quantity = $cartproduct->quantity;
+                $productColorSize = ProductColorSize::where('product_id', $product_id)
+                ->where('color_id', $color_id)
+                ->where('size_id', $size_id)
+                ->first();
+                // dd($productColorSize->quantity);
+              
+
+                if($productColorSize && $productColorSize->quantity >= $quantity){
+                    $productColorSize->quantity -= $quantity;
+                    $productColorSize->save();
                     $order_product->order_id = $order->id;
                     $order_product->product_id = $cartproduct->product_id;
                     $order_product->quantity = $cartproduct->quantity;
                     $order_product->total = $cartproduct->quantity * $cartproduct->price;
                     // $order_product->total =  $order->total;
                     $isSaved = $order_product->save();
+
+                }
+                else {
+                    return response()->json(
+                        ['message' => 'Product quantity is not sufficient.'],
+                        Response::HTTP_BAD_REQUEST,
+                    );
+                }
+                 
             }
 
             Cart::destroy($cartproducts);
