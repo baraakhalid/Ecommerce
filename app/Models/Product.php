@@ -154,6 +154,10 @@ class Product extends Model
             if (request()->get('name') != null)
                 $query->whereTranslationLike('name','%' . request()->get('name') . '%');
         }
+        if (request()->has('price')) {
+            if (request()->get('price') != null)
+                $query->where('price', request()->get('price'));
+        }
 
         if (request()->has('status')) {
             if (request()->get('status') != null)
