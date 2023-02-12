@@ -68,13 +68,13 @@
 								<a href="{{route('front.products')}}">Shop</a>
 							</li>
 
-							<li class="label1" data-label1="hot">
+							{{-- <li class="label1" data-label1="hot">
 								<a href="shoping-cart.html">Features</a>
 							</li>
 
 							<li>
 								<a href="blog.html">Blog</a>
-							</li>
+							</li> --}}
 
 							<li>
 								<a href="{{route('front.about')}}">About</a>
@@ -89,10 +89,18 @@
 							<li>
 								<a href="#">Hi,{{auth()->user()->name}}</a>
 							</li>
+							<a href="{{route('user.logout')}}" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 "  >
+								<i class="fa fa-sign-out" aria-hidden="true"></i>
+
+							</a>
 							@else
-							<li>
-								<a href="{{route('users.create')}}">Register | Login</a>
-							</li>
+							
+								<li><a href="{{route('users.create')}}">Register </a>
+								</li>
+								<li>
+								<a href="{{route('cms.login','user')}}"> Login</a>
+								</li>
+							
 							@endif
 						</ul>
 					</div>	

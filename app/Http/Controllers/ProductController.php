@@ -36,16 +36,17 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        $categories=Category::all();
+
         if (Auth::guard('admin')->check()){
 
-        $categories=Category::all();
         $products=Product::filter()->orderBy('id', 'desc')->get();
 
         return response()->view('admin.products.home',['categories'=>$categories  ,'products'=>$products]);  
     }
     else{
 
-        $products = Product::all();
+        $products = Product::with('category')->get();
 
         if($request->has('category_id')){
             $products =Product::with('sizes')->distinct()->with('colors')->distinct()->where('category_id','=',$request->input('category_id'))->get();
@@ -57,28 +58,28 @@ class ProductController extends Controller
 
 
 
-    return response()->view('front.product', ['products' => $products,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart ]);}
+    return response()->view('front.product', ['products' => $products,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart,'categories'=>$categories ]);}
 
     }
     
-    public function showProducts(Request $request)
-    {
+    // public function showProducts(Request $request)
+    // {
       
  
 
-        if($request->has('category_id')){
-            $products =Product::with('sizes')->distinct()->with('colors')->distinct()->where('category_id','=',$request->input('category_id'))->get();
+    //     if($request->has('category_id')){
+    //         $products =Product::with('sizes')->distinct()->with('colors')->distinct()->where('category_id','=',$request->input('category_id'))->get();
            
-            return response()->json(['message'=>'success' , 'products' => $products ]);
-        }
-        else{
-            $products=Product::all();
-            return response()->json(['message'=>'success' , 'products' => $products ]);
+    //         return response()->json(['message'=>'success' , 'products' => $products ]);
+    //     }
+    //     else{
+    //         $products=Product::all();
+    //         return response()->json(['message'=>'success' , 'products' => $products ]);
 
        
-        }
+    //     }
 
-    }
+    // }
 
 
 
