@@ -30,6 +30,18 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+// use Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
+
+// route::get('/test',function(){
+//     $data = [
+//         'invoice' => '123'
+//     ];
+//     $pdf = PDF::loadView('layout.invoice', $data);
+//     // $pdf = PDF::loadView('layout.invoice', $data);
+
+//     return $pdf->stream('document.pdf');
+
+// }) ; 
 
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
@@ -207,9 +219,10 @@ Route::group([
 
     route::prefix('/')->group(function () {
 
+   
         route::get('products' ,  'ProductController@index')->name('front.products');
         route::get('products/{product}' ,  'ProductController@show')->name('products.show');
-        route::get('productscategory/' ,  'ProductController@showProducts');
+        // route::get('productscategory/' ,  'ProductController@showProducts');
         // Route::resource('carts', CartController::class);
         Route::resource('users', UserController::class);
         
@@ -218,7 +231,6 @@ Route::group([
         Route::get('/about', 'web\admin\SettingController@showAboutPage')->name('front.about');
         Route::resource('messages', MessageController::class)->except([  'index' ,'destroy','show']);
 
-        // Route::view('/about','front.about')->name('front.about');
 
         
         });

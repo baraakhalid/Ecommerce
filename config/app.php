@@ -166,6 +166,11 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
         Kreait\Laravel\Firebase\ServiceProvider::class,
+        // Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class,
+        
+        
+
+
 
         /*
          * Package Service Providers...
@@ -234,8 +239,10 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-//        'PDF' => Barryvdh\DomPDF\Facade\Pdf::class,
-        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class
+        // 'PDF' => Meneses\LaravelMpdf\Facades\LaravelMpdf::class,
+             'PDF' => Barryvdh\DomPDF\Facade\Pdf::class,
+        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
+
 
     ],
 
