@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Size extends Model
 {
     use HasFactory;
+    public function productColorSizes()
+    {
+        return $this->hasMany(ProductColorSize::class, 'size_id','id');
+    }
+
+
 }

@@ -432,25 +432,6 @@
 							<div class="p-t-33">
 								<div class="flex-w flex-r-m p-b-10">
 									<div class="size-203 flex-c-m respon6">
-										Size
-									</div>
-
-									<div class="size-204 respon6-next">
-										<div class="rs1-select2 bor8 bg0">
-											<select class="js-select2"  id="size_id" name="time">
-												{{-- <option>Choose an size</option> --}}
-												{{-- @foreach ($product->sizes->unique()->sortBy('id') as $size) --}}
-
-												{{-- <option value="{{$size->id}}">{{$size->name}}</option> --}}
-												{{-- @endforeach --}}
-											</select>
-											<div class="dropDownSelect2"></div>
-										</div>
-									</div>
-								</div>
-
-								<div class="flex-w flex-r-m p-b-10">
-									<div class="size-203 flex-c-m respon6">
 										Color
 									</div>
 
@@ -470,6 +451,26 @@
 										</div>
 									</div>
 								</div>
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-203 flex-c-m respon6">
+										Size
+									</div>
+
+									<div class="size-204 respon6-next">
+										<div class="rs1-select2 bor8 bg0">
+											<select class="js-select2"  id="size_id" name="time">
+												{{-- <option>Choose an size</option> --}}
+												{{-- @foreach ($product->sizes->unique()->sortBy('id') as $size) --}}
+
+												{{-- <option value="{{$size->id}}">{{$size->name}}</option> --}}
+												{{-- @endforeach --}}
+											</select>
+											<div class="dropDownSelect2"></div>
+										</div>
+									</div>
+								</div>
+
+							
 
 								<div class="flex-w flex-r-m p-b-10">
 									<div class="size-204 flex-w flex-m respon6-next">
@@ -678,9 +679,10 @@ $('.js-show-modal1').on('click',function(e){
 		var productId = $(this).data('id');
 		let button = "";
 		
-		let selectedColorId = document.getElementById("color_id").value;
+		// let selectedColorId = document.getElementById("color_id").value;
+		// + '?color_id=' + selectedColorId
 	
-		axios.get('/products/' + productId + '?color_id=' + selectedColorId)
+		axios.get('/products/' + productId )
       .then(function (response) {
 		var currentDate = moment().format("YYYY-MM-DD");
 		var startDate = response.data.data.start_date;
@@ -719,17 +721,12 @@ $('.js-show-modal1').on('click',function(e){
 				console.log(item.name);
 				console.log('Id: '+item['id']);
 				colorHtml += `<option value="${item.id}">${item.name}</option>`;
-            //  $('#color_id').append(new Option(  item['name'] ,item['id'] ))
              });
 
 		$('#size_id').empty();
 		sizeHtml += `<option >Choose an Size</option>`;
 
             $.each(response.data.sizes , function(i, item){
-				// console.log(item.name);
-				// console.log('Id: '+item['id']);
-
-			// $('#size_id').append(new Option(item['name'],item['id']));
 			 sizeHtml += `<option value="${item.id}">${item.name}</option>`;
 
              });
@@ -737,7 +734,24 @@ $('.js-show-modal1').on('click',function(e){
 			document.getElementById('color_id').innerHTML = colorHtml;
 
 
-
+			$('#color_id').on('change',function(){
+        getsizes(this.value,productId);
+    });
+    function getsizes(color_id,productId){
+        axios.get('/sizes/'+color_id+'/'+productId)         
+       .then(function (response) {
+		// console.log(response.data.data);
+           $('#size_id').empty();
+           $.each(response.data.data , function(i , item){
+            // console.log('Id: '+item['size'].name);
+            $('#size_id').append(new Option(item['size'].name,item['size_id']));
+           });
+          
+       })
+       .catch(function (error) {
+     
+       });
+    } 
 
 
 			let imagesHtml = "";

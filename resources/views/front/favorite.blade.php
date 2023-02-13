@@ -22,8 +22,9 @@
 
 	<!-- Product -->
 	
-	<div class="bg0 m-t-23 p-b-140">
+	<div class="bg0 m-t-80 p-b-140">
 		<div class="container">
+			
 			<div class="row isotope-grid">
 				@forelse ($products as $product )
 					

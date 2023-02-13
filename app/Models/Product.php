@@ -39,6 +39,13 @@ class Product extends Model
     public function category(){
         return $this->belongsto(Category::class ,'category_id','id');
     }
+
+    public function sizesForColor($colorId)
+   {
+    return $this->hasManyThrough(Size::class, ProductColorSize::class, 'product_id', 'id', 'id', 'size_id')
+                ->where('color_id', $colorId)
+                  ->get();
+   }
  
      public function offers()
     {

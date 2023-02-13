@@ -46,8 +46,11 @@ class ProductController extends Controller
             return response()->view('admin.products.home',['categories'=>$categories  ,'products'=>$products]);  
         }
         else{
-    
+            $categories=Category::all();
+
             $products = Product::with('category')->get();
+            $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
+            $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
     
             if($request->has('name')){
                 if ( $request->input('name') != null)
@@ -71,14 +74,15 @@ class ProductController extends Controller
             }
             elseif($request->has('category_id')){
                 $products =Product::with('sizes')->distinct()->with('colors')->distinct()->where('category_id','=',$request->input('category_id'))->get();
-                $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
-                $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
+            
         return response()->view('front.product', ['products' => $products,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart ]);
                     
         
             }
             else{
-                return response()->json(['message'=>'success' , 'products' => $products]);
+                return response()->view('front.product', ['products' => $products ,'categories'=>$categories,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart ]);
+
+                // return response()->json(['message'=>'success' , 'products' => $products]);
     
         
             }
@@ -225,15 +229,29 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product = Product::with('sizes')->distinct()->with('colors')->distinct()->with('images')->distinct()->find($product->id);
-        $selectedColor = request()->input('color_id');
-        // dd($selectedColor);
-        if ($selectedColor) {
-            $sizes = $product->sizes->where('color_id', $selectedColor)->sortBy('id');
-        } else {
+        // if ($selectedColor) {
+        //     $sizes = $product->sizes->where('color_id', $selectedColor)->sortBy('id');
+        // } else {
             $sizes = $product->sizes->unique()->sortBy('id');
-        }
+        // }
     
         return response()->json(['message'=>'success', 'data' => $product, 'colors' => $product->colors->unique(), 'sizes' => $sizes]);
+    }
+
+    public function getsizes($color_id,$productId)
+    {       
+
+        // $productcolorsize=ProductColorSize::
+        // $sizes = $product->with('sizes')->sortBy('id');
+        $sizes = ProductColorSize::with('size')->where('color_id', $color_id)->where('product_id',$productId)
+    ->get();
+    // $sizes = Size::with(['productColorSizes' => function ($query) use ($color_id,$productId) {
+    //     $query->where('color_id', $color_id)->where('product_id',$productId);
+    // }])->get();
+
+
+
+        return response()->json(['message'=> 'dd', 'data'=>$sizes]);
     }
     
     
@@ -247,8 +265,10 @@ class ProductController extends Controller
     {
         $categories=Category::all();
         $sizes=Size::all();
+      
         $colors=Color::all();
         $product->load('images');
+
 
         return response()->view('admin.products.edit',['product'=>$product ,'categories'=>$categories ,'sizes'=>$sizes,'colors'=>$colors]);
     }
