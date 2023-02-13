@@ -551,8 +551,8 @@ $('#discount').text(response.data.data.value +'$');
 
 
 }
-changeUsedTimeCoupon(response.data.data.id ,++used_times );
-console.log(response);
+// changeUsedTimeCoupon(response.data.data.id ,++used_times );
+// console.log(response);
 
 }
 else{
@@ -582,13 +582,12 @@ else{
 
     }
 
-function changeUsedTimeCoupon(id ,used_times) {
+	function changeUsedTimeCoupon(id ,used_times) {
 
-var formData = new FormData();
-// if(plus)
+	var formData = new FormData();
+
 	formData.append('used_times', used_times);
-// else
-// formData.append('quantity',parseInt(document.getElementById('qty_' + productId).value) - 1);
+
 
 	formData.append('_method','PUT');     
 
@@ -597,17 +596,14 @@ axios.post('/product_coupons/'+ id ,formData)
 .then(function (response) {
 
 toastr.success(response.data.message ,'' ,{positionClass: 'toast-bottom-right'});
-// getTotal();
+
 })
 .catch(function (error) {
-// alert(11);
-// console.log(error.response);
 
 toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
 });
 
 }
-	// applayCoupon();
 	
 function performPlaceOrder() {
 // getTotal();
@@ -618,6 +614,17 @@ function performPlaceOrder() {
        })
         .then(function (response) {
             console.log(response);
+			axios.get('/product_coupons?code=' + $("#code").val())
+	   .then(function (response) {
+		changeUsedTimeCoupon(response.data.data.id ,++response.data.data.used_times );
+
+	}
+	)
+	.catch(function (error) {
+            console.log(error.response);
+            toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
+        });
+			
 
             toastr.success(response.data.message,'' ,{positionClass: 'toast-bottom-right'});
             window.location.href = '/orders';
