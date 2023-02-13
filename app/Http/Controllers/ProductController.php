@@ -341,6 +341,31 @@ class ProductController extends Controller
                     }
                 }
             }
+            // if ($request->colors != null) {
+            //     foreach ($request->colors as $color_id) {
+            //       $color_sizes = $request->input("sizes_for_color_$color_id");
+            //       if ($color_sizes != null) {
+            //         foreach ($color_sizes as $size_id){
+            //           $quantity = $request->input("quantities_for_color_$color_id" . "_size_" . "$size_id");
+            //           if ($quantity == null) {
+            //             $quantity = ProductColorSize::where('product_id', $product->id)
+            //                 ->where('color_id', $color_id)
+            //                 ->where('size_id', $size_id)
+            //                 ->first()
+            //                 ->quantity;
+            //           }
+            //           $values[] = [
+            //             'product_id' => $product->id,
+            //             'color_id' => $color_id,
+            //             'size_id' => $size_id,
+            //             'quantity' => $quantity,
+            //           ];
+            //         }
+            //       }
+            //     }
+            //     ProductColorSize::insert($values);
+            //   }
+
             ProductColorSize::where('product_id', $product->id)->delete();
 
             if ($request->colors != null) {

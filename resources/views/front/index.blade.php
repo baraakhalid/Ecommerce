@@ -554,14 +554,14 @@
 		// console.log(response.data.products.length);
 		if(response.data.products.length > 0)
 		{
-			// $(".isotope-item").hide();
+			$(".isotope-item").hide();
 
 			
 			$.each(response.data.products, function(i, item){
 				var id=item['id'];
 				console.log(id);
 				if ( $("#product_"+id).length) {
-        		$("#product_"+id).hide();
+        		$("#product_"+id).show();
 				}
 
 			})
