@@ -40,46 +40,56 @@ class ProductController extends Controller
 
         if (Auth::guard('admin')->check()){
 
-        $products=Product::filter()->orderBy('id', 'desc')->get();
-
-        return response()->view('admin.products.home',['categories'=>$categories  ,'products'=>$products]);  
-    }
-    else{
-
-        $products = Product::with('category')->get();
-
-        if($request->has('category_id')){
-            $products =Product::with('sizes')->distinct()->with('colors')->distinct()->where('category_id','=',$request->input('category_id'))->get();
-           
+            $categories=Category::all();
+            $products=Product::filter()->orderBy('id', 'desc')->get();
+    
+            return response()->view('admin.products.home',['categories'=>$categories  ,'products'=>$products]);  
         }
-        $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
-        $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
-            
-
-
-
-    return response()->view('front.product', ['products' => $products,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart,'categories'=>$categories ]);}
+        else{
+    
+            $products = Product::with('category')->get();
+    
+            if($request->has('name')){
+                if ( $request->input('name') != null)
+    
+                    {
+                        $products= Product::whereTranslationLike('name' ,'%' . $request->input('name') . '%')->get();
+                        return response()->json(['message'=>'success' , 'products' => $products]);
+                    }
+                // $products =Product::with('sizes')->distinct()->with('colors')->distinct()->where('category_id','=',$request->input('category_id'))->get();
+               
+            }
+    
+            elseif($request->has('min') && $request->has('max')){
+    
+                      $products= Product::with('category')->whereBetween('price', [$request->input('min') , $request->input('max') ])->get();
+                    //   $exceptProducts = Product::whereNotIn('id', $products->pluck('id'))->get();
+    
+                      return response()->json(['message'=>'success' , 'products' => $products]);
+               
+    
+            }
+            elseif($request->has('category_id')){
+                $products =Product::with('sizes')->distinct()->with('colors')->distinct()->where('category_id','=',$request->input('category_id'))->get();
+                $numOfProductsFavorite=FavoritProduct::where('user_id' , $request->user()->id)->count();
+                $numOfProductsCart=Cart::where('user_id' , $request->user()->id)->count();
+        return response()->view('front.product', ['products' => $products,'numOfProductsFavorite'=>$numOfProductsFavorite,'numOfProductsCart'=>$numOfProductsCart ]);
+                    
+        
+            }
+            else{
+                return response()->json(['message'=>'success' , 'products' => $products]);
+    
+        
+            }
+         
+    
+    
+    }
 
     }
     
-    // public function showProducts(Request $request)
-    // {
-      
- 
 
-    //     if($request->has('category_id')){
-    //         $products =Product::with('sizes')->distinct()->with('colors')->distinct()->where('category_id','=',$request->input('category_id'))->get();
-           
-    //         return response()->json(['message'=>'success' , 'products' => $products ]);
-    //     }
-    //     else{
-    //         $products=Product::all();
-    //         return response()->json(['message'=>'success' , 'products' => $products ]);
-
-       
-    //     }
-
-    // }
 
 
 
