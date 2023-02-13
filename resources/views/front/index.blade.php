@@ -146,18 +146,17 @@
 
 			<div class="flex-w flex-sb-m p-b-52">
 				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" type="button" onclick="showProducts()" data-filter="*">
 						All Products
 					</button>
 					@foreach ($categories as $category )
-						
 
-					<button type="button" onclick="showProducts({{$category->id}})" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" >
+
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" onclick="showProducts()"  data-filter=".{{$category->id}}">
 						{{$category->name}}
 					</button>
-					@endforeach
 
-					
+					@endforeach
 				</div>
 
 				<div class="flex-w flex-c-m m-tb-10">
@@ -188,50 +187,7 @@
 				<!-- Filter -->
 				<div class="dis-none panel-filter w-full p-t-10">
 					<div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
-						<div class="filter-col1 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Sort By
-							</div>
-
-							<ul>
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Default
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Popularity
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Average rating
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04 filter-link-active">
-										Newness
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Price: Low to High
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Price: High to Low
-									</a>
-								</li>
-							</ul>
-						</div>
-
+					
 						<div class="filter-col2 p-r-15 p-b-27">
 							<div class="mtext-102 cl2 p-b-15">
 								Price
@@ -245,27 +201,35 @@
 								</li>
 
 								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
+					              <div class="bor8 dis-flex p-l-15 filter-tope-group">
+									<button id="price-search1" type="button"  onclick="searchByPrice(0,50)"  class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5">
 										$0.00 - $50.00
-									</a>
+									</button>
+									{{-- <a  id="price-search"  onclick="searchByPrice(0,50)" >
+										$0.00 - $50.00
+									</a> --}}
+								  </div>
 								</li>
 
 								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
+									<button id="price-search2" type="button"  onclick="searchByPrice(50,100)"  class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5">
 										$50.00 - $100.00
-									</a>
+									</button>
+								
 								</li>
 
 								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
+									<button id="price-search3" type="button"  onclick="searchByPrice(100,150)"  class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5">
 										$100.00 - $150.00
-									</a>
+									</button>
+								
 								</li>
 
 								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
+									<button id="price-search4" type="button"  onclick="searchByPrice(150,200)"  class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5">
 										$150.00 - $200.00
-									</a>
+									</button>
+									
 								</li>
 
 								<li class="p-b-6">
@@ -344,33 +308,7 @@
 							</ul>
 						</div>
 
-						<div class="filter-col4 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Tags
-							</div>
-
-							<div class="flex-w p-t-4 m-r--5">
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Fashion
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Lifestyle
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Denim
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Streetstyle
-								</a>
-
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Crafts
-								</a>
-							</div>
-						</div>
+					
 					</div>
 				</div>
 			</div>
@@ -378,7 +316,7 @@
 			<div class="row isotope-grid" id="products-category">
 				@foreach ($products as $product )
 					
-				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
+				<div id="product_{{$product->id}}" class=" col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item {{$product->category->id}}">
 					<!-- Block2 -->
 					<div class="block2">
 						<div class="block2-pic hov-img0">
@@ -396,17 +334,11 @@
 									
 								</a>
 
-								{{-- @php
-								$currentDate = \Carbon\Carbon::now();
-							    @endphp --}}
+								
 								@if($product->has_offer)
-								{{-- @if($currentDate->between($product->offers()->first()->start_date , $product->offers()->first()->end_date)) --}}
-
-								{{-- {{$product->has_offer}} --}}
-								{{-- @if($product->has_offer) --}}
+							
 								<del class="stext-105 cl3">
 									{{$product->price}}$
-									{{-- {{$product->offer_price}} --}}
 
 								</del>
 
@@ -425,10 +357,6 @@
 							</div>
 
 							<div id="favorite" class="block2-txt-child2 flex-r p-t-3">
-								{{-- @if (Auth::guard('user')->check()) --}}
-								{{-- <a  onclick="performFavorite({{$product->id }})"  data-id="{{$product->id}}" class="addToWishlist btn-addwish-b2 dis-block pos-relative js-addwish-b2" > --}}
-									
-									{{-- <a id="heart" onclick="performFavorite({{$product->id }})"   data-id="{{$product->id}}" class="fa fa-heart" ></a> --}}
 									<a id="heart_{{$product->id}}" onclick="performFavorite({{$product->id }})"   data-id="{{$product->id}}" @if($product->is_favorite) class="fa fa-heart" @else  class="fa fa-heart-o" @endif></a>
 									
 							</div>
@@ -601,6 +529,122 @@
 	@section('scripts')
 
 	<script>
+
+		function showProducts() {
+
+			$(".isotope-item").show();
+
+
+		}
+	function searchByPrice(min ,max) {
+	
+	
+	// axios.get('/products?name=' + $("#name-search").val())
+	axios.get('/products?min=' + min +'&max='+max)
+
+	.then(function (response) {
+
+		// let productsHtml = "";
+		// let productsOfferHtml = "";
+		// let productsFavoriteHtml = "";
+
+		// console.log(response.data.products.length);
+		if(response.data.products.length > 0)
+		{
+			// $(".isotope-item").hide();
+
+			
+			$.each(response.data.products, function(i, item){
+				var id=item['id'];
+				console.log(id);
+				if ( $("#product_"+id).length) {
+        		$("#product_"+id).hide();
+				}
+
+			})
+
+
+
+
+			}
+else
+$(".isotope-item").hide();
+
+	
+// 		var category=item.category.name;
+// 		var is_favorite=item['is_favorite'];
+// 		var name=item['name'];
+// 		var price=item['price'];
+// 		var offer_price=item['offer_price'];
+// 		var offer=item['has_offer'];
+// 		var image=item['image_url'];
+// 		if(offer){
+// 		 productsOfferHtml= `
+// 							<del class="stext-105 cl3">
+// 								${price}$
+// 								</del>
+// 								<span class="stext-105 cl3">
+// 									${offer_price}
+// 								</span>
+// 						`
+								
+// 							}
+// 							else{
+// 								productsOfferHtml=`
+// 								<span class="stext-105 cl3">
+// 									${price}$
+// 								</span>
+// 								`
+// 							}
+// 		if(is_favorite){
+// 			productsFavoriteHtml= `
+// 			 class="fa fa-heart"   
+// 						`
+								
+// 							}
+// 							else{
+// 								productsFavoriteHtml=`
+// 								class="fa fa-heart-o" 
+// 								`
+// 							}
+// 			productsHtml += `
+// 			<div  class="product_${id} col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item ${category}">
+// 					<!-- Block2 -->
+// 					<div class="block2">
+// 						<div class="block2-pic hov-img0">
+// 							<img src="${image}" alt="IMG-PRODUCT">
+// 							<a href="#" id= "js-show-modal1" data-id="${id}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+// 								Quick View
+// 							</a>
+// 						</div>
+// 						<div class="block2-txt flex-w flex-t p-t-14">
+// 							<div class="block2-txt-child1 flex-col-l ">
+// 								<a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+// 									${name}
+// 								</a>
+// 								${productsOfferHtml}
+								
+// 							</div>
+// 							<div id="favorite" class="block2-txt-child2 flex-r p-t-3">
+								
+// 									<a id="heart_${id}" onclick="performFavorite(${id})"   data-id="${id}" ${productsFavoriteHtml}></a>
+									
+// 							</div>
+// 						</div>
+// 					</div>
+// 				</div>
+			
+// 			`;
+//    document.getElementById('products-category').innerHTML = productsHtml;
+// })
+
+
+})
+.catch(function (error) {
+          console.log(error.response);
+          toastr.error(error.response.data.message,'' ,{positionClass: 'toast-bottom-right'});
+      });
+}
 
 var qty=1;
   $("#minus-button").click(function() {
@@ -782,6 +826,26 @@ $('.js-show-modal1').on('click',function(e){
 
 	<script>
         $('.parallax100').parallax100();
+
+		$('.js-show-filter').on('click',function(){
+        $(this).toggleClass('show-filter');
+        $('.panel-filter').slideToggle(400);
+
+        if($('.js-show-search').hasClass('show-search')) {
+            $('.js-show-search').removeClass('show-search');
+            $('.panel-search').slideUp(400);
+        }    
+    });
+
+    $('.js-show-search').on('click',function(){
+        $(this).toggleClass('show-search');
+        $('.panel-search').slideToggle(400);
+
+        if($('.js-show-filter').hasClass('show-filter')) {
+            $('.js-show-filter').removeClass('show-filter');
+            $('.panel-filter').slideUp(400);
+        }    
+    });
 	</script>
 <!--===============================================================================================-->
 	<script src="{{asset('front/vendor/MagnificPopup/jquery.magnific-popup.min.js')}}"></script>
@@ -852,110 +916,7 @@ function performFavorite(id) {
         }
 });
 }
-function showProducts(id) {
-	
- 
-	axios.get('/productscategory?category_id=' + id)
 
-      .then(function (response) {
-		console.log(response.data.products);
-
-		let productsHtml = "";
-		let productsOfferHtml = "";
-		let productsFavoriteHtml = "";
-
-
-		$.each(response.data.products, function(i, item){
-			
-
-		var id=item['id'];
-		var is_favorite=item['is_favorite'];
-
-		var name=item['name'];
-		var price=item['price'];
-		var offer_price=item['offer_price'];
-		var offer=item['has_offer'];
-		var image=item['image_url'];
-		if(offer){
-		 productsOfferHtml= `
-							<del class="stext-105 cl3">
-								${price}$
-
-								</del>
-
-								<span class="stext-105 cl3">
-									${offer_price}
-
-								</span>
-						`
-								
-							}
-							else{
-								productsOfferHtml=`
-								<span class="stext-105 cl3">
-									${price}$
-
-
-								</span>
-								`
-
-							}
-		if(is_favorite){
-			productsFavoriteHtml= `
-			 class="fa fa-heart"   
-						`
-								
-							}
-							else{
-								productsFavoriteHtml=`
-								class="fa fa-heart-o" 
-								`
-
-							}
-			productsHtml += `
-			<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
-					<!-- Block2 -->
-					<div class="block2">
-						<div class="block2-pic hov-img0">
-							<img src="${image}" alt="IMG-PRODUCT">
-
-							<a href="#" id= "js-show-modal1" data-id="${id}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
-								Quick View
-							</a>
-						</div>
-
-						<div class="block2-txt flex-w flex-t p-t-14">
-							<div class="block2-txt-child1 flex-col-l ">
-								<a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-									${name}
-								</a>
-
-								${productsOfferHtml}
-								
-							</div>
-
-							<div id="favorite" class="block2-txt-child2 flex-r p-t-3">
-								
-									<a id="heart_${id}" onclick="performFavorite(${id})"   data-id="${id}" ${productsFavoriteHtml}></a>
-									
-							</div>
-						</div>
-					</div>
-				</div>
-			
-			`;
-
-   document.getElementById('products-category').innerHTML = productsHtml;
-
-})
-})
-	
-      .catch(function (error) {
-        console.log(error);
-      });
-      
-
-}
 
 	</script>
 
