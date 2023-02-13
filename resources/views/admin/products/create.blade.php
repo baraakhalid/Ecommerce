@@ -20,7 +20,7 @@
                 <!--begin::Info-->
                 <div class="d-flex align-items-center flex-wrap mr-1">
                     <div class="d-flex align-items-baseline mr-5">
-                        <h3>{{__('cp.add_meal')}}</h3>
+                        <h3>{{__('cp.add_product')}}</h3>
                     </div>
                 </div>
                 <!--end::Info-->
@@ -52,19 +52,7 @@
                             <div class="card-body">
 
                                 <div class="row">
-                                    {{-- <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>{{__('cp.vendor')}}</label>
-                                            <select class="form-control form-control-solid"
-                                                    name="user_id" id="user_id" required>
-                                                <option value=""> @lang('cp.select')</option>
-                                                @foreach($users as $one)
-                                                    <option value="{{$one->id}}"
-                                                            data-id="{{$one->id}}"> {{$one->name}} </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div> --}}
+                                   
 
                                     {{-- <div class=" row"> --}}
                                         <label class="form-group">Category:</label>
