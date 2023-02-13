@@ -12,6 +12,7 @@
         "astrotomic/laravel-translatable": "^11.9",
         "barryvdh/laravel-dompdf": "^2.0",
         "beyondcode/laravel-websockets": "^1.12",
+        "carlos-meneses/laravel-mpdf": "^2.1",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",

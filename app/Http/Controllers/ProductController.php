@@ -36,6 +36,8 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        $categories=Category::all();
+
         if (Auth::guard('admin')->check()){
 
             $categories=Category::all();
@@ -84,26 +86,10 @@ class ProductController extends Controller
     
     
     }
+
     }
     
-    public function showProducts(Request $request)
-    {
-      
- 
 
-        if($request->has('category_id')){
-            $products =Product::with('sizes')->distinct()->with('colors')->distinct()->where('category_id','=',$request->input('category_id'))->get();
-           
-            return response()->json(['message'=>'success' , 'products' => $products ]);
-        }
-        else{
-            $products=Product::all();
-            return response()->json(['message'=>'success' , 'products' => $products ]);
-
-       
-        }
-
-    }
 
 
 

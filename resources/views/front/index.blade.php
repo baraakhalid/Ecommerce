@@ -153,6 +153,7 @@
 
 
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" onclick="showProducts()"  data-filter=".{{$category->id}}">
+
 						{{$category->name}}
 					</button>
 
@@ -317,6 +318,7 @@
 				@foreach ($products as $product )
 					
 				<div id="product_{{$product->id}}" class=" col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item {{$product->category->id}}">
+
 					<!-- Block2 -->
 					<div class="block2">
 						<div class="block2-pic hov-img0">
@@ -917,6 +919,110 @@ function performFavorite(id) {
 });
 }
 
+// function showProducts(id) {
+	
+ 
+// 	axios.get('/productscategory?category_id=' + id)
+
+//       .then(function (response) {
+// 		console.log(response.data.products);
+
+// 		let productsHtml = "";
+// 		let productsOfferHtml = "";
+// 		let productsFavoriteHtml = "";
+
+
+// 		$.each(response.data.products, function(i, item){
+			
+
+// 		var id=item['id'];
+// 		var is_favorite=item['is_favorite'];
+
+// 		var name=item['name'];
+// 		var price=item['price'];
+// 		var offer_price=item['offer_price'];
+// 		var offer=item['has_offer'];
+// 		var image=item['image_url'];
+// 		if(offer){
+// 		 productsOfferHtml= `
+// 							<del class="stext-105 cl3">
+// 								${price}$
+
+// 								</del>
+
+// 								<span class="stext-105 cl3">
+// 									${offer_price}
+
+// 								</span>
+// 						`
+								
+// 							}
+// 							else{
+// 								productsOfferHtml=`
+// 								<span class="stext-105 cl3">
+// 									${price}$
+
+
+// 								</span>
+// 								`
+
+// 							}
+// 		if(is_favorite){
+// 			productsFavoriteHtml= `
+// 			 class="fa fa-heart"   
+// 						`
+								
+// 							}
+// 							else{
+// 								productsFavoriteHtml=`
+// 								class="fa fa-heart-o" 
+// 								`
+
+// 							}
+// 			productsHtml += `
+// 			<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
+// 					<!-- Block2 -->
+// 					<div class="block2">
+// 						<div class="block2-pic hov-img0">
+// 							<img src="${image}" alt="IMG-PRODUCT">
+
+// 							<a href="#" id= "js-show-modal1" data-id="${id}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+// 								Quick View
+// 							</a>
+// 						</div>
+
+// 						<div class="block2-txt flex-w flex-t p-t-14">
+// 							<div class="block2-txt-child1 flex-col-l ">
+// 								<a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+// 									${name}
+// 								</a>
+
+// 								${productsOfferHtml}
+								
+// 							</div>
+
+// 							<div id="favorite" class="block2-txt-child2 flex-r p-t-3">
+								
+// 									<a id="heart_${id}" onclick="performFavorite(${id})"   data-id="${id}" ${productsFavoriteHtml}></a>
+									
+// 							</div>
+// 						</div>
+// 					</div>
+// 				</div>
+			
+// 			`;
+
+//    document.getElementById('products-category').innerHTML = productsHtml;
+
+// })
+// })
+	
+//       .catch(function (error) {
+//         console.log(error);
+//       });
+      
+
+// }
 
 	</script>
 
