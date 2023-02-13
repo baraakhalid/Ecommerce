@@ -141,10 +141,10 @@
                                                 @foreach ($sizes as $size )
 
                                                 <label class="checkbox">
-                                                    <input type="checkbox"  id="sizes"
-                                                    name="sizes_for_color_{{$color->id}}[]" value="{{$size->id}}" 
-                                                    {{old("sizes_for_color_{$color->id}") && in_array($size->id, old("sizes_for_color_{$color->id}")) ? 'checked' : ''}}
-                                                     {{$product->sizes->contains($size->id) ? 'checked' : ''}}
+                                                    <input type="checkbox"  id="sizes" name="sizes_for_color_{{$color->id}}[]" value="{{$size->id}}"
+                                                    @if (in_array($size->id, old("sizes_for_color_{$color->id}", $product->sizesForColor($color->id)->pluck('id')->toArray())))
+                                                      checked
+                                                    @endif
                                                     /> {{$size->name}}
                                                     <div class="col-12" >
                                                      <input type="number" name="quantities_for_color_{{$color->id}}_size_{{$size->id}}" 
@@ -176,7 +176,7 @@
                                                     @foreach($product->images as $image)
                                                         <div class="imageBox text-center"
                                                              style="width:150px;height:190px;margin:5px">
-                                                            <img src="{{$image->url ?? ''}}"
+                                                            <img src="{{$image->image_url ?? ''}}"
                                                                  style="width:150px;height:150px">
                                                             <button class="btn btn-danger deleteImage"
                                                                     type="button">{{__("cp.remove")}}</button>
