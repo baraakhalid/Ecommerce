@@ -30,7 +30,7 @@ The control panel includes the following features:
 
 To run the project locally, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/sawsanghabayen/clothes_store.git`
+1. Clone the repository: `git clone https://github.com/baraakhalid/Ecommerc.git`
 2. copy .example.env to .env file: cp .example.env .env
 3. create a new database and add the database credentials to your .env file
 4. run composer install
